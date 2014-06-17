@@ -114,7 +114,6 @@ public class Potions
 		}
 		catch (java.lang.NoSuchFieldError e)
 		{
-			Essentials.wrongVersion();
 		}
 		
 		try // 1.7 update
@@ -127,7 +126,6 @@ public class Potions
 		}
 		catch (java.lang.NoSuchFieldError e)
 		{
-			Essentials.wrongVersion();
 		}
 	}
 

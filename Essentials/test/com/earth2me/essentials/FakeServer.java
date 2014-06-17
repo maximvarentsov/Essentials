@@ -2,13 +2,6 @@ package com.earth2me.essentials;
 
 import com.avaje.ebean.config.ServerConfig;
 import com.earth2me.essentials.craftbukkit.FakeWorld;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.logging.Logger;
 import org.bukkit.*;
 import org.bukkit.Warning.WarningState;
 import org.bukkit.World.Environment;
@@ -30,21 +23,20 @@ import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.plugin.EventExecutor;
-import org.bukkit.plugin.InvalidDescriptionException;
-import org.bukkit.plugin.InvalidPluginException;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginLoader;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredListener;
-import org.bukkit.plugin.ServicesManager;
-import org.bukkit.plugin.UnknownDependencyException;
+import org.bukkit.plugin.*;
 import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scheduler.BukkitWorker;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.util.CachedServerIcon;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.logging.Logger;
 
 
 public class FakeServer implements Server
@@ -919,7 +911,12 @@ public class FakeServer implements Server
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
-	@Override
+    @Override
+    public Inventory createInventory(InventoryHolder inventoryHolder, InventoryType inventoryType, String s) {
+        return null;
+    }
+
+    @Override
 	public Inventory createInventory(InventoryHolder ih, int i)
 	{
 		throw new UnsupportedOperationException("Not supported yet.");

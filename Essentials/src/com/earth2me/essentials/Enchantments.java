@@ -154,7 +154,6 @@ public class Enchantments
 		}
 		catch (java.lang.NoSuchFieldError e)
 		{
-			Essentials.wrongVersion();
 		}
 	}
 

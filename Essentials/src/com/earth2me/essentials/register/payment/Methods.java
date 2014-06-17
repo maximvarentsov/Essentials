@@ -1,9 +1,10 @@
 package com.earth2me.essentials.register.payment;
 
-import java.util.HashSet;
-import java.util.Set;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -16,12 +17,6 @@ import org.bukkit.plugin.PluginManager;
  * Methods also allows you to set a preferred method of payment before it captures payment plugins in the initialization
  * process.
  *
- * in
- * <code>bukkit.yml</code>: <blockquote><pre>
- *  economy:
- *      preferred: "iConomy"
- * </pre></blockquote>
- *
  * @author: Nijikokun <nijikokun@shortmail.com> (@nijikokun) @copyright: Copyright (C) 2011 @license: AOL license
  * <http://aol.nexua.org>
  */
@@ -31,9 +26,9 @@ public class Methods
 	private static boolean self = false;
 	private static Method Method = null;
 	private static String preferred = "";
-	private static final Set<Method> Methods = new HashSet<Method>();
-	private static final Set<String> Dependencies = new HashSet<String>();
-	private static final Set<Method> Attachables = new HashSet<Method>();
+	private static final Set<Method> Methods = new HashSet<>();
+	private static final Set<String> Dependencies = new HashSet<>();
+	private static final Set<Method> Attachables = new HashSet<>();
 
 	static
 	{
@@ -45,13 +40,8 @@ public class Methods
 	 */
 	private static void _init()
 	{
-		addMethod("iConomy", new com.earth2me.essentials.register.payment.methods.iCo6());
-		addMethod("iConomy", new com.earth2me.essentials.register.payment.methods.iCo5());
-		addMethod("BOSEconomy", new com.earth2me.essentials.register.payment.methods.BOSE7());
-		addMethod("Currency", new com.earth2me.essentials.register.payment.methods.MCUR());
-		Dependencies.add("MultiCurrency");
-		addMethod("Vault", new com.earth2me.essentials.register.payment.methods.VaultEco());
-	}
+        addMethod("Vault", new com.earth2me.essentials.register.payment.methods.VaultEco());
+    }
 
 	/**
 	 * Used by the plugin to setup version
@@ -91,7 +81,6 @@ public class Methods
 	 *
 	 * @return
 	 * <code>Set<String></code> - Array of payment methods that are loaded.
-	 * @see #setMethod(org.bukkit.plugin.Plugin)
 	 */
 	public static Set<String> getDependencies()
 	{
@@ -130,7 +119,6 @@ public class Methods
 	 *
 	 * @return
 	 * <code>boolean</code>
-	 * @see #setMethod(org.bukkit.plugin.Plugin)
 	 * @see #checkDisabled(org.bukkit.plugin.Plugin)
 	 */
 	public static boolean hasMethod()
@@ -141,7 +129,6 @@ public class Methods
 	/**
 	 * Checks Plugin Class against a multitude of checks to verify it's usability as a payment method.
 	 *
-	 * @param <code>PluginManager</code> the plugin manager for the server
 	 * @return
 	 * <code>boolean</code> True on success, False on failure.
 	 */

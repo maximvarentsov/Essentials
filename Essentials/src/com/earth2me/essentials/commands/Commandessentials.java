@@ -2,23 +2,23 @@ package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.EssentialsUpgrade;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.UserMap;
-import com.earth2me.essentials.metrics.Metrics;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.NumberUtil;
 import com.google.common.base.Charsets;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+
+import static com.earth2me.essentials.I18n.tl;
 
 // This command has 4 undocumented behaviours #EasterEgg
 public class Commandessentials extends EssentialsCommand
@@ -28,7 +28,7 @@ public class Commandessentials extends EssentialsCommand
 		super("essentials");
 	}
 	private transient int taskid;
-	private final transient Map<Player, Block> noteBlocks = new HashMap<Player, Block>();
+	private final transient Map<Player, Block> noteBlocks = new HashMap<>();
 
 	@Override
 	public void run(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception
@@ -52,10 +52,6 @@ public class Commandessentials extends EssentialsCommand
 		else if (args[0].equalsIgnoreCase("reset"))
 		{
 			run_reset(server, sender, commandLabel, args);
-		}
-		else if (args[0].equalsIgnoreCase("opt-out"))
-		{
-			run_optout(server, sender, commandLabel, args);
 		}
 		else if (args[0].equalsIgnoreCase("cleanup"))
 		{
@@ -233,28 +229,6 @@ public class Commandessentials extends EssentialsCommand
 			{
 				sender.getSender().sendMessage(consoleMoo);
 			}
-		}
-	}
-
-	private void run_optout(final Server server, final CommandSource sender, final String command, final String args[])
-	{
-		final Metrics metrics = ess.getMetrics();
-		try
-		{
-			sender.sendMessage("Essentials collects simple metrics to highlight which features to concentrate work on in the future.");
-			if (metrics.isOptOut())
-			{
-				metrics.enable();
-			}
-			else
-			{
-				metrics.disable();
-			}
-			sender.sendMessage("Anonymous Metrics are now " + (metrics.isOptOut() ? "disabled" : "enabled") + " for all plugins.");
-		}
-		catch (IOException ex)
-		{
-			sender.sendMessage("Unable to modify 'plugins/PluginMetrics/config.yml': " + ex.getMessage());
 		}
 	}
 

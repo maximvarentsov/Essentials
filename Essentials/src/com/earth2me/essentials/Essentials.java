@@ -17,15 +17,7 @@
  */
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
-import com.earth2me.essentials.commands.EssentialsCommand;
-import com.earth2me.essentials.commands.IEssentialsCommand;
-import com.earth2me.essentials.commands.NoChargeException;
-import com.earth2me.essentials.commands.NotEnoughArgumentsException;
-import com.earth2me.essentials.commands.QuietAbortException;
-import com.earth2me.essentials.metrics.Metrics;
-import com.earth2me.essentials.metrics.MetricsListener;
-import com.earth2me.essentials.metrics.MetricsStarter;
+import com.earth2me.essentials.commands.*;
 import com.earth2me.essentials.perm.PermissionsHandler;
 import com.earth2me.essentials.register.payment.Methods;
 import com.earth2me.essentials.signs.SignBlockListener;
@@ -35,31 +27,16 @@ import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.utils.DateUtil;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.ess3.api.Economy;
 import net.ess3.api.IEssentials;
 import net.ess3.api.IItemDb;
-import net.ess3.api.IJails;
 import net.ess3.api.ISettings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.command.BlockCommandSender;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -78,18 +55,25 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.yaml.snakeyaml.error.YAMLException;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.earth2me.essentials.I18n.tl;
+
 
 public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 {
-	public static final int BUKKIT_VERSION = 3050;
 	private static final Logger LOGGER = Logger.getLogger("Essentials");
 	private transient ISettings settings;
-	private final transient TNTExplodeListener tntListener = new TNTExplodeListener(this);
-	private transient Jails jails;
 	private transient Warps warps;
 	private transient Worth worth;
 	private transient List<IConf> confList;
-	private transient Backup backup;
 	private transient ItemDb itemDb;
 	private transient final Methods paymentMethod = new Methods();
 	private transient PermissionsHandler permissionsHandler;
@@ -97,9 +81,8 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 	private transient UserMap userMap;
 	private transient ExecuteTimer execTimer;
 	private transient I18n i18n;
-	private transient Metrics metrics;
 	private transient EssentialsTimer timer;
-	private final transient List<String> vanishedPlayers = new ArrayList<String>();
+	private final transient List<String> vanishedPlayers = new ArrayList<>();
 
 	public Essentials()
 	{
@@ -137,8 +120,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 		userMap = new UserMap(this);
 		permissionsHandler = new PermissionsHandler(this, false);
 		Economy.setEss(this);
-		confList = new ArrayList<IConf>();
-		jails = new Jails(this);
+		confList = new ArrayList<>();
 		registerListeners(server.getPluginManager());
 	}
 
@@ -157,29 +139,12 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 			for (Plugin plugin : pm.getPlugins())
 			{
 				if (plugin.getDescription().getName().startsWith("Essentials")
-					&& !plugin.getDescription().getVersion().equals(this.getDescription().getVersion())
-					&& !plugin.getDescription().getName().equals("EssentialsAntiCheat"))
+					&& !plugin.getDescription().getVersion().equals(this.getDescription().getVersion()))
 				{
 					LOGGER.log(Level.WARNING, tl("versionMismatch", plugin.getDescription().getName()));
 				}
 			}
-			final Matcher versionMatch = Pattern.compile("git-Bukkit-(?:(?:[0-9]+)\\.)+[0-9]+-R[\\.0-9]+-(?:[0-9]+-g[0-9a-f]+-)?b([0-9]+)jnks.*").matcher(getServer().getVersion());
-			if (versionMatch.matches())
-			{
-				final int versionNumber = Integer.parseInt(versionMatch.group(1));
-				if (versionNumber < BUKKIT_VERSION && versionNumber > 100)
-				{
-					wrongVersion();
-					this.setEnabled(false);
-					return;
-				}
-			}
-			else
-			{
-				LOGGER.log(Level.INFO, tl("bukkitFormatChanged"));
-				LOGGER.log(Level.INFO, getServer().getVersion());
-				LOGGER.log(Level.INFO, getServer().getBukkitVersion());
-			}
+
 			execTimer.mark("BukkitCheck");
 			try
 			{
@@ -204,8 +169,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 				itemDb = new ItemDb(this);
 				confList.add(itemDb);
 				execTimer.mark("Init(Worth/ItemDB)");
-				jails = new Jails(this);
-				confList.add(jails);
 				reload();
 			}
 			catch (YAMLException exception)
@@ -221,7 +184,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 				handleCrash(exception);
 				return;
 			}
-			backup = new Backup(this);
 			permissionsHandler = new PermissionsHandler(this, settings.useBukkitPermissions());
 			alternativeCommandsHandler = new AlternativeCommandsHandler(this);
 
@@ -230,17 +192,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 
 			Economy.setEss(this);
 			execTimer.mark("RegHandler");
-
-			final MetricsStarter metricsStarter = new MetricsStarter(this);
-			if (metricsStarter.getStart() != null && metricsStarter.getStart() == true)
-			{
-				runTaskLaterAsynchronously(metricsStarter, 1);
-			}
-			else if (metricsStarter.getStart() != null && metricsStarter.getStart() == false)
-			{
-				final MetricsListener metricsListener = new MetricsListener(this, metricsStarter);
-				pm.registerEvents(metricsListener, this);
-			}
 
 			final String timeroutput = execTimer.end();
 			if (getSettings().isDebug())
@@ -298,10 +249,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 
 		final EssentialsWorldListener worldListener = new EssentialsWorldListener(this);
 		pm.registerEvents(worldListener, this);
-
-		pm.registerEvents(tntListener, this);
-
-		jails.resetListener();
 	}
 
 	@Override
@@ -321,10 +268,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 		if (i18n != null)
 		{
 			i18n.onDisable();
-		}
-		if (backup != null)
-		{
-			backup.stopTask();
 		}
 		Economy.setEss(null);
 		Trade.closeLog();
@@ -570,24 +513,10 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 		}
 	}
 
-	public static void wrongVersion()
-	{
-		LOGGER.log(Level.SEVERE, " * ! * ! * ! * ! * ! * ! * ! * ! * ! * ! * ! * ! *");
-		LOGGER.log(Level.SEVERE, tl("notRecommendedBukkit"));
-		LOGGER.log(Level.SEVERE, tl("requiredBukkit", Integer.toString(BUKKIT_VERSION)));
-		LOGGER.log(Level.SEVERE, " * ! * ! * ! * ! * ! * ! * ! * ! * ! * ! * ! * ! *");
-	}
-
 	@Override
 	public BukkitScheduler getScheduler()
 	{
 		return this.getServer().getScheduler();
-	}
-
-	@Override
-	public IJails getJails()
-	{
-		return jails;
 	}
 
 	@Override
@@ -600,24 +529,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 	public Worth getWorth()
 	{
 		return worth;
-	}
-
-	@Override
-	public Backup getBackup()
-	{
-		return backup;
-	}
-
-	@Override
-	public Metrics getMetrics()
-	{
-		return metrics;
-	}
-
-	@Override
-	public void setMetrics(Metrics metrics)
-	{
-		this.metrics = metrics;
 	}
 
 	@Deprecated
@@ -841,12 +752,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 	}
 
 	@Override
-	public TNTExplodeListener getTNTListener()
-	{
-		return tntListener;
-	}
-
-	@Override
 	public PermissionsHandler getPermissionsHandler()
 	{
 		return permissionsHandler;
@@ -901,7 +806,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 		@EventHandler(priority = EventPriority.LOW)
 		public void onWorldLoad(final WorldLoadEvent event)
 		{
-			ess.getJails().onReload();
 			ess.getWarps().reloadConfig();
 			for (IConf iConf : ((Essentials)ess).confList)
 			{
@@ -915,9 +819,8 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 		@EventHandler(priority = EventPriority.LOW)
 		public void onWorldUnload(final WorldUnloadEvent event)
 		{
-			ess.getJails().onReload();
 			ess.getWarps().reloadConfig();
-			for (IConf iConf : ((Essentials)ess).confList)
+            for (IConf iConf : ((Essentials)ess).confList)
 			{
 				if (iConf instanceof IEssentialsModule)
 				{

@@ -1,13 +1,5 @@
 package com.earth2me.essentials.utils;
 
-import com.earth2me.essentials.Essentials;
-import static com.earth2me.essentials.I18n.tl;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import net.ess3.api.IUser;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -16,6 +8,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.*;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class LocationUtil
@@ -68,7 +64,6 @@ public class LocationUtil
 		}
 		catch (java.lang.NoSuchFieldError e)
 		{
-			Essentials.wrongVersion();
 		}
 
 		for (Integer integer : HOLLOW_MATERIALS)

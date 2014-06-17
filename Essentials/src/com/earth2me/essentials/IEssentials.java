@@ -1,13 +1,9 @@
 package com.earth2me.essentials;
 
 import com.earth2me.essentials.api.IItemDb;
-import com.earth2me.essentials.api.IJails;
 import com.earth2me.essentials.api.IWarps;
-import com.earth2me.essentials.metrics.Metrics;
 import com.earth2me.essentials.perm.PermissionsHandler;
 import com.earth2me.essentials.register.payment.Methods;
-import java.util.List;
-import java.util.UUID;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -15,6 +11,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.List;
+import java.util.UUID;
 
 
 public interface IEssentials extends Plugin
@@ -50,13 +49,9 @@ public interface IEssentials extends Plugin
 
 	BukkitScheduler getScheduler();
 
-	IJails getJails();
-
 	IWarps getWarps();
 
 	Worth getWorth();
-
-	Backup getBackup();
 
 	Methods getPaymentMethod();
 
@@ -72,8 +67,6 @@ public interface IEssentials extends Plugin
 
 	int scheduleSyncRepeatingTask(Runnable run, long delay, long period);
 
-	TNTExplodeListener getTNTListener();
-
 	PermissionsHandler getPermissionsHandler();
 
 	AlternativeCommandsHandler getAlternativeCommandsHandler();
@@ -83,10 +76,6 @@ public interface IEssentials extends Plugin
 	IItemDb getItemDb();
 
 	UserMap getUserMap();
-
-	Metrics getMetrics();
-
-	void setMetrics(Metrics metrics);
 
 	EssentialsTimer getTimer();
 
