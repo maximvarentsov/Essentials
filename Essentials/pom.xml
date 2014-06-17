@@ -48,6 +48,7 @@
 		<url>http://ci.ess3.net/</url>
 	</ciManagement>
     <build>
+        <finalName>${artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

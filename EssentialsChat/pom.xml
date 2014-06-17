@@ -41,6 +41,10 @@
 		<url>http://ci.ess3.net/</url>
 	</ciManagement>
 
+    <build>
+        <finalName>${artifactId}</finalName>
+    </build>
+
 	<dependencies>
 		<dependency>
 			<groupId>net.ess3</groupId>
