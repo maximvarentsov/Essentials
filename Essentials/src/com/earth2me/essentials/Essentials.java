@@ -32,7 +32,6 @@ import net.ess3.api.IEssentials;
 import net.ess3.api.IItemDb;
 import net.ess3.api.ISettings;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -329,26 +328,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 	@Override
 	public boolean onCommandEssentials(final CommandSender cSender, final Command command, final String commandLabel, final String[] args, final ClassLoader classLoader, final String commandPath, final String permissionPrefix, final IEssentialsModule module)
 	{
-		// Allow plugins to override the command via onCommand
-		if (!getSettings().isCommandOverridden(command.getName()) && (!commandLabel.startsWith("e") || commandLabel.equalsIgnoreCase(command.getName())))
-		{
-			final PluginCommand pc = alternativeCommandsHandler.getAlternative(commandLabel);
-			if (pc != null)
-			{
-				alternativeCommandsHandler.executed(commandLabel, pc);
-				try
-				{
-					return pc.execute(cSender, commandLabel, args);
-				}
-				catch (final Exception ex)
-				{
-					Bukkit.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
-					cSender.sendMessage(ChatColor.RED + "An internal error occurred while attempting to perform this command");
-					return true;
-				}
-			}
-		}
-
 		try
 		{
 
