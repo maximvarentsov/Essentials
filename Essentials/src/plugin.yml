@@ -135,10 +135,6 @@ commands:
     description: Searches for an item.
     usage: /<command> <item>
     aliases: [dura,durability,itemno]
-  jump:
-    description: Jumps to the nearest block in the line of sight.
-    usage: /<command>
-    aliases: [j,jumpto]
   kick:
     description: Kicks a specified player with a reason.
     usage: /<command> <player> [reason]
