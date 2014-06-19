@@ -1,9 +1,10 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class Commandafk extends EssentialsCommand
@@ -44,28 +45,15 @@ public class Commandafk extends EssentialsCommand
 	private void toggleAfk(User user)
 	{
 		user.setDisplayNick();
-		String msg = "";
 		if (!user.toggleAfk())
 		{
-			//user.sendMessage(_("markedAsNotAway"));
-			if (!user.isHidden())
-			{
-				msg = tl("userIsNotAway", user.getDisplayName());
-			}
 			user.updateActivity(false);
+            user.sendMessage(tl("userIsNotAway", user.getDisplayName()));
 		}
 		else
-		{
-			//user.sendMessage(_("markedAsAway"));
-			if (!user.isHidden())
-			{
-				msg = tl("userIsAway", user.getDisplayName());
-			}
-		}
-		if (!msg.isEmpty())
-		{
-			ess.broadcastMessage(user, msg);
-		}
+        {
+            user.sendMessage(tl("userIsAway", user.getDisplayName()));
+        }
 	}
 }
 
