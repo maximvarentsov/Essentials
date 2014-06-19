@@ -1,6 +1,5 @@
 package com.earth2me.essentials.spawn;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.Kit;
 import com.earth2me.essentials.OfflinePlayer;
 import com.earth2me.essentials.User;
@@ -8,11 +7,6 @@ import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextPager;
 import net.ess3.api.IEssentials;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -20,6 +14,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class EssentialsSpawnPlayerListener implements Listener

@@ -1,24 +1,25 @@
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.commands.IEssentialsCommand;
 import com.earth2me.essentials.signs.EssentialsSign;
 import com.earth2me.essentials.signs.Signs;
 import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.utils.FormatUtil;
+import net.ess3.api.IEssentials;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.MemoryConfiguration;
+import org.bukkit.event.EventPriority;
+import org.bukkit.inventory.ItemStack;
+
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.ess3.api.IEssentials;
-import org.bukkit.ChatColor;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.event.EventPriority;
-import org.bukkit.inventory.ItemStack;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class Settings implements net.ess3.api.ISettings
