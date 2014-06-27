@@ -1,12 +1,7 @@
 package com.earth2me.essentials.signs;
 
 import com.earth2me.essentials.*;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.utils.NumberUtil;
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
 import net.ess3.api.IEssentials;
 import net.ess3.api.MaxMoneyException;
 import net.ess3.api.events.SignBreakEvent;
@@ -20,10 +15,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
+
+import static com.earth2me.essentials.I18n.tl;
+
 
 public class EssentialsSign
 {
-	private static final Set<Material> EMPTY_SET = new HashSet<Material>();
+	private static final Set<Material> EMPTY_SET = new HashSet<>();
 	protected static final BigDecimal MINTRANSACTION = new BigDecimal("0.01");
 	protected transient final String signName;
 
