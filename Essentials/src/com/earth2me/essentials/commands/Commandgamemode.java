@@ -1,15 +1,17 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
-import java.util.List;
-import java.util.Locale;
 import org.bukkit.GameMode;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+import java.util.Locale;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandgamemode extends EssentialsCommand
 {
 	public Commandgamemode()
@@ -106,7 +108,7 @@ public class Commandgamemode extends EssentialsCommand
 
 	private GameMode matchGameMode(String modeString) throws NotEnoughArgumentsException
 	{
-		GameMode mode = null;
+		GameMode mode;
 		if (modeString.equalsIgnoreCase("gmc") || modeString.equalsIgnoreCase("egmc")
 			|| modeString.contains("creat") || modeString.equalsIgnoreCase("1") || modeString.equalsIgnoreCase("c"))
 		{

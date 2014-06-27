@@ -1,10 +1,8 @@
 package com.earth2me.essentials.commands;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.MetaItemStack;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.NumberUtil;
-import java.util.regex.Pattern;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -13,6 +11,8 @@ import org.bukkit.entity.Firework;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.util.Vector;
+
+import static com.earth2me.essentials.I18n.tl;
 
 //This command has quite a complicated syntax, in theory it has 4 seperate syntaxes which are all variable:
 //
@@ -30,6 +30,7 @@ import org.bukkit.util.Vector;
 //4: Possible Shapes:              star, ball, large, creeper, burst
 //4: Possible Effects              trail, twinkle
 
+@SuppressWarnings("unused")
 public class Commandfirework extends EssentialsCommand
 {
 

@@ -1,6 +1,5 @@
 package com.earth2me.essentials.commands;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.craftbukkit.InventoryWorkaround;
 import org.bukkit.Material;
@@ -8,6 +7,8 @@ import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import static com.earth2me.essentials.I18n.tl;
+@SuppressWarnings("unused")
 public class Commandskull extends EssentialsCommand
 {
 	public Commandskull()
@@ -31,7 +32,7 @@ public class Commandskull extends EssentialsCommand
 		}
 
 		ItemStack itemSkull = user.getBase().getItemInHand();
-		SkullMeta metaSkull = null;
+		SkullMeta metaSkull;
 		boolean spawn = false;
 
 		if (itemSkull != null && itemSkull.getType() == Material.SKULL_ITEM && itemSkull.getDurability() == 3) {

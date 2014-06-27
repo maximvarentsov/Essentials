@@ -21,6 +21,7 @@ import java.util.UUID;
 import static com.earth2me.essentials.I18n.tl;
 
 // This command has 4 undocumented behaviours #EasterEgg
+@SuppressWarnings("unused")
 public class Commandessentials extends EssentialsCommand
 {
 	public Commandessentials()
@@ -117,7 +118,7 @@ public class Commandessentials extends EssentialsCommand
 
 	private void run_nya(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception
 	{
-		final Map<String, Float> noteMap = new HashMap<String, Float>();
+		final Map<String, Float> noteMap = new HashMap<>();
 		noteMap.put("1F#", 0.5f);
 		noteMap.put("1G", 0.53f);
 		noteMap.put("1G#", 0.56f);
@@ -249,58 +250,53 @@ public class Commandessentials extends EssentialsCommand
 		final int bansArg = args.length >= 5 && NumberUtil.isInt(args[4]) ? Integer.parseInt(args[4]) : 0;
 		final UserMap userMap = ess.getUserMap();
 
-		ess.runTaskAsynchronously(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Long currTime = System.currentTimeMillis();
-				for (UUID u : userMap.getAllUniqueUsers())
-				{
-					final User user = ess.getUserMap().getUser(u);
-					if (user == null)
-					{
-						continue;
-					}
+		ess.runTaskAsynchronously(() -> {
+            Long currTime = System.currentTimeMillis();
+            for (UUID u : userMap.getAllUniqueUsers())
+            {
+                final User user = ess.getUserMap().getUser(u);
+                if (user == null)
+                {
+                    continue;
+                }
 
-					int ban = user.getBanReason().isEmpty() ? 0 : 1;
+                int ban = user.getBanReason().isEmpty() ? 0 : 1;
 
-					long lastLog = user.getLastLogout();
-					if (lastLog == 0)
-					{
-						lastLog = user.getLastLogin();
-					}
-					if (lastLog == 0)
-					{
-						user.setLastLogin(currTime);
-					}
+                long lastLog = user.getLastLogout();
+                if (lastLog == 0)
+                {
+                    lastLog = user.getLastLogin();
+                }
+                if (lastLog == 0)
+                {
+                    user.setLastLogin(currTime);
+                }
 
-					if (user.isNPC())
-					{
-						continue;
-					}
+                if (user.isNPC())
+                {
+                    continue;
+                }
 
-					long timeDiff = currTime - lastLog;
-					long milliDays = daysArg * 24L * 60L * 60L * 1000L;
-					int homeCount = user.getHomes().size();
-					double moneyCount = user.getMoney().doubleValue();
+                long timeDiff = currTime - lastLog;
+                long milliDays = daysArg * 24L * 60L * 60L * 1000L;
+                int homeCount = user.getHomes().size();
+                double moneyCount = user.getMoney().doubleValue();
 
-					if ((lastLog == 0) || (ban > bansArg) || (timeDiff < milliDays)
-						|| (homeCount > homesArg) || (moneyCount > moneyArg))
-					{
-						continue;
-					}
+                if ((lastLog == 0) || (ban > bansArg) || (timeDiff < milliDays)
+                    || (homeCount > homesArg) || (moneyCount > moneyArg))
+                {
+                    continue;
+                }
 
-					if (ess.getSettings().isDebug())
-					{
-						ess.getLogger().info("Deleting user: " + user.getName() + " Money: " + moneyCount + " Homes: " + homeCount + " Last seen: " + DateUtil.formatDateDiff(lastLog));
-					}
+                if (ess.getSettings().isDebug())
+                {
+                    ess.getLogger().info("Deleting user: " + user.getName() + " Money: " + moneyCount + " Homes: " + homeCount + " Last seen: " + DateUtil.formatDateDiff(lastLog));
+                }
 
-					user.reset();
-				}
-				sender.sendMessage(tl("cleaned"));
-			}
-		});
+                user.reset();
+            }
+            sender.sendMessage(tl("cleaned"));
+        });
 
 	}
 

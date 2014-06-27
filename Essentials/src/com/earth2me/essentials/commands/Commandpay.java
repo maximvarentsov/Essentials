@@ -2,14 +2,16 @@ package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.ChargeException;
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
-import java.math.BigDecimal;
 import net.ess3.api.MaxMoneyException;
 import org.bukkit.Server;
 
+import java.math.BigDecimal;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandpay extends EssentialsLoopCommand
 {
 	BigDecimal amount;

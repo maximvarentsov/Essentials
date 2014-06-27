@@ -1,14 +1,16 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
-import java.util.Locale;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
+import java.util.Locale;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandrealname extends EssentialsCommand
 {
 	public Commandrealname()

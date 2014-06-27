@@ -1,15 +1,17 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.PlayerList;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.NumberUtil;
-import java.util.*;
 import org.bukkit.Server;
 
+import java.util.*;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandlist extends EssentialsCommand
 {
 	public Commandlist()
@@ -44,7 +46,7 @@ public class Commandlist extends EssentialsCommand
 	private void sendGroupedList(CommandSource sender, String commandLabel, Map<String, List<User>> playerList)
 	{
 		final Set<String> configGroups = ess.getSettings().getListGroupConfig().keySet();
-		final List<String> asterisk = new ArrayList<String>();
+		final List<String> asterisk = new ArrayList<>();
 
 		// Loop through the custom defined groups and display them
 		for (String oConfigGroup : configGroups)
@@ -66,7 +68,7 @@ public class Commandlist extends EssentialsCommand
 				continue;
 			}
 
-			List<User> outputUserList = new ArrayList<User>();
+			List<User> outputUserList = new ArrayList<>();
 			final List<User> matchedList = playerList.get(configGroup);
 
 			// If the group value is an int, then we might need to truncate it
@@ -100,13 +102,14 @@ public class Commandlist extends EssentialsCommand
 			sender.sendMessage(PlayerList.outputFormat(oConfigGroup, PlayerList.listUsers(ess, outputUserList, ", ")));
 		}
 
-		String[] onlineGroups = playerList.keySet().toArray(new String[0]);
+        Set<String> strings = playerList.keySet();
+        String[] onlineGroups = strings.toArray(new String[strings.size()]);
 		Arrays.sort(onlineGroups, String.CASE_INSENSITIVE_ORDER);
 
 		// If we have an asterisk group, then merge all remaining groups
 		if (!asterisk.isEmpty())
 		{
-			List<User> asteriskUsers = new ArrayList<User>();
+			List<User> asteriskUsers = new ArrayList<>();
 			for (String onlineGroup : onlineGroups)
 			{
 				asteriskUsers.addAll(playerList.get(onlineGroup));
@@ -115,7 +118,7 @@ public class Commandlist extends EssentialsCommand
 			{
 				playerList.put(key, asteriskUsers);
 			}
-			onlineGroups = asterisk.toArray(new String[0]);
+			onlineGroups = asterisk.toArray(new String[asterisk.size()]);
 		}
 
 		// If we have any groups remaining after the custom groups loop through and display them

@@ -1,16 +1,21 @@
 package com.earth2me.essentials.commands;
 
-import com.earth2me.essentials.*;
-import static com.earth2me.essentials.I18n.tl;
+import com.earth2me.essentials.CommandSource;
+import com.earth2me.essentials.IEssentialsModule;
+import com.earth2me.essentials.Trade;
+import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
-import java.util.logging.Logger;
 import net.ess3.api.IEssentials;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
+import java.util.logging.Logger;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public abstract class EssentialsCommand implements IEssentialsCommand
@@ -220,11 +225,7 @@ public abstract class EssentialsCommand implements IEssentialsCommand
 			return !interactee.isHidden();
 		}
 
-		if (interactor.equals(interactee))
-		{
-			return true;
-		}
+        return interactor.equals(interactee) || interactor.getBase().canSee(interactee.getBase());
 
-		return interactor.getBase().canSee(interactee.getBase());
-	}
+    }
 }

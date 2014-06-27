@@ -1,11 +1,12 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 
+import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings("unused")
 public class Commandvanish extends EssentialsToggleCommand
 {
 	public Commandvanish()
@@ -55,7 +56,7 @@ public class Commandvanish extends EssentialsToggleCommand
 		user.setVanished(enabled);
 		user.sendMessage(tl("vanish", user.getDisplayName(), enabled ? tl("enabled") : tl("disabled")));
 
-		if (enabled == true)
+		if (enabled)
 		{
 			user.sendMessage(tl("vanished"));
 		}

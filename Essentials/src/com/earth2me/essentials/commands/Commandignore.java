@@ -1,10 +1,11 @@
 package com.earth2me.essentials.commands;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 
+import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings("unused")
 public class Commandignore extends EssentialsCommand
 {
 	public Commandignore()

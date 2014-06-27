@@ -1,15 +1,17 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.craftbukkit.SetExpFix;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.NumberUtil;
-import java.util.Locale;
 import org.bukkit.Server;
 
+import java.util.Locale;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandwhois extends EssentialsCommand
 {
 	public Commandwhois()
@@ -41,7 +43,7 @@ public class Commandwhois extends EssentialsCommand
 		sender.sendMessage(tl("whoisIPAddress", user.getBase().getAddress().getAddress().toString()));
 		final String location = user.getGeoLocation();
 		if (location != null
-			&& (sender.isPlayer() ? ess.getUser(sender.getPlayer()).isAuthorized("essentials.geoip.show") : true))
+			&& (!sender.isPlayer() || ess.getUser(sender.getPlayer()).isAuthorized("essentials.geoip.show")))
 		{
 			sender.sendMessage(tl("whoisGeoLocation", location));
 		}

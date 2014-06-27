@@ -3,7 +3,7 @@ package com.earth2me.essentials.commands;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 
-
+@SuppressWarnings("unused")
 public class Commandenderchest extends EssentialsCommand
 {
 	public Commandenderchest()

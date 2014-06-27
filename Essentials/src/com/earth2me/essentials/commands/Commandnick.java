@@ -1,15 +1,17 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
-import java.util.Locale;
 import net.ess3.api.events.NickChangeEvent;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
+import java.util.Locale;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandnick extends EssentialsLoopCommand
 {
 	public Commandnick()
@@ -117,11 +119,8 @@ public class Commandnick extends EssentialsLoopCommand
 				return true;
 			}
 		}
-		if (ess.getUser(lowerNick) != null && ess.getUser(lowerNick) != target) {
-				return true;
-		}
-		return false;
-	}
+        return ess.getUser(lowerNick) != null && ess.getUser(lowerNick) != target;
+    }
 
 	private void setNickname(final Server server, final CommandSource sender, final User target, final String nickname)
 	{

@@ -4,7 +4,7 @@ import com.earth2me.essentials.User;
 import org.bukkit.Server;
 import org.bukkit.inventory.Inventory;
 
-
+@SuppressWarnings("unused")
 public class Commandinvsee extends EssentialsCommand
 {
 	public Commandinvsee()

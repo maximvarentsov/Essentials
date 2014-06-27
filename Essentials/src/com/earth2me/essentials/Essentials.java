@@ -26,7 +26,6 @@ import com.earth2me.essentials.signs.SignPlayerListener;
 import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
-import com.earth2me.essentials.utils.DateUtil;
 import net.ess3.api.Economy;
 import net.ess3.api.IEssentials;
 import net.ess3.api.IItemDb;
@@ -404,19 +403,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 			{
 				LOGGER.log(Level.INFO, tl("deniedAccessCommand", user.getName()));
 				user.sendMessage(tl("noAccessCommand"));
-				return true;
-			}
-
-			if (user != null && user.isJailed() && !user.isAuthorized(cmd, "essentials.jail.allow."))
-			{
-				if (user.getJailTimeout() > 0)
-				{
-					user.sendMessage(tl("playerJailedFor", user.getName(), DateUtil.formatDateDiff(user.getJailTimeout())));
-				}
-				else
-				{
-					user.sendMessage(tl("jailMessage"));
-				}
 				return true;
 			}
 

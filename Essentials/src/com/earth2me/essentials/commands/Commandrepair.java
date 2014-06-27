@@ -1,17 +1,21 @@
 package com.earth2me.essentials.commands;
 
-import com.earth2me.essentials.*;
-import static com.earth2me.essentials.I18n.tl;
+import com.earth2me.essentials.ChargeException;
+import com.earth2me.essentials.Trade;
+import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.StringUtil;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 import net.ess3.api.IUser;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandrepair extends EssentialsCommand
 {
 	public Commandrepair()
@@ -68,7 +72,7 @@ public class Commandrepair extends EssentialsCommand
 
 	public void repairAll(User user) throws Exception
 	{
-		final List<String> repaired = new ArrayList<String>();
+		final List<String> repaired = new ArrayList<>();
 		repairItems(user.getBase().getInventory().getContents(), user, repaired);
 
 		if (user.isAuthorized("essentials.repair.armor"))

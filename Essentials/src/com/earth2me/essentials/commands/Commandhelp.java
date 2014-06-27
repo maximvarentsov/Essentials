@@ -10,7 +10,7 @@ import java.util.Locale;
 
 import static com.earth2me.essentials.I18n.tl;
 
-
+@SuppressWarnings("unused")
 public class Commandhelp extends EssentialsCommand
 {
 	public Commandhelp()

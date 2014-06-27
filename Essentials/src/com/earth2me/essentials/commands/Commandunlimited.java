@@ -1,14 +1,16 @@
 package com.earth2me.essentials.commands;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
-import java.util.List;
-import java.util.Locale;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+import java.util.Locale;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandunlimited extends EssentialsCommand
 {
 	public Commandunlimited()
@@ -44,7 +46,7 @@ public class Commandunlimited extends EssentialsCommand
 			while (itemList.size() > index)
 			{
 				final Integer item = itemList.get(index);
-				if (toggleUnlimited(user, target, item.toString()) == false)
+				if (!toggleUnlimited(user, target, item.toString()))
 				{
 					index++;
 				}

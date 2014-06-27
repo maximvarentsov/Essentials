@@ -1,14 +1,15 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings("unused")
 public class Commandnear extends EssentialsCommand
 {
 	public Commandnear()
@@ -42,7 +43,7 @@ public class Commandnear extends EssentialsCommand
 				{
 					otherUser = getPlayer(server, user, args, 0);
 				}
-				catch (Exception ex)
+				catch (Exception ignore)
 				{
 				}
 			}
@@ -52,7 +53,7 @@ public class Commandnear extends EssentialsCommand
 				{
 					radius = Long.parseLong(args[1]);
 				}
-				catch (NumberFormatException e)
+				catch (NumberFormatException ignore)
 				{
 				}
 			}
@@ -88,7 +89,7 @@ public class Commandnear extends EssentialsCommand
 			{
 				radius = Long.parseLong(args[1]);
 			}
-			catch (NumberFormatException e)
+			catch (NumberFormatException ignore)
 			{
 			}
 		}

@@ -1,12 +1,13 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 import org.bukkit.entity.LightningStrike;
 
+import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings("unused")
 public class Commandlightning extends EssentialsLoopCommand
 {
 	int power = 5;
@@ -36,7 +37,7 @@ public class Commandlightning extends EssentialsLoopCommand
 			{
 				power = Integer.parseInt(args[1]);
 			}
-			catch (NumberFormatException ex)
+			catch (NumberFormatException ignore)
 			{
 			}
 		}

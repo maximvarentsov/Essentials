@@ -1,17 +1,17 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.StringUtil;
 import org.bukkit.Server;
 
 import java.util.List;
-
 import java.util.UUID;
 
+import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings("unused")
 public class Commandmail extends EssentialsCommand
 {
 	private static int mailsPerMinute = 0;
@@ -34,10 +34,7 @@ public class Commandmail extends EssentialsCommand
 				user.sendMessage(tl("noMail"));
 				throw new NoChargeException();
 			}
-			for (String messages : mail)
-			{
-				user.sendMessage(messages);
-			}
+            mail.forEach(user::sendMessage);
 			user.sendMessage(tl("mailClear"));
 			return;
 		}

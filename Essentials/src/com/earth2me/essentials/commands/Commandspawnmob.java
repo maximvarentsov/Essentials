@@ -1,15 +1,17 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.Mob;
 import com.earth2me.essentials.SpawnMob;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.StringUtil;
-import java.util.List;
 import org.bukkit.Server;
 
+import java.util.List;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandspawnmob extends EssentialsCommand
 {
 	public Commandspawnmob()

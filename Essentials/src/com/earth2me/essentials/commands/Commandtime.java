@@ -1,15 +1,17 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.DescParseTickFormat;
 import com.earth2me.essentials.utils.NumberUtil;
-import java.util.*;
 import org.bukkit.Server;
 import org.bukkit.World;
 
+import java.util.*;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandtime extends EssentialsCommand
 {
 	public Commandtime()
@@ -21,7 +23,7 @@ public class Commandtime extends EssentialsCommand
 	public void run(final Server server, final CommandSource sender, final String commandLabel, final String[] args) throws Exception
 	{
 		boolean add = false;
-		final List<String> argList = new ArrayList<String>(Arrays.asList(args));
+		final List<String> argList = new ArrayList<>(Arrays.asList(args));
 		if (argList.remove("set") && !argList.isEmpty() && NumberUtil.isInt(argList.get(0)))
 		{
 			argList.set(0, argList.get(0) + "t");
@@ -31,7 +33,7 @@ public class Commandtime extends EssentialsCommand
 			add = true;
 			argList.set(0, argList.get(0) + "t");
 		}
-		final String[] validArgs = argList.toArray(new String[0]);
+		final String[] validArgs = argList.toArray(new String[argList.size()]);
 
 		// Which World(s) are we interested in?
 		String worldSelector = null;
@@ -137,7 +139,7 @@ public class Commandtime extends EssentialsCommand
 	 */
 	private Set<World> getWorlds(final Server server, final CommandSource sender, final String selector) throws Exception
 	{
-		final Set<World> worlds = new TreeSet<World>(new WorldNameComparator());
+		final Set<World> worlds = new TreeSet<>(new WorldNameComparator());
 
 		// If there is no selector we want the world the user is currently in. Or all worlds if it isn't a user.
 		if (selector == null)

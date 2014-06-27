@@ -1,19 +1,21 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.UserMap;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.StringUtil;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.Server;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandseen extends EssentialsCommand
 {
 	public Commandseen()
@@ -169,40 +171,35 @@ public class Commandseen extends EssentialsCommand
 
 		sender.sendMessage(tl("runningPlayerMatch", ipAddress));
 
-		ess.runTaskAsynchronously(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				final List<String> matches = new ArrayList<String>();
-				for (final UUID u : userMap.getAllUniqueUsers())
-				{
-					final User user = ess.getUserMap().getUser(u);
-					if (user == null)
-					{
-						continue;
-					}
+		ess.runTaskAsynchronously(() -> {
+            final List<String> matches = new ArrayList<>();
+            for (final UUID u : userMap.getAllUniqueUsers())
+            {
+                final User user = ess.getUserMap().getUser(u);
+                if (user == null)
+                {
+                    continue;
+                }
 
-					final String uIPAddress = user.getLastLoginAddress();
+                final String uIPAddress = user.getLastLoginAddress();
 
-					if (!uIPAddress.isEmpty() && uIPAddress.equalsIgnoreCase(ipAddress))
-					{
-						matches.add(user.getName());
-					}
-				}
+                if (!uIPAddress.isEmpty() && uIPAddress.equalsIgnoreCase(ipAddress))
+                {
+                    matches.add(user.getName());
+                }
+            }
 
-				if (matches.size() > 0)
-				{
-					sender.sendMessage(tl("matchingIPAddress"));
-					sender.sendMessage(StringUtil.joinList(matches));
-				}
-				else
-				{
-					sender.sendMessage(tl("noMatchingPlayers"));
-				}
+            if (matches.size() > 0)
+            {
+                sender.sendMessage(tl("matchingIPAddress"));
+                sender.sendMessage(StringUtil.joinList(matches));
+            }
+            else
+            {
+                sender.sendMessage(tl("noMatchingPlayers"));
+            }
 
-			}
-		});
+        });
 
 	}
 }

@@ -1,13 +1,15 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.NumberUtil;
-import java.math.BigDecimal;
 import org.bukkit.Server;
 
+import java.math.BigDecimal;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandbalance extends EssentialsCommand
 {
 	public Commandbalance()

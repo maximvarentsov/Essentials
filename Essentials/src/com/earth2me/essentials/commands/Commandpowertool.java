@@ -1,17 +1,19 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.StringUtil;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandpowertool extends EssentialsCommand
 {
 	public Commandpowertool()
@@ -104,7 +106,7 @@ public class Commandpowertool extends EssentialsCommand
 				}
 				else
 				{
-					powertools = new ArrayList<String>();
+					powertools = new ArrayList<>();
 				}
 
 				powertools.add(command);

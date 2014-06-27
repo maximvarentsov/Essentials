@@ -16,6 +16,7 @@ import static com.earth2me.essentials.I18n.tl;
 
 // This could be rewritten in a simpler form if we made a mapping of all Entity names to their types (which would also provide possible mod support)
 
+@SuppressWarnings("unused")
 public class Commandbutcher extends EssentialsCommand
 {
 	public Commandbutcher()
@@ -66,8 +67,8 @@ public class Commandbutcher extends EssentialsCommand
 
 	private void parseCommand(Server server, CommandSource sender, String[] args, World world, int radius) throws Exception
 	{
-		List<String> types = new ArrayList<String>();
-		List<String> customTypes = new ArrayList<String>();
+		List<String> types = new ArrayList<>();
+		List<String> customTypes = new ArrayList<>();
 
 		if (world == null)
 		{
@@ -113,8 +114,8 @@ public class Commandbutcher extends EssentialsCommand
 			radius *= radius;
 		}
 
-		ArrayList<ToRemove> removeTypes = new ArrayList<ToRemove>();
-		ArrayList<Mob> customRemoveTypes = new ArrayList<Mob>();
+		ArrayList<ToRemove> removeTypes = new ArrayList<>();
+		ArrayList<Mob> customRemoveTypes = new ArrayList<>();
 
 		for (String s : types)
 		{

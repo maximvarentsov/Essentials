@@ -7,7 +7,7 @@ import com.earth2me.essentials.textreader.TextInput;
 import com.earth2me.essentials.textreader.TextPager;
 import org.bukkit.Server;
 
-
+@SuppressWarnings("unused")
 public class Commandmotd extends EssentialsCommand
 {
 	public Commandmotd()

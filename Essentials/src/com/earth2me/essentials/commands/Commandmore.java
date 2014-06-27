@@ -1,12 +1,14 @@
 package com.earth2me.essentials.commands;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
-import java.util.Locale;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Locale;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandmore extends EssentialsCommand
 {
 	public Commandmore()

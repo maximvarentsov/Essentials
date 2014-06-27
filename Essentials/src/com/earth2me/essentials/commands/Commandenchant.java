@@ -1,20 +1,22 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.Enchantments;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.MetaItemStack;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.StringUtil;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandenchant extends EssentialsCommand
 {
 	public Commandenchant()
@@ -33,7 +35,7 @@ public class Commandenchant extends EssentialsCommand
 		}
 		if (args.length == 0)
 		{
-			final Set<String> enchantmentslist = new TreeSet<String>();
+			final Set<String> enchantmentslist = new TreeSet<>();
 			for (Map.Entry<String, Enchantment> entry : Enchantments.entrySet())
 			{
 				final String enchantmentName = entry.getValue().getName().toLowerCase(Locale.ENGLISH);

@@ -1,12 +1,13 @@
 package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
 import org.bukkit.World;
 
+import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings("unused")
 public class Commandweather extends EssentialsCommand
 {
 	public Commandweather()
@@ -21,12 +22,11 @@ public class Commandweather extends EssentialsCommand
 		final boolean isStorm;
 		if (args.length < 1)
 		{
-			if (commandLabel.equalsIgnoreCase("sun") || commandLabel.equalsIgnoreCase("esun"))
+			if (commandLabel.equalsIgnoreCase("sun"))
 			{
 				isStorm = false;
 			}
-			else if (commandLabel.equalsIgnoreCase("storm") || commandLabel.equalsIgnoreCase("estorm")
-					 || commandLabel.equalsIgnoreCase("rain") || commandLabel.equalsIgnoreCase("erain"))
+			else if (commandLabel.equalsIgnoreCase("storm") || commandLabel.equalsIgnoreCase("rain"))
 			{
 				isStorm = true;
 			}

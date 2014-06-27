@@ -2,15 +2,17 @@ package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.ChargeException;
 import com.earth2me.essentials.CommandSource;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.NumberUtil;
-import java.math.BigDecimal;
-import java.util.Locale;
 import net.ess3.api.MaxMoneyException;
 import org.bukkit.Server;
 
+import java.math.BigDecimal;
+import java.util.Locale;
 
+import static com.earth2me.essentials.I18n.tl;
+
+@SuppressWarnings("unused")
 public class Commandeco extends EssentialsLoopCommand
 {
 	Commandeco.EcoCommands cmd;

@@ -1,17 +1,19 @@
 package com.earth2me.essentials.commands;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.NumberUtil;
+import org.bukkit.Server;
+import org.bukkit.inventory.ItemStack;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
-import org.bukkit.Server;
-import org.bukkit.inventory.ItemStack;
 
+import static com.earth2me.essentials.I18n.tl;
 
+@SuppressWarnings("unused")
 public class Commandsell extends EssentialsCommand
 {
 	public Commandsell()
