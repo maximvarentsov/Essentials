@@ -4,11 +4,12 @@ import com.earth2me.essentials.ChargeException;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
-import java.util.Map;
-import java.util.logging.Logger;
 import org.bukkit.Server;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import java.util.Map;
+import java.util.logging.Logger;
 
 
 public abstract class EssentialsChatPlayer implements Listener
@@ -25,10 +26,6 @@ public abstract class EssentialsChatPlayer implements Listener
 		this.ess = ess;
 		this.server = server;
 		this.chatStorage = chatStorage;
-	}
-
-	public void onPlayerChat(final AsyncPlayerChatEvent event)
-	{
 	}
 
 	public boolean isAborted(final AsyncPlayerChatEvent event)
