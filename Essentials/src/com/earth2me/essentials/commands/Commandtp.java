@@ -59,8 +59,8 @@ public class Commandtp extends EssentialsCommand
 			{
 				throw new Exception(tl("teleportDisabled", target2.getDisplayName()));
 			}
-			target2.getTeleport().now(loc, false, TeleportCause.COMMAND);
 			user.sendMessage(tl("teleporting", loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
+			target2.getTeleport().now(loc, false, TeleportCause.COMMAND);
 			target2.sendMessage(tl("teleporting", loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
 			break;
 		case 2:
@@ -84,8 +84,8 @@ public class Commandtp extends EssentialsCommand
 			{
 				throw new Exception(tl("noPerm", "essentials.worlds." + toPlayer.getWorld().getName()));
 			}
-			target.getTeleport().now(toPlayer.getBase(), false, TeleportCause.COMMAND);
 			target.sendMessage(tl("teleportAtoB", user.getDisplayName(), toPlayer.getDisplayName()));
+			target.getTeleport().now(toPlayer.getBase(), false, TeleportCause.COMMAND);
 			break;
 		}
 	}
@@ -102,8 +102,8 @@ public class Commandtp extends EssentialsCommand
 		if (args.length == 2)
 		{
 			final User toPlayer = getPlayer(server, args, 1, true, false);
-			target.getTeleport().now(toPlayer.getBase(), false, TeleportCause.COMMAND);
 			target.sendMessage(tl("teleportAtoB", Console.NAME, toPlayer.getDisplayName()));
+			target.getTeleport().now(toPlayer.getBase(), false, TeleportCause.COMMAND);
 		}
 		else if (args.length > 3)
 		{
@@ -115,9 +115,9 @@ public class Commandtp extends EssentialsCommand
 				throw new NotEnoughArgumentsException(tl("teleportInvalidLocation"));
 			}
 			final Location loc = new Location(target.getWorld(), x, y, z, target.getLocation().getYaw(), target.getLocation().getPitch());
+			sender.sendMessage(tl("teleporting", loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
 			target.getTeleport().now(loc, false, TeleportCause.COMMAND);
 			target.sendMessage(tl("teleporting", loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
-			sender.sendMessage(tl("teleporting", loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
 		}
 		else
 		{
