@@ -19,9 +19,6 @@
 # +------------------------------------------------------+ #
 ############################################################
 
-# A color code between 0-9 or a-f. Set to 'none' to disable.
-ops-name-color: '4'
-
 # The character(s) to prefix all nicknames, so that you know they are not true usernames.
 nickname-prefix: '~'
 
@@ -308,10 +305,10 @@ debug: false
 
 # Set the locale for all messages.
 # If you don't set this, the default locale of the server will be used.
-# For example, to set language to English, set locale to en, to use the file "messages_en.properties".
+# For example, to set language to Russia, set locale to ru, to use the file "messages_ru.properties".
 # Don't forget to remove the # in front of the line.
 # For more information, visit http://wiki.ess3.net/wiki/Locale
-#locale: en
+#locale: ru
 
 # Turn off god mode when people leave the server.
 remove-god-on-disconnect: false

@@ -7,7 +7,6 @@ import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.utils.FormatUtil;
 import net.ess3.api.IEssentials;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.event.EventPriority;
@@ -292,7 +291,7 @@ public class Settings implements net.ess3.api.ISettings
 		}
 		else
 		{
-			socialspyCommands.addAll(Arrays.asList("msg", "r", "mail", "m", "whisper", "emsg", "t", "tell", "er", "reply", "ereply", "email", "action", "describe", "eme", "eaction", "edescribe", "etell", "ewhisper", "pm"));
+			socialspyCommands.addAll(Arrays.asList("msg", "r", "mail", "m", "whisper", "t", "tell", "reply", "email", "action", "describe",  "pm"));
 		}
 
 		return socialspyCommands;
@@ -367,37 +366,6 @@ public class Settings implements net.ess3.api.ISettings
 		}
 		return null;
 	}
-	private ChatColor operatorColor = null;
-
-	@Override
-	public ChatColor getOperatorColor()
-	{
-		return operatorColor;
-	}
-
-	private ChatColor _getOperatorColor()
-	{
-		String colorName = config.getString("ops-name-color", null);
-
-		if (colorName == null)
-		{
-			return ChatColor.DARK_RED;
-		}
-		if ("none".equalsIgnoreCase(colorName) || colorName.isEmpty())
-		{
-			return null;
-		}
-
-		try
-		{
-			return ChatColor.valueOf(colorName.toUpperCase(Locale.ENGLISH));
-		}
-		catch (IllegalArgumentException ignore)
-		{
-		}
-
-		return ChatColor.getByChar(colorName);
-	}
 
 	@Override
 	public int getSpawnMobLimit()
@@ -429,17 +397,6 @@ public class Settings implements net.ess3.api.ISettings
 		return !signsEnabled;
 	}
 
-	@Override
-	public long getBackupInterval()
-	{
-		return config.getInt("backup.interval", 1440); // 1440 = 24 * 60
-	}
-
-	@Override
-	public String getBackupCommand()
-	{
-		return config.getString("backup.command", null);
-	}
 	private final Map<String, String> chatFormats = Collections.synchronizedMap(new HashMap<>());
 
 	@Override
@@ -541,7 +498,6 @@ public class Settings implements net.ess3.api.ISettings
 		changeDisplayName = _changeDisplayName();
 		disabledCommands = getDisabledCommands();
 		nicknamePrefix = _getNicknamePrefix();
-		operatorColor = _getOperatorColor();
 		changePlayerListName = _changePlayerListName();
 		configDebug = _isDebug();
 		prefixsuffixconfigured = _isPrefixSuffixConfigured();

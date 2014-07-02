@@ -10,6 +10,7 @@ import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -35,6 +36,7 @@ public class EssentialsSpawnPlayerListener implements Listener
 		this.spawns = spawns;
 	}
 
+    @EventHandler
 	public void onPlayerRespawn(final PlayerRespawnEvent event)
 	{
 		final User user = ess.getUser(event.getPlayer());
@@ -64,12 +66,13 @@ public class EssentialsSpawnPlayerListener implements Listener
 		}
 	}
 
+    @EventHandler
 	public void onPlayerJoin(final PlayerJoinEvent event)
 	{
 		ess.runTaskAsynchronously(() -> delayedJoin(event.getPlayer()));
 	}
 
-	public void delayedJoin(Player player)
+	public void delayedJoin(final Player player)
 	{
 		if (player.hasPlayedBefore())
 		{
