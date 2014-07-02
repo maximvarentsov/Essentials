@@ -115,10 +115,6 @@ public interface IUser
 
 	void setLastTeleportTimestamp(long time);
 
-	String getJail();
-
-	void setJail(String jail);
-
 	List<String> getMails();
 
 	void addMail(String mail);

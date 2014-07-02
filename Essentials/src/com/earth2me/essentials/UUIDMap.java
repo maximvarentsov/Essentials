@@ -1,24 +1,16 @@
 package com.earth2me.essentials;
 
 import com.google.common.io.Files;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import org.bukkit.Bukkit;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
-import org.bukkit.Bukkit;
 
 
 public class UUIDMap
@@ -55,8 +47,7 @@ public class UUIDMap
 				names.clear();
 				history.clear();
 
-				final BufferedReader reader = new BufferedReader(new FileReader(userList));
-				try
+				try (BufferedReader reader = new BufferedReader(new FileReader(userList)))
 				{
 					while (true)
 					{
@@ -75,7 +66,7 @@ public class UUIDMap
 								names.put(name, uuid);
 								if (!history.containsKey(uuid))
 								{
-									final ArrayList<String> list = new ArrayList<String>();
+									final ArrayList<String> list = new ArrayList<>();
 									list.add(name);
 									history.put(uuid, list);
 								}
@@ -90,10 +81,6 @@ public class UUIDMap
 							}
 						}
 					}
-				}
-				finally
-				{
-					reader.close();
 				}
 			}
 		}
@@ -116,21 +103,17 @@ public class UUIDMap
 		}
 		try
 		{
-			Future<?> future = _writeUUIDMap();;
+			Future<?> future = _writeUUIDMap();
 			if (future != null)
 			{
 				future.get();
 			}
 		}
-		catch (InterruptedException ex)
+		catch (InterruptedException | ExecutionException ex)
 		{
 			ess.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
 		}
-		catch (ExecutionException ex)
-		{
-			ess.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
-		}
-	}
+    }
 
 	public Future<?> _writeUUIDMap()
 	{
@@ -140,8 +123,7 @@ public class UUIDMap
 			return null;
 		}
 		pendingDiskWrites.incrementAndGet();
-		Future<?> future = EXECUTOR_SERVICE.submit(new WriteRunner(ess.getDataFolder(), userList, names, pendingDiskWrites));
-		return future;
+        return EXECUTOR_SERVICE.submit(new WriteRunner(ess.getDataFolder(), userList, names, pendingDiskWrites));
 	}
 
 

@@ -1,10 +1,6 @@
 package com.earth2me.essentials.storage;
 
 import com.earth2me.essentials.utils.NumberUtil;
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,6 +15,11 @@ import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.nodes.*;
+
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 
 public class BukkitConstructor extends CustomClassLoaderConstructor
@@ -283,7 +284,7 @@ public class BukkitConstructor extends CustomClassLoaderConstructor
 			{
 				final Field typeDefField = Constructor.class.getDeclaredField("typeDefinitions");
 				typeDefField.setAccessible(true);
-				typeDefinitions = (Map<Class<? extends Object>, TypeDescription>)typeDefField.get((Constructor)BukkitConstructor.this);
+				typeDefinitions = (Map<Class<? extends Object>, TypeDescription>)typeDefField.get(BukkitConstructor.this);
 				if (typeDefinitions == null)
 				{
 					throw new NullPointerException();

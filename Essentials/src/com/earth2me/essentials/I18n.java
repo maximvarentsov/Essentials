@@ -1,5 +1,7 @@
 package com.earth2me.essentials;
 
+import net.ess3.api.IEssentials;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,8 +13,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import net.ess3.api.IEssentials;
-import org.bukkit.Bukkit;
 
 
 public class I18n implements net.ess3.api.II18n
@@ -24,7 +24,7 @@ public class I18n implements net.ess3.api.II18n
 	private transient ResourceBundle customBundle;
 	private transient ResourceBundle localeBundle;
 	private final transient ResourceBundle defaultBundle;
-	private transient Map<String, MessageFormat> messageFormatCache = new HashMap<String, MessageFormat>();
+	private transient Map<String, MessageFormat> messageFormatCache = new HashMap<>();
 	private final transient IEssentials ess;
 	private static final Pattern NODOUBLEMARK = Pattern.compile("''");
 	private static final ResourceBundle NULL_BUNDLE = new ResourceBundle()
@@ -140,7 +140,7 @@ public class I18n implements net.ess3.api.II18n
 			}
 		}
 		ResourceBundle.clearCache();
-		messageFormatCache = new HashMap<String, MessageFormat>();
+		messageFormatCache = new HashMap<>();
 		Logger.getLogger("Essentials").log(Level.INFO, String.format("Using locale %s", currentLocale.toString()));
 
 		try
@@ -191,7 +191,7 @@ public class I18n implements net.ess3.api.II18n
 				{
 					return file.toURI().toURL();
 				}
-				catch (MalformedURLException ex)
+				catch (MalformedURLException ignore)
 				{
 				}
 			}
@@ -208,7 +208,7 @@ public class I18n implements net.ess3.api.II18n
 				{
 					return new FileInputStream(file);
 				}
-				catch (FileNotFoundException ex)
+				catch (FileNotFoundException ignore)
 				{
 				}
 			}

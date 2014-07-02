@@ -1,31 +1,20 @@
 package com.earth2me.essentials.api;
 
-import com.earth2me.essentials.EssentialsConf;
 import com.earth2me.essentials.EssentialsUserConf;
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
-import static com.earth2me.essentials.api.Economy.add;
-import static com.earth2me.essentials.api.Economy.divide;
-import static com.earth2me.essentials.api.Economy.format;
-import static com.earth2me.essentials.api.Economy.getMoneyExact;
-import static com.earth2me.essentials.api.Economy.hasEnough;
-import static com.earth2me.essentials.api.Economy.hasLess;
-import static com.earth2me.essentials.api.Economy.hasMore;
-import static com.earth2me.essentials.api.Economy.multiply;
-import static com.earth2me.essentials.api.Economy.setMoney;
-import static com.earth2me.essentials.api.Economy.substract;
 import com.earth2me.essentials.utils.NumberUtil;
 import com.earth2me.essentials.utils.StringUtil;
 import com.google.common.base.Charsets;
+import net.ess3.api.IEssentials;
+import net.ess3.api.MaxMoneyException;
+
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.ess3.api.IEssentials;
-import net.ess3.api.MaxMoneyException;
 
 
 /**
@@ -212,7 +201,7 @@ public class Economy
 	 * Divides the balance of a user by a value
 	 *
 	 * @param name Name of the user
-	 * @param value The balance is divided by this value
+	 * @param amount The balance is divided by this value
 	 * @throws UserDoesNotExistException If a user by that name does not exists
 	 * @throws NoLoanPermittedException If the user is not allowed to have a negative balance
 	 */
@@ -240,7 +229,7 @@ public class Economy
 	 * Multiplies the balance of a user by a value
 	 *
 	 * @param name Name of the user
-	 * @param value The balance is multiplied by this value
+	 * @param amount The balance is multiplied by this value
 	 * @throws UserDoesNotExistException If a user by that name does not exists
 	 * @throws NoLoanPermittedException If the user is not allowed to have a negative balance
 	 */

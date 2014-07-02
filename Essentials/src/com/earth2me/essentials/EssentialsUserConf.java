@@ -2,12 +2,13 @@ package com.earth2me.essentials;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import org.bukkit.Bukkit;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.logging.Level;
-import org.bukkit.Bukkit;
 
 
 public class EssentialsUserConf extends EssentialsConf
@@ -54,12 +55,8 @@ public class EssentialsUserConf extends EssentialsConf
 	@Override
 	public boolean altFileExists()
 	{
-		if (username.equals(username.toLowerCase()))
-		{
-			return false;
-		}
-		return getAltFile().exists();
-	}
+        return !username.equals(username.toLowerCase()) && getAltFile().exists();
+    }
 
 	@Override
 	public void convertAltFile()

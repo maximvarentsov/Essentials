@@ -1,16 +1,12 @@
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.utils.FormatUtil;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+
+import java.util.*;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class PlayerList
@@ -63,11 +59,11 @@ public class PlayerList
 		String online;
 		if (hiddenCount > 0)
 		{
-			online = tl("listAmountHidden", server.getOnlinePlayers().length - playerHidden, hiddenCount, server.getMaxPlayers());
+			online = tl("listAmountHidden", server.getOnlinePlayers().size() - playerHidden, hiddenCount, server.getMaxPlayers());
 		}
 		else
 		{
-			online = tl("listAmount", server.getOnlinePlayers().length - playerHidden, server.getMaxPlayers());
+			online = tl("listAmount", server.getOnlinePlayers().size() - playerHidden, server.getMaxPlayers());
 		}
 		return online;
 	}

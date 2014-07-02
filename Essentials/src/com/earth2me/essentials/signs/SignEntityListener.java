@@ -20,6 +20,7 @@ public class SignEntityListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
+    @SuppressWarnings("unused")
 	public void onSignEntityExplode(final EntityExplodeEvent event)
 	{
 		if (ess.getSettings().areSignsDisabled())
@@ -30,10 +31,8 @@ public class SignEntityListener implements Listener
 		
 		for (Block block : event.blockList())
 		{
-			if (((block.getType() == Material.WALL_SIGN
-				  || block.getType() == Material.SIGN_POST)
-				 && EssentialsSign.isValidSign(new EssentialsSign.BlockSign(block)))
-				|| EssentialsSign.checkIfBlockBreaksSigns(block))
+			if (((block.getType() == Material.WALL_SIGN || block.getType() == Material.SIGN_POST)
+				 && EssentialsSign.isValidSign(new EssentialsSign.BlockSign(block))) | EssentialsSign.checkIfBlockBreaksSigns(block))
 			{
 				event.setCancelled(true);
 				return;
@@ -50,6 +49,7 @@ public class SignEntityListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @SuppressWarnings("unused")
 	public void onSignEntityChangeBlock(final EntityChangeBlockEvent event)
 	{
 		if (ess.getSettings().areSignsDisabled())

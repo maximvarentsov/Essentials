@@ -1,7 +1,6 @@
 package com.earth2me.essentials;
 
 import com.earth2me.essentials.utils.LocationUtil;
-import java.util.Locale;
 import net.ess3.api.IEssentials;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -14,6 +13,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Locale;
+
 
 public class EssentialsBlockListener implements Listener
 {
@@ -25,7 +26,8 @@ public class EssentialsBlockListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onBlockPlace(final BlockPlaceEvent event)
+	@SuppressWarnings("unused")
+    public void onBlockPlace(final BlockPlaceEvent event)
 	{
 		// Do not rely on getItemInHand();
 		// http://leaky.bukkit.org/issues/663

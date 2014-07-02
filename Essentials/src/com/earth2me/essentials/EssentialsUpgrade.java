@@ -1,11 +1,15 @@
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.craftbukkit.FakeWorld;
 import com.earth2me.essentials.settings.Spawns;
 import com.earth2me.essentials.storage.YamlStorageWriter;
 import com.earth2me.essentials.utils.StringUtil;
 import com.google.common.base.Charsets;
+import net.ess3.api.IEssentials;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+
 import java.io.*;
 import java.math.BigInteger;
 import java.security.DigestInputStream;
@@ -13,10 +17,8 @@ import java.security.MessageDigest;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.ess3.api.IEssentials;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class EssentialsUpgrade
@@ -410,7 +412,7 @@ public class EssentialsUpgrade
 					for (String group : keys)
 					{
 						Location loc = getFakeLocation(config, group);
-						spawns.getSpawns().put(group.toLowerCase(Locale.ENGLISH), loc);
+						//spawns.getSpawns().put(group.toLowerCase(Locale.ENGLISH), loc);
 					}
 					if (!configFile.renameTo(new File(ess.getDataFolder(), "spawn.yml.old")))
 					{
@@ -436,52 +438,7 @@ public class EssentialsUpgrade
 		doneFile.save();
 	}
 
-	private void updateJailsToNewJailsConfig()
-	{
-		if (doneFile.getBoolean("updateJailsToNewJailsConfig", false))
-		{
-			return;
-		}
-		final File configFile = new File(ess.getDataFolder(), "jail.yml");
-		if (configFile.exists())
-		{
 
-			final EssentialsConf config = new EssentialsConf(configFile);
-			try
-			{
-				config.load();
-				if (!config.hasProperty("jails"))
-				{
-					final com.earth2me.essentials.settings.Jails jails = new com.earth2me.essentials.settings.Jails();
-					Set<String> keys = config.getKeys(false);
-					for (String jailName : keys)
-					{
-						Location loc = getFakeLocation(config, jailName);
-						jails.getJails().put(jailName.toLowerCase(Locale.ENGLISH), loc);
-					}
-					if (!configFile.renameTo(new File(ess.getDataFolder(), "jail.yml.old")))
-					{
-						throw new Exception(tl("fileRenameError", "jail.yml"));
-					}
-					PrintWriter writer = new PrintWriter(configFile);
-					try
-					{
-						new YamlStorageWriter(writer).save(jails);
-					}
-					finally
-					{
-						writer.close();
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				Bukkit.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
-			}
-		}
-		doneFile.setProperty("updateJailsToNewJailsConfig", true);
-		doneFile.save();
-	}
 
 	private void warnMetrics()
 	{
@@ -489,7 +446,7 @@ public class EssentialsUpgrade
 		{
 			return;
 		}
-		ess.getSettings().setMetricsEnabled(false);
+		//ess.getSettings().setMetricsEnabled(false);
 		doneFile.setProperty("warnMetrics", true);
 		doneFile.save();
 	}
@@ -676,7 +633,6 @@ public class EssentialsUpgrade
 		updateUsersHomesFormat();
 		deleteOldItemsCsv();
 		updateSpawnsToNewSpawnsConfig();
-		updateJailsToNewJailsConfig();
 		uuidFileChange();
 		warnMetrics();
 	}

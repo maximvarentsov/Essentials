@@ -1,18 +1,11 @@
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.commands.IEssentialsCommand;
 import com.earth2me.essentials.register.payment.Method;
 import com.earth2me.essentials.register.payment.Methods;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.NumberUtil;
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.ess3.api.IEssentials;
 import net.ess3.api.MaxMoneyException;
 import net.ess3.api.events.AfkStatusChangeEvent;
@@ -20,9 +13,17 @@ import net.ess3.api.events.UserBalanceUpdateEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class User extends UserData implements Comparable<User>, IReplyTo, net.ess3.api.IUser
@@ -548,34 +549,6 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 		{
 			setLastLogout(getLastOnlineActivity());
 		}
-	}
-
-	//Returns true if status expired during this check
-	public boolean checkJailTimeout(final long currentTime)
-	{
-		if (getJailTimeout() > 0 && getJailTimeout() < currentTime && isJailed())
-		{
-			setJailTimeout(0);
-			setJailed(false);
-			sendMessage(tl("haveBeenReleased"));
-			setJail(null);
-			try
-			{
-				getTeleport().back();
-			}
-			catch (Exception ex)
-			{
-				try
-				{
-					getTeleport().respawn(null, TeleportCause.PLUGIN);
-				}
-				catch (Exception ex1)
-				{
-				}
-			}
-			return true;
-		}
-		return false;
 	}
 
 	//Returns true if status expired during this check

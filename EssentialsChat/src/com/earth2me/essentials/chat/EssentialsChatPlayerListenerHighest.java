@@ -1,11 +1,12 @@
 package com.earth2me.essentials.chat;
 
 import net.ess3.api.IEssentials;
-import java.util.Map;
 import org.bukkit.Server;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+import java.util.Map;
 
 
 public class EssentialsChatPlayerListenerHighest extends EssentialsChatPlayer
@@ -18,7 +19,7 @@ public class EssentialsChatPlayerListenerHighest extends EssentialsChatPlayer
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	@Override
+    @SuppressWarnings("unused")
 	public void onPlayerChat(final AsyncPlayerChatEvent event)
 	{
 		final ChatStore chatStore = delChatStore(event);

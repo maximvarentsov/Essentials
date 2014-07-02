@@ -1,19 +1,20 @@
 package com.earth2me.essentials.storage;
 
-import java.io.Reader;
-import java.lang.reflect.Field;
-import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 import org.bukkit.plugin.Plugin;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
+import java.io.Reader;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
+
 
 public class YamlStorageReader implements IStorageReader
 {
-	private transient static final Map<Class, Yaml> PREPARED_YAMLS = Collections.synchronizedMap(new HashMap<Class, Yaml>());
-	private transient static final Map<Class, ReentrantLock> LOCKS = new HashMap<Class, ReentrantLock>();
+	private transient static final Map<Class, Yaml> PREPARED_YAMLS = Collections.synchronizedMap(new HashMap<>());
+	private transient static final Map<Class, ReentrantLock> LOCKS = new HashMap<>();
 	private transient final Reader reader;
 	private transient final Plugin plugin;
 
@@ -50,15 +51,10 @@ public class YamlStorageReader implements IStorageReader
 			}
 			return object;
 		}
-		catch (IllegalAccessException ex)
+		catch (IllegalAccessException | InstantiationException ex)
 		{
 			throw new ObjectLoadException(ex);
-		}
-		catch (InstantiationException ex)
-		{
-			throw new ObjectLoadException(ex);
-		}
-		finally
+		} finally
 		{
 			lock.unlock();
 		}
@@ -67,7 +63,7 @@ public class YamlStorageReader implements IStorageReader
 	private Constructor prepareConstructor(final Class<?> clazz)
 	{
 		final Constructor constructor = new BukkitConstructor(clazz, plugin);
-		final Set<Class> classes = new HashSet<Class>();
+		final Set<Class> classes = new HashSet<>();
 
 		prepareConstructor(constructor, classes, clazz);
 		return constructor;

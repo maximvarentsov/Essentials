@@ -167,7 +167,7 @@ public class KeywordReplacer implements IText
 							playerHidden++;
 						}
 					}
-					replacer = Integer.toString(ess.getServer().getOnlinePlayers().length - playerHidden);
+					replacer = Integer.toString(ess.getServer().getOnlinePlayers().size() - playerHidden);
 					break;
 				case UNIQUE:
 					replacer = Integer.toString(ess.getUserMap().getUniqueUsers());

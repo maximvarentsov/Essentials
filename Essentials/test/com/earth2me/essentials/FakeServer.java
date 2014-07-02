@@ -65,12 +65,6 @@ public class FakeServer implements Server
 		return "1.0";
 	}
 
-	@Override
-	public Player[] getOnlinePlayers()
-	{
-		return players.toArray(new Player[0]);
-	}
-
 	public void setOnlinePlayers(List<Player> players)
 	{
 		this.players = players;
@@ -821,7 +815,17 @@ public class FakeServer implements Server
 		return "Essentials Fake-Server";
 	}
 
-	@Override
+    @Override
+    public Player[] _INVALID_getOnlinePlayers() {
+        return new Player[0];
+    }
+
+    @Override
+    public Collection<? extends Player> getOnlinePlayers() {
+        return players;
+    }
+
+    @Override
 	public File getWorldContainer()
 	{
 		throw new UnsupportedOperationException("Not supported yet.");

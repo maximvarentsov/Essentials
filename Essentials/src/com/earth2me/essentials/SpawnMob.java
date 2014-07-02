@@ -24,7 +24,7 @@ public class SpawnMob
 	public static String mobList(final User user)
 	{
 		final Set<String> mobList = Mob.getMobList();
-		final Set<String> availableList = new HashSet<String>();
+		final Set<String> availableList = new HashSet<>();
 		for (String mob : mobList)
 		{
 			if (user.isAuthorized("essentials.spawnmob." + mob.toLowerCase(Locale.ENGLISH)))
@@ -57,7 +57,7 @@ public class SpawnMob
 	{
 		String[] mobParts = mobString.split(",");
 
-		List<String> mobData = new ArrayList<String>();
+		List<String> mobData = new ArrayList<>();
 
 		for (String mobPart : mobParts)
 		{

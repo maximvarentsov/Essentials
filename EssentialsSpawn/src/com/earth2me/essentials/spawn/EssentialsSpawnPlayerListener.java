@@ -39,11 +39,6 @@ public class EssentialsSpawnPlayerListener implements Listener
 	{
 		final User user = ess.getUser(event.getPlayer());
 
-		if (user.isJailed() && user.getJail() != null && !user.getJail().isEmpty())
-		{
-			return;
-		}
-
 		if (ess.getSettings().getRespawnAtHome())
 		{
 			Location home;
@@ -71,14 +66,7 @@ public class EssentialsSpawnPlayerListener implements Listener
 
 	public void onPlayerJoin(final PlayerJoinEvent event)
 	{
-		ess.runTaskAsynchronously(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				delayedJoin(event.getPlayer());
-			}
-		});
+		ess.runTaskAsynchronously(() -> delayedJoin(event.getPlayer()));
 	}
 
 	public void delayedJoin(Player player)
@@ -96,44 +84,39 @@ public class EssentialsSpawnPlayerListener implements Listener
 			ess.scheduleSyncDelayedTask(new NewPlayerTeleport(user), 1L);
 		}
 
-		ess.scheduleSyncDelayedTask(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				if (!user.getBase().isOnline()) {
-					return;
-				}
+		ess.scheduleSyncDelayedTask(() -> {
+            if (!user.getBase().isOnline()) {
+                return;
+            }
 
-				//This method allows for multiple line player announce messages using multiline yaml syntax #EasterEgg
-				if (ess.getSettings().getAnnounceNewPlayers())
-				{
-					final IText output = new KeywordReplacer(ess.getSettings().getAnnounceNewPlayerFormat(), user.getSource(), ess);
-					final SimpleTextPager pager = new SimpleTextPager(output);
+            //This method allows for multiple line player announce messages using multiline yaml syntax #EasterEgg
+            if (ess.getSettings().getAnnounceNewPlayers())
+            {
+                final IText output = new KeywordReplacer(ess.getSettings().getAnnounceNewPlayerFormat(), user.getSource(), ess);
+                final SimpleTextPager pager = new SimpleTextPager(output);
 
-					for (String line : pager.getLines())
-					{
-						ess.broadcastMessage(user, line);
-					}
-				}
+                for (String line : pager.getLines())
+                {
+                    ess.broadcastMessage(user, line);
+                }
+            }
 
-				final String kitName = ess.getSettings().getNewPlayerKit();
-				if (!kitName.isEmpty())
-				{
-					try
-					{
-						final Kit kit = new Kit(kitName.toLowerCase(Locale.ENGLISH), ess);
-						kit.expandItems(user);
-					}
-					catch (Exception ex)
-					{
-						LOGGER.log(Level.WARNING, ex.getMessage());
-					}
-				}
+            final String kitName = ess.getSettings().getNewPlayerKit();
+            if (!kitName.isEmpty())
+            {
+                try
+                {
+                    final Kit kit = new Kit(kitName.toLowerCase(Locale.ENGLISH), ess);
+                    kit.expandItems(user);
+                }
+                catch (Exception ex)
+                {
+                    LOGGER.log(Level.WARNING, ex.getMessage());
+                }
+            }
 
-				LOGGER.log(Level.FINE, "New player join");
-			}
-		}, 2L);
+            LOGGER.log(Level.FINE, "New player join");
+        }, 2L);
 	}
 
 

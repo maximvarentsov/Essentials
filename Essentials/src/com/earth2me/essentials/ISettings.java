@@ -175,10 +175,6 @@ public interface ISettings extends IConf
 
 	long getTpaAcceptCancellation();
 
-	boolean isMetricsEnabled();
-
-	void setMetricsEnabled(boolean metricsEnabled);
-
 	long getTeleportInvulnerability();
 
 	boolean isTeleportInvulnerability();

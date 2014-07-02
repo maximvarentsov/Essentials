@@ -1,7 +1,16 @@
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.google.common.io.Files;
+import net.ess3.api.InvalidWorldException;
+import org.bukkit.*;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
+
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -19,15 +28,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.ess3.api.InvalidWorldException;
-import org.bukkit.*;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class EssentialsConf extends YamlConfiguration
@@ -122,61 +124,46 @@ public class EssentialsConf extends YamlConfiguration
 
 		try
 		{
-			final FileInputStream inputStream = new FileInputStream(configFile);
-			try
-			{
-				long startSize = configFile.length();
-				if (startSize > Integer.MAX_VALUE)
-				{
-					throw new InvalidConfigurationException("File too big");
-				}
-				ByteBuffer buffer = ByteBuffer.allocate((int)startSize);
-				int length;
-				while ((length = inputStream.read(bytebuffer)) != -1)
-				{
-					if (length > buffer.remaining())
-					{
-						ByteBuffer resize = ByteBuffer.allocate(buffer.capacity() + length - buffer.remaining());
-						int resizePosition = buffer.position();
-						buffer.rewind();
-						resize.put(buffer);
-						resize.position(resizePosition);
-						buffer = resize;
-					}
-					buffer.put(bytebuffer, 0, length);
-				}
-				buffer.rewind();
-				final CharBuffer data = CharBuffer.allocate(buffer.capacity());
-				CharsetDecoder decoder = UTF8.newDecoder();
-				CoderResult result = decoder.decode(buffer, data, true);
-				if (result.isError())
-				{
-					buffer.rewind();
-					data.clear();
-					LOGGER.log(Level.INFO, "File " + configFile.getAbsolutePath().toString() + " is not utf-8 encoded, trying " + Charset.defaultCharset().displayName());
-					decoder = Charset.defaultCharset().newDecoder();
-					result = decoder.decode(buffer, data, true);
-					if (result.isError())
-					{
-						throw new InvalidConfigurationException("Invalid Characters in file " + configFile.getAbsolutePath().toString());
-					}
-					else
-					{
-						decoder.flush(data);
-					}
-				}
-				else
-				{
-					decoder.flush(data);
-				}
-				final int end = data.position();
-				data.rewind();
-				super.loadFromString(data.subSequence(0, end).toString());
-			}
-			finally
-			{
-				inputStream.close();
-			}
+            try (FileInputStream inputStream = new FileInputStream(configFile)) {
+                long startSize = configFile.length();
+                if (startSize > Integer.MAX_VALUE) {
+                    throw new InvalidConfigurationException("File too big");
+                }
+                ByteBuffer buffer = ByteBuffer.allocate((int) startSize);
+                int length;
+                while ((length = inputStream.read(bytebuffer)) != -1) {
+                    if (length > buffer.remaining()) {
+                        ByteBuffer resize = ByteBuffer.allocate(buffer.capacity() + length - buffer.remaining());
+                        int resizePosition = buffer.position();
+                        buffer.rewind();
+                        resize.put(buffer);
+                        resize.position(resizePosition);
+                        buffer = resize;
+                    }
+                    buffer.put(bytebuffer, 0, length);
+                }
+                buffer.rewind();
+                final CharBuffer data = CharBuffer.allocate(buffer.capacity());
+                CharsetDecoder decoder = UTF8.newDecoder();
+                CoderResult result = decoder.decode(buffer, data, true);
+                if (result.isError()) {
+                    buffer.rewind();
+                    data.clear();
+                    LOGGER.log(Level.INFO, "File " + configFile.getAbsolutePath() + " is not utf-8 encoded, trying " + Charset.defaultCharset().displayName());
+                    decoder = Charset.defaultCharset().newDecoder();
+                    result = decoder.decode(buffer, data, true);
+                    if (result.isError()) {
+                        throw new InvalidConfigurationException("Invalid Characters in file " + configFile.getAbsolutePath());
+                    } else {
+                        decoder.flush(data);
+                    }
+                } else {
+                    decoder.flush(data);
+                }
+                final int end = data.position();
+                data.rewind();
+                super.loadFromString(data.subSequence(0, end).toString());
+            }
 		}
 		catch (IOException ex)
 		{
@@ -224,7 +211,7 @@ public class EssentialsConf extends YamlConfiguration
 			}
 			ostr = new FileOutputStream(configFile);
 			byte[] buffer = new byte[1024];
-			int length = 0;
+			int length;
 			length = istr.read(buffer);
 			while (length > 0)
 			{
@@ -328,15 +315,11 @@ public class EssentialsConf extends YamlConfiguration
 				future.get();
 			}
 		}
-		catch (InterruptedException ex)
+		catch (InterruptedException | ExecutionException ex)
 		{
 			LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
 		}
-		catch (ExecutionException ex)
-		{
-			LOGGER.log(Level.SEVERE, ex.getMessage(), ex);
-		}
-	}
+    }
 
 	public synchronized void cleanup()
 	{
@@ -357,9 +340,7 @@ public class EssentialsConf extends YamlConfiguration
 			return null;
 		}
 
-		Future<?> future = EXECUTOR_SERVICE.submit(new WriteRunner(configFile, data, pendingDiskWrites));
-
-		return future;
+        return EXECUTOR_SERVICE.submit(new WriteRunner(configFile, data, pendingDiskWrites));
 	}
 
 
@@ -412,24 +393,11 @@ public class EssentialsConf extends YamlConfiguration
 						}
 					}
 
-					final FileOutputStream fos = new FileOutputStream(configFile);
-					try
-					{
-						final OutputStreamWriter writer = new OutputStreamWriter(fos, UTF8);
-
-						try
-						{
-							writer.write(data);
-						}
-						finally
-						{
-							writer.close();
-						}
-					}
-					finally
-					{
-						fos.close();
-					}
+                    try (FileOutputStream fos = new FileOutputStream(configFile)) {
+                        try (OutputStreamWriter writer = new OutputStreamWriter(fos, UTF8)) {
+                            writer.write(data);
+                        }
+                    }
 				}
 				catch (IOException e)
 				{
@@ -510,14 +478,14 @@ public class EssentialsConf extends YamlConfiguration
 
 	public void setProperty(final String path, final ItemStack stack)
 	{
-		final Map<String, Object> map = new HashMap<String, Object>();
+		final Map<String, Object> map = new HashMap<>();
 		map.put("type", stack.getType().toString());
 		map.put("amount", stack.getAmount());
 		map.put("damage", stack.getDurability());
 		Map<Enchantment, Integer> enchantments = stack.getEnchantments();
 		if (!enchantments.isEmpty())
 		{
-			Map<String, Integer> enchant = new HashMap<String, Integer>();
+			Map<String, Integer> enchant = new HashMap<>();
 			for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet())
 			{
 				enchant.put(entry.getKey().getName().toLowerCase(Locale.ENGLISH), entry.getValue());

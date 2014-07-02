@@ -1,17 +1,19 @@
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.LocationUtil;
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import net.ess3.api.IEssentials;
 import net.ess3.api.IUser;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class Teleport implements net.ess3.api.ITeleport
@@ -204,7 +206,7 @@ public class Teleport implements net.ess3.api.ITeleport
 		initTimer((long)(delay * 1000.0), teleportee, target, cashCharge, cause, false);
 	}
 
-	//The respawn function is a wrapper used to handle tp fallback, on /jail and /home
+	//The respawn function is a wrapper used to handle tp fallback, on /home
 	@Override
 	public void respawn(final Trade chargeFor, TeleportCause cause) throws Exception
 	{
@@ -272,7 +274,6 @@ public class Teleport implements net.ess3.api.ITeleport
 		teleport(teleportOwner, new LocationTarget(loc), chargeFor, TeleportCause.COMMAND);
 	}
 
-	//This function is used to throw a user back after a jail sentence
 	@Override
 	public void back() throws Exception
 	{

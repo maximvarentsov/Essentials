@@ -28,7 +28,7 @@ public class Commandcondense extends EssentialsCommand
 	@Override
 	public void run(final Server server, final User user, final String commandLabel, final String[] args) throws Exception
 	{
-		List<ItemStack> is = new ArrayList<ItemStack>();
+		List<ItemStack> is = new ArrayList<>();
 
 		boolean validateReverse = false;
 		if (args.length > 0)

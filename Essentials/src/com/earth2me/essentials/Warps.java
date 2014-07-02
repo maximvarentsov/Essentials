@@ -1,23 +1,25 @@
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.commands.WarpNotFoundException;
 import com.earth2me.essentials.utils.StringUtil;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.ess3.api.InvalidNameException;
 import net.ess3.api.InvalidWorldException;
 import org.bukkit.Location;
 import org.bukkit.Server;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.earth2me.essentials.I18n.tl;
+
 
 public class Warps implements IConf, net.ess3.api.IWarps
 {
 	private static final Logger logger = Logger.getLogger("Essentials");
-	private final Map<StringIgnoreCase, EssentialsConf> warpPoints = new HashMap<StringIgnoreCase, EssentialsConf>();
+	private final Map<StringIgnoreCase, EssentialsConf> warpPoints = new HashMap<>();
 	private final File warpsFolder;
 	private final Server server;
 
@@ -41,7 +43,7 @@ public class Warps implements IConf, net.ess3.api.IWarps
 	@Override
 	public Collection<String> getList()
 	{
-		final List<String> keys = new ArrayList<String>();
+		final List<String> keys = new ArrayList<>();
 		for (StringIgnoreCase stringIgnoreCase : warpPoints.keySet())
 		{
 			keys.add(stringIgnoreCase.getString());
@@ -108,7 +110,7 @@ public class Warps implements IConf, net.ess3.api.IWarps
 	{
 		warpPoints.clear();
 		File[] listOfFiles = warpsFolder.listFiles();
-		if (listOfFiles.length >= 1)
+        if (listOfFiles.length >= 1)
 		{
 			for (int i = 0; i < listOfFiles.length; i++)
 			{
@@ -165,12 +167,8 @@ public class Warps implements IConf, net.ess3.api.IWarps
 		@Override
 		public boolean equals(Object o)
 		{
-			if (o instanceof StringIgnoreCase)
-			{
-				return getString().equalsIgnoreCase(((StringIgnoreCase)o).getString());
-			}
-			return false;
-		}
+            return o instanceof StringIgnoreCase && getString().equalsIgnoreCase(((StringIgnoreCase) o).getString());
+        }
 
 		public String getString()
 		{

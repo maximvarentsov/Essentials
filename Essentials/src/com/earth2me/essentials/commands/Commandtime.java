@@ -47,11 +47,11 @@ public class Commandtime extends EssentialsCommand
 		// If no arguments we are reading the time
 		if (validArgs.length == 0)
 		{
-			if (commandLabel.equalsIgnoreCase("day") || commandLabel.equalsIgnoreCase("eday"))
+			if (commandLabel.equalsIgnoreCase("day"))
 			{
 				setTime = "day";
 			}
-			else if (commandLabel.equalsIgnoreCase("night") || commandLabel.equalsIgnoreCase("enight"))
+			else if (commandLabel.equalsIgnoreCase("night"))
 			{
 				setTime = "night";
 			}

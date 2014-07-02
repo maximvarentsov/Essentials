@@ -15,14 +15,13 @@ public class ExecuteTimer
 
 	public ExecuteTimer()
 	{
-		times = new ArrayList<ExecuteRecord>();
+		times = new ArrayList<>();
 	}
 
 	public void start()
 	{
 		times.clear();
 		mark("start");
-
 	}
 
 	public void mark(final String label)
@@ -45,8 +44,8 @@ public class ExecuteTimer
 
 		for (ExecuteRecord pair : times)
 		{
-			mark = (String)pair.getMark();
-			time2 = (Long)pair.getTime();
+			mark = pair.getMark();
+			time2 = pair.getTime();
 			if (time1 > 0)
 			{
 				duration = (time2 - time1)/1000000.0;

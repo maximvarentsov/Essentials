@@ -1,11 +1,7 @@
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.utils.NumberUtil;
 import com.earth2me.essentials.utils.StringUtil;
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.*;
 import net.ess3.api.IEssentials;
 import net.ess3.api.InvalidWorldException;
 import net.ess3.api.MaxMoneyException;
@@ -13,6 +9,12 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public abstract class UserData extends PlayerExtension implements IConf
@@ -72,14 +74,11 @@ public abstract class UserData extends PlayerExtension implements IConf
 		lastLocation = _getLastLocation();
 		lastTeleportTimestamp = _getLastTeleportTimestamp();
 		lastHealTimestamp = _getLastHealTimestamp();
-		jail = _getJail();
 		mails = _getMails();
 		teleportEnabled = _getTeleportEnabled();
 		godmode = _getGodModeEnabled();
 		muted = _getMuted();
 		muteTimeout = _getMuteTimeout();
-		jailed = _getJailed();
-		jailTimeout = _getJailTimeout();
 		lastLogin = _getLastLogin();
 		lastLogout = _getLastLogout();
 		lastLoginAddress = _getLastLoginAddress();
@@ -438,32 +437,7 @@ public abstract class UserData extends PlayerExtension implements IConf
 		config.setProperty("timestamps.lastheal", time);
 		config.save();
 	}
-	private String jail;
 
-	private String _getJail()
-	{
-		return config.getString("jail");
-	}
-
-	public String getJail()
-	{
-		return jail;
-	}
-
-	public void setJail(String jail)
-	{
-		if (jail == null || jail.isEmpty())
-		{
-			this.jail = null;
-			config.removeProperty("jail");
-		}
-		else
-		{
-			this.jail = jail;
-			config.setProperty("jail", jail);
-		}
-		config.save();
-	}
 	private List<String> mails;
 
 	private List<String> _getMails()
@@ -621,49 +595,6 @@ public abstract class UserData extends PlayerExtension implements IConf
 	{
 		muteTimeout = time;
 		config.setProperty("timestamps.mute", time);
-		config.save();
-	}
-	private boolean jailed;
-
-	private boolean _getJailed()
-	{
-		return config.getBoolean("jailed", false);
-	}
-
-	public boolean isJailed()
-	{
-		return jailed;
-	}
-
-	public void setJailed(boolean set)
-	{
-		jailed = set;
-		config.setProperty("jailed", set);
-		config.save();
-	}
-
-	public boolean toggleJailed()
-	{
-		boolean ret = !isJailed();
-		setJailed(ret);
-		return ret;
-	}
-	private long jailTimeout;
-
-	private long _getJailTimeout()
-	{
-		return config.getLong("timestamps.jail", 0);
-	}
-
-	public long getJailTimeout()
-	{
-		return jailTimeout;
-	}
-
-	public void setJailTimeout(long time)
-	{
-		jailTimeout = time;
-		config.setProperty("timestamps.jail", time);
 		config.save();
 	}
 
@@ -883,7 +814,7 @@ public abstract class UserData extends PlayerExtension implements IConf
 		if (config.isConfigurationSection("timestamps.kits"))
 		{
 			final ConfigurationSection section = config.getConfigurationSection("timestamps.kits");
-			final Map<String, Long> timestamps = new HashMap<String, Long>();
+			final Map<String, Long> timestamps = new HashMap<>();
 			for (String command : section.getKeys(false))
 			{
 				if (section.isLong(command))
@@ -897,7 +828,7 @@ public abstract class UserData extends PlayerExtension implements IConf
 			}
 			return timestamps;
 		}
-		return new HashMap<String, Long>();
+		return new HashMap<>();
 	}
 
 	public long getKitTimestamp(String name)
@@ -950,7 +881,7 @@ public abstract class UserData extends PlayerExtension implements IConf
 		{
 			return config.getConfigurationSection("info").getKeys(true);
 		}
-		return new HashSet<String>();
+		return new HashSet<>();
 	}
 
 	public Map<String, Object> getConfigMap()
@@ -959,7 +890,7 @@ public abstract class UserData extends PlayerExtension implements IConf
 		{
 			return config.getConfigurationSection("info").getValues(true);
 		}
-		return new HashMap<String, Object>();
+		return new HashMap<>();
 	}
 
 	public Map<String, Object> getConfigMap(String node)
@@ -968,7 +899,7 @@ public abstract class UserData extends PlayerExtension implements IConf
 		{
 			return config.getConfigurationSection("info." + node).getValues(true);
 		}
-		return new HashMap<String, Object>();
+		return new HashMap<>();
 	}
 
 	public UUID getConfigUUID()

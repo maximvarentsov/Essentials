@@ -1,9 +1,10 @@
 package com.earth2me.essentials.textreader;
 
+import net.ess3.api.IEssentials;
+
 import java.io.*;
 import java.lang.ref.SoftReference;
 import java.util.*;
-import net.ess3.api.IEssentials;
 
 
 public class BookInput implements IText
@@ -26,23 +27,14 @@ public class BookInput implements IText
 		{
 			if (createFile)
 			{
-				final InputStream input = ess.getResource(filename + ".txt");
-				final OutputStream output = new FileOutputStream(file);
-				try
-				{
-					final byte[] buffer = new byte[1024];
-					int length = input.read(buffer);
-					while (length > 0)
-					{
-						output.write(buffer, 0, length);
-						length = input.read(buffer);
-					}
-				}
-				finally
-				{
-					output.close();
-					input.close();
-				}
+                try (InputStream input = ess.getResource(filename + ".txt"); OutputStream output = new FileOutputStream(file)) {
+                    final byte[] buffer = new byte[1024];
+                    int length = input.read(buffer);
+                    while (length > 0) {
+                        output.write(buffer, 0, length);
+                        length = input.read(buffer);
+                    }
+                }
 				ess.getLogger().info("File " + filename + ".txt does not exist. Creating one for you.");
 			}
 		}
@@ -64,10 +56,10 @@ public class BookInput implements IText
 				BookInput input;
 				if (inputRef == null || (input = inputRef.get()) == null || input.lastChange < lastChange)
 				{
-					lines = new ArrayList<String>();
-					chapters = new ArrayList<String>();
-					bookmarks = new HashMap<String, Integer>();
-					cache.put(file.getName(), new SoftReference<BookInput>(this));
+					lines = new ArrayList<>();
+					chapters = new ArrayList<>();
+					bookmarks = new HashMap<>();
+					cache.put(file.getName(), new SoftReference<>(this));
 					readFromfile = true;
 				}
 				else
@@ -81,31 +73,24 @@ public class BookInput implements IText
 			if (readFromfile)
 			{
 				final Reader reader = new InputStreamReader(new FileInputStream(file), "utf-8");
-				final BufferedReader bufferedReader = new BufferedReader(reader);
-				try
-				{
-					int lineNumber = 0;
-					while (bufferedReader.ready())
-					{
-						final String line = bufferedReader.readLine();
-						if (line == null)
-						{
-							break;
-						}
-						if (line.length() > 0 && line.charAt(0) == '#')
-						{
-							bookmarks.put(line.substring(1).toLowerCase(Locale.ENGLISH).replaceAll("&[0-9a-fk]", ""), lineNumber);
-							chapters.add(line.substring(1).replace('&', '§').replace("§§", "&"));
-						}
-						lines.add(line.replace('&', '§').replace("§§", "&"));
-						lineNumber++;
-					}
-				}
-				finally
-				{
-					reader.close();
-					bufferedReader.close();
-				}
+                try (BufferedReader bufferedReader = new BufferedReader(reader)) {
+                    int lineNumber = 0;
+                    while (bufferedReader.ready()) {
+                        final String line = bufferedReader.readLine();
+                        if (line == null) {
+                            break;
+                        }
+                        if (line.length() > 0 && line.charAt(0) == '#') {
+                            bookmarks.put(line.substring(1).toLowerCase(Locale.ENGLISH).replaceAll("&[0-9a-fk]", ""), lineNumber);
+                            chapters.add(line.substring(1).replace('&', '§').replace("§§", "&"));
+                        }
+                        lines.add(line.replace('&', '§').replace("§§", "&"));
+                        lineNumber++;
+                    }
+                } finally {
+                    reader.close();
+
+                }
 			}
 		}
 	}

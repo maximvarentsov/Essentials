@@ -1,5 +1,12 @@
 package com.earth2me.essentials.storage;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
+import org.yaml.snakeyaml.Yaml;
+
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -11,12 +18,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
-import org.yaml.snakeyaml.Yaml;
 
 
 public class YamlStorageWriter implements IStorageWriter
@@ -37,15 +38,11 @@ public class YamlStorageWriter implements IStorageWriter
 		{
 			writeToFile(object, 0, object.getClass());
 		}
-		catch (IllegalArgumentException ex)
+		catch (IllegalArgumentException | IllegalAccessException ex)
 		{
 			Logger.getLogger(YamlStorageWriter.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		catch (IllegalAccessException ex)
-		{
-			Logger.getLogger(YamlStorageWriter.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
+    }
 
 	private void writeToFile(final Object object, final int depth, final Class clazz) throws IllegalAccessException
 	{
@@ -95,14 +92,14 @@ public class YamlStorageWriter implements IStorageWriter
 			return true;
 		}
 		writeIndention(depth);
-		if (data == null && commentPresent)
+		if (data == null)
 		{
 			writer.print('#');
 		}
 		final String name = field.getName();
 		writer.print(name);
 		writer.print(": ");
-		if (data == null && commentPresent)
+		if (data == null)
 		{
 			writer.println();
 			writer.println();

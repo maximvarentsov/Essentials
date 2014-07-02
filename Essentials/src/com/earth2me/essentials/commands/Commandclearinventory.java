@@ -7,10 +7,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static com.earth2me.essentials.I18n.tl;
 
@@ -38,7 +35,7 @@ public class Commandclearinventory extends EssentialsCommand
 
 	private void parseCommand(Server server, CommandSource sender, String[] args, boolean allowOthers, boolean allowAll) throws Exception
 	{
-		List<Player> players = new ArrayList<>();
+		Collection<Player> players = new ArrayList<>();
 		int offset = 0;
 
 		if (sender.isPlayer())
@@ -50,7 +47,7 @@ public class Commandclearinventory extends EssentialsCommand
 		{
 			sender.sendMessage(tl("inventoryClearingFromAll"));
 			offset = 1;
-			players = Arrays.asList(server.getOnlinePlayers());
+			players.addAll(server.getOnlinePlayers());
 		}
 		else if (allowOthers && args.length > 0 && args[0].trim().length() > 2)
 		{

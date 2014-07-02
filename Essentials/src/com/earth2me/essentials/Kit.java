@@ -1,7 +1,5 @@
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
-import static com.earth2me.essentials.I18n.capitalCase;
 import com.earth2me.essentials.Trade.OverflowType;
 import com.earth2me.essentials.commands.NoChargeException;
 import com.earth2me.essentials.craftbukkit.InventoryWorkaround;
@@ -10,13 +8,17 @@ import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.NumberUtil;
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.logging.Level;
 import net.ess3.api.IEssentials;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.logging.Level;
+
+import static com.earth2me.essentials.I18n.capitalCase;
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class Kit
@@ -99,8 +101,7 @@ public class Kit
 
 		if (nextUse == 0L)
 		{
-			return;
-		}
+        }
 		else if (nextUse < 0L)
 		{
 			user.sendMessage(tl("kitOnce"));
@@ -138,7 +139,7 @@ public class Kit
 
 		final Calendar time = new GregorianCalendar();
 
-		double delay = 0;
+		double delay;
 		try
 		{
 			// Make sure delay is valid
@@ -182,13 +183,9 @@ public class Kit
 
 	public List<String> getItems(final User user) throws Exception
 	{
-		if (kit == null)
+        try
 		{
-			throw new Exception(tl("kitNotFound"));
-		}
-		try
-		{
-			final List<String> itemList = new ArrayList<String>();
+			final List<String> itemList = new ArrayList<>();
 			final Object kitItems = kit.get("items");
 			if (kitItems instanceof List)
 			{

@@ -2,8 +2,6 @@ package com.earth2me.essentials.signs;
 
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.ess3.api.IEssentials;
 import net.ess3.api.MaxMoneyException;
 import org.bukkit.Material;
@@ -14,6 +12,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class SignBlockListener implements Listener
@@ -29,6 +30,7 @@ public class SignBlockListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @SuppressWarnings("unused")
 	public void onSignBlockBreak(final BlockBreakEvent event)
 	{
 		if (ess.getSettings().areSignsDisabled())
@@ -86,6 +88,7 @@ public class SignBlockListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @SuppressWarnings("unused")
 	public void onSignSignChange2(final SignChangeEvent event)
 	{
 		if (ess.getSettings().areSignsDisabled())
@@ -113,6 +116,7 @@ public class SignBlockListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @SuppressWarnings("unused")
 	public void onSignSignChange(final SignChangeEvent event)
 	{
 		if (ess.getSettings().areSignsDisabled())
@@ -138,6 +142,7 @@ public class SignBlockListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @SuppressWarnings("unused")
 	public void onSignBlockPlace(final BlockPlaceEvent event)
 	{
 		if (ess.getSettings().areSignsDisabled())
@@ -172,6 +177,7 @@ public class SignBlockListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @SuppressWarnings("unused")
 	public void onSignBlockBurn(final BlockBurnEvent event)
 	{
 		if (ess.getSettings().areSignsDisabled())
@@ -201,6 +207,7 @@ public class SignBlockListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @SuppressWarnings("unused")
 	public void onSignBlockIgnite(final BlockIgniteEvent event)
 	{
 		if (ess.getSettings().areSignsDisabled())
@@ -230,6 +237,7 @@ public class SignBlockListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
+    @SuppressWarnings("unused")
 	public void onSignBlockPistonExtend(final BlockPistonExtendEvent event)
 	{
 		if (ess.getSettings().areSignsDisabled())
@@ -261,6 +269,7 @@ public class SignBlockListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.LOW)
+    @SuppressWarnings("unused")
 	public void onSignBlockPistonRetract(final BlockPistonRetractEvent event)
 	{
 		if (ess.getSettings().areSignsDisabled())

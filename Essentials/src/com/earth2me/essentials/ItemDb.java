@@ -1,24 +1,26 @@
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.utils.NumberUtil;
 import com.earth2me.essentials.utils.StringUtil;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.earth2me.essentials.I18n.tl;
+
 
 public class ItemDb implements IConf, net.ess3.api.IItemDb
 {
 	private final transient IEssentials ess;
-	private final transient Map<String, Integer> items = new HashMap<String, Integer>();
-	private final transient Map<ItemData, List<String>> names = new HashMap<ItemData, List<String>>();
-	private final transient Map<ItemData, String> primaryName = new HashMap<ItemData, String>();
-	private final transient Map<String, Short> durabilities = new HashMap<String, Short>();
+	private final transient Map<String, Integer> items = new HashMap<>();
+	private final transient Map<ItemData, List<String>> names = new HashMap<>();
+	private final transient Map<ItemData, String> primaryName = new HashMap<>();
+	private final transient Map<String, Short> durabilities = new HashMap<>();
 	private final transient ManagedFile file;
 	private final transient Pattern splitPattern = Pattern.compile("((.*)[:+',;.](\\d+))");
 
@@ -73,7 +75,7 @@ public class ItemDb implements IConf, net.ess3.api.IItemDb
 			}
 			else
 			{
-				List<String> nameList = new ArrayList<String>();
+				List<String> nameList = new ArrayList<>();
 				nameList.add(itemName);
 				names.put(itemData, nameList);
 				primaryName.put(itemData, itemName);
@@ -167,7 +169,7 @@ public class ItemDb implements IConf, net.ess3.api.IItemDb
 	@Override
 	public List<ItemStack> getMatching(User user, String[] args) throws Exception
 	{
-		List<ItemStack> is = new ArrayList<ItemStack>();
+		List<ItemStack> is = new ArrayList<>();
 
 		if (args.length < 1)
 		{

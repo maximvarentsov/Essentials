@@ -2,13 +2,14 @@ package com.earth2me.essentials;
 
 import com.earth2me.essentials.perm.PermissionsHandler;
 import com.earth2me.essentials.register.payment.Methods;
-import java.util.logging.Level;
 import net.ess3.api.IEssentials;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
+
+import java.util.logging.Level;
 
 
 public class EssentialsPluginListener implements Listener, IConf
@@ -21,7 +22,8 @@ public class EssentialsPluginListener implements Listener, IConf
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPluginEnable(final PluginEnableEvent event)
+	@SuppressWarnings("unused")
+    public void onPluginEnable(final PluginEnableEvent event)
 	{
 		if (event.getPlugin().getName().equals("EssentialsChat"))
 		{
@@ -36,7 +38,8 @@ public class EssentialsPluginListener implements Listener, IConf
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPluginDisable(final PluginDisableEvent event)
+    @SuppressWarnings("unused")
+    public void onPluginDisable(final PluginDisableEvent event)
 	{
 		if (event.getPlugin().getName().equals("EssentialsChat"))
 		{

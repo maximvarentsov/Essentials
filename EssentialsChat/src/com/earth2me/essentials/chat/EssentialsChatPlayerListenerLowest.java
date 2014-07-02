@@ -3,13 +3,14 @@ package com.earth2me.essentials.chat;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
 import net.ess3.api.IEssentials;
-import java.util.Locale;
-import java.util.Map;
 import org.bukkit.Server;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scoreboard.Team;
+
+import java.util.Locale;
+import java.util.Map;
 
 
 public class EssentialsChatPlayerListenerLowest extends EssentialsChatPlayer
@@ -22,8 +23,8 @@ public class EssentialsChatPlayerListenerLowest extends EssentialsChatPlayer
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
-	@Override
-	public void onPlayerChat(final AsyncPlayerChatEvent event)
+	@SuppressWarnings("unused")
+    public void onPlayerChat(final AsyncPlayerChatEvent event)
 	{
 		if (isAborted(event))
 		{

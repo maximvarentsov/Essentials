@@ -4,10 +4,11 @@ import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.StringUtil;
+import net.ess3.api.IEssentials;
+
 import java.io.*;
 import java.lang.ref.SoftReference;
 import java.util.*;
-import net.ess3.api.IEssentials;
 
 
 public class TextInput implements IText
@@ -45,10 +46,10 @@ public class TextInput implements IText
 				TextInput input;
 				if (inputRef == null || (input = inputRef.get()) == null || input.lastChange < lastChange)
 				{
-					lines = new ArrayList<String>();
-					chapters = new ArrayList<String>();
-					bookmarks = new HashMap<String, Integer>();
-					cache.put(file.getName(), new SoftReference<TextInput>(this));
+					lines = new ArrayList<>();
+					chapters = new ArrayList<>();
+					bookmarks = new HashMap<>();
+					cache.put(file.getName(), new SoftReference<>(this));
 					readFromfile = true;
 				}
 				else
@@ -62,35 +63,27 @@ public class TextInput implements IText
 			if (readFromfile)
 			{
 				final Reader reader = new InputStreamReader(new FileInputStream(file), "utf-8");
-				final BufferedReader bufferedReader = new BufferedReader(reader);
-				try
-				{
-					int lineNumber = 0;
-					while (bufferedReader.ready())
-					{
-						final String line = bufferedReader.readLine();
-						if (line == null)
-						{
-							break;
-						}
-						if (line.length() > 1 && line.charAt(0) == '#')
-						{
-							String[] titles = line.substring(1).trim().replace(" ", "_").split(",");
-							chapters.add(FormatUtil.replaceFormat(titles[0]));
-							for (String title : titles)
-							{
-								bookmarks.put(FormatUtil.stripEssentialsFormat(title.toLowerCase(Locale.ENGLISH)), lineNumber);
-							}
-						}
-						lines.add(FormatUtil.replaceFormat(line));
-						lineNumber++;
-					}
-				}
-				finally
-				{
-					reader.close();
-					bufferedReader.close();
-				}
+                try (BufferedReader bufferedReader = new BufferedReader(reader)) {
+                    int lineNumber = 0;
+                    while (bufferedReader.ready()) {
+                        final String line = bufferedReader.readLine();
+                        if (line == null) {
+                            break;
+                        }
+                        if (line.length() > 1 && line.charAt(0) == '#') {
+                            String[] titles = line.substring(1).trim().replace(" ", "_").split(",");
+                            chapters.add(FormatUtil.replaceFormat(titles[0]));
+                            for (String title : titles) {
+                                bookmarks.put(FormatUtil.stripEssentialsFormat(title.toLowerCase(Locale.ENGLISH)), lineNumber);
+                            }
+                        }
+                        lines.add(FormatUtil.replaceFormat(line));
+                        lineNumber++;
+                    }
+                } finally {
+                    reader.close();
+
+                }
 			}
 		}
 		else
@@ -101,23 +94,14 @@ public class TextInput implements IText
 			bookmarks = Collections.emptyMap();
 			if (createFile)
 			{
-				final InputStream input = ess.getResource(filename + ".txt");
-				final OutputStream output = new FileOutputStream(file);
-				try
-				{
-					final byte[] buffer = new byte[1024];
-					int length = input.read(buffer);
-					while (length > 0)
-					{
-						output.write(buffer, 0, length);
-						length = input.read(buffer);
-					}
-				}
-				finally
-				{
-					output.close();
-					input.close();
-				}
+                try (OutputStream output = new FileOutputStream(file); InputStream input = ess.getResource(filename + ".txt")) {
+                    final byte[] buffer = new byte[1024];
+                    int length = input.read(buffer);
+                    while (length > 0) {
+                        output.write(buffer, 0, length);
+                        length = input.read(buffer);
+                    }
+                }
 				throw new FileNotFoundException("File " + filename + ".txt does not exist. Creating one for you.");
 			}
 		}

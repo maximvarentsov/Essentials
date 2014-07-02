@@ -1,8 +1,6 @@
-# This determines the command prefix when there are conflicts (/name:home, /name:help, etc.)
 name: Essentials
 main: com.earth2me.essentials.Essentials
-# Note to developers: This next line cannot change, or the automatic versioning system will break.
-version: 2.x-SNAPSHOT
+version: ${version}
 website: http://tiny.cc/EssentialsCommands
 description: Provides an essential, core set of commands for Bukkit.
 authors: [Zenexer, ementalo, Aelux, Brettflan, KimKandor, snowleo, ceulemans, Xeology, KHobbits, md_5, Iaccidentally]
@@ -29,6 +27,9 @@ commands:
   broadcast:
     description: Broadcasts a message to the entire server.
     usage: /<command> <msg>
+  butcher:
+    description: Removes entities in your world.
+    usage: /<command> <all|tamed|named|drops|arrows|boats|minecarts|xp|paintings|itemframes|endercrystals|monsters|animals|ambient|mobs|[mobType]> [radius|world]
   burn:
     description: Set a player on fire.
     usage: /<command> <player> <seconds>
@@ -40,9 +41,6 @@ commands:
     description: Condenses items into a more compact blocks.
     usage: /<command> [<itemname>|<id>|hand|inventory]
     aliases: [compact,blocks,toblocks]
-  compass:
-    description: Describes your current bearing.
-    usage: /<command>
   delhome:
     description: Removes a home.
     usage: /<command> [player:]<name>
@@ -79,12 +77,12 @@ commands:
     description: Satisfy the hunger.
     usage: /<command> [player]
     aliases: [eat]
-  fly:
-    description: Take off, and soar!
-    usage: /<command> [player] [on|off]
   firework:
     description: Allows you to modify a stack of fireworks.
     usage: /<command> <<meta param>|power [amount]|clear|fire [amount]>
+  fly:
+      description: Take off, and soar!
+      usage: /<command> [player] [on|off]
   gamemode:
     description: Change player gamemode.
     usage: /<command> <survival|creative|adventure> [player]
@@ -207,9 +205,6 @@ commands:
   realname:
     description: Displays the username of a user based on nick.
     usage: /<command> <nickname>
-  butcher:
-    description: Removes entities in your world.
-    usage: /<command> <all|tamed|named|drops|arrows|boats|minecarts|xp|paintings|itemframes|endercrystals|monsters|animals|ambient|mobs|[mobType]> [radius|world]
   repair:
     description: Repairs the durability of one or all items.
     usage: /<command> [hand|all]

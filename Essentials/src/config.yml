@@ -286,14 +286,6 @@ enabledSigns:
 # Lower numbers will reduce the possibility of lag, but may annoy players.
 sign-use-per-second: 4
 
-# Backup runs a batch/bash command while saving is disabled.
-backup:
-  # Interval in minutes.
-  interval: 30
-  # Unless you add a valid backup command or script here, this feature will be useless.
-  # Use 'save-all' to simply force regular world saving without backup.
-  #command: 'rdiff-backup World1 backups/World1'
-
 # Set this true to enable permission per warp.
 per-warp-permission: false
 
@@ -356,11 +348,11 @@ cancel-afk-on-interact: true
 cancel-afk-on-move: true
 
 # You can disable the death messages of Minecraft here.
-death-messages: true
+death-messages: false
 
 # Should operators be able to join and part silently?
 # You can control this with permissions if it is enabled.
-allow-silent-join-quit: false
+allow-silent-join-quit: true
 
 # You can set a custom join message here, set to "none" to disable.
 # You may use color codes, use {USERNAME} the player's name or {PLAYER} for the player's displayname.
@@ -534,170 +526,6 @@ chat:
   #  Admins: '{WORLDNAME} &c[{GROUP}]&r {DISPLAYNAME}&7:&c {MESSAGE}'
 
   # If you are using group formats make sure to remove the '#' to allow the setting to be read.
-
-############################################################
-# +------------------------------------------------------+ #
-# |                 EssentialsProtect                    | #
-# +------------------------------------------------------+ #
-############################################################
-
-# This section requires the EssentialsProtect.jar to work.
-
-protect:
-
-  # General physics/behavior modifications.
-  prevent:
-    lava-flow: false
-    water-flow: false
-    water-bucket-flow: false
-    fire-spread: true
-    lava-fire-spread: true
-    flint-fire: false
-    lightning-fire-spread: true
-    portal-creation: false
-    tnt-explosion: false
-    tnt-playerdamage: false
-    tnt-minecart-explosion: false
-    tnt-minecart-playerdamage: false
-    fireball-explosion: false
-    fireball-fire: false
-    fireball-playerdamage: false
-    witherskull-explosion: false
-    witherskull-playerdamage: false
-    wither-spawnexplosion: false
-    wither-blockreplace: false
-    creeper-explosion: false
-    creeper-playerdamage: false
-    creeper-blockdamage: false
-    enderdragon-blockdamage: true
-    enderman-pickup: false
-    villager-death: false
-    # Monsters won't follow players.
-    # permission essentials.protect.entitytarget.bypass disables this.
-    entitytarget: false
-    # Prevent the spawning of creatures.
-    spawn:
-      creeper: false
-      skeleton: false
-      spider: false
-      giant: false
-      zombie: false
-      slime: false
-      ghast: false
-      pig_zombie: false
-      enderman: false
-      cave_spider: false
-      silverfish: false
-      blaze: false
-      magma_cube: false
-      ender_dragon: false
-      pig: false
-      sheep: false
-      cow: false
-      chicken: false
-      squid: false
-      wolf: false
-      mushroom_cow: false
-      snowman: false
-      ocelot: false
-      iron_golem: false
-      villager: false
-      wither: false
-      bat: false
-      witch: false
-      horse: false
-
-  # Maximum height the creeper should explode. -1 allows them to explode everywhere.
-  # Set prevent.creeper-explosion to true, if you want to disable creeper explosions.
-  creeper:
-    max-height: -1
-
-  # Disable various default physics and behaviors.
-  disable:
-    # Should fall damage be disabled?
-    fall: false
-
-    # Users with the essentials.protect.pvp permission will still be able to attack each other if this is set to true.
-    # They will be unable to attack users without that same permission node.
-    pvp: false
-
-    # Should drowning damage be disabled?
-    # (Split into two behaviors; generally, you want both set to the same value.)
-    drown: false
-    suffocate: false
-
-    # Should damage via lava be disabled?  Items that fall into lava will still burn to a crisp. ;)
-    lavadmg: false
-
-    # Should arrow damage be disabled?
-    projectiles: false
-
-    # This will disable damage from touching cacti.
-    contactdmg: false
-
-    # Burn, baby, burn!  Should fire damage be disabled?
-    firedmg: false
-
-    # Should the damage after hit by a lightning be disabled?
-    lightning: false
-
-    # Should Wither damage be disabled?
-    wither: false
-
-    # Disable weather options?
-    weather:
-      storm: false
-      thunder: false
-      lightning: false
-
-############################################################
-# +------------------------------------------------------+ #
-# |                EssentialsAntiBuild                   | #
-# +------------------------------------------------------+ #
-############################################################
-
-  # This section requires the EssentialsAntiBuild.jar to work.
-
-  # Disable various default physics and behaviors
-  # For more information, visit http://wiki.ess3.net/wiki/AntiBuild
-
-    # Should people with build: false in permissions be allowed to build?
-    # Set true to disable building for those people.
-    # Setting to false means EssentialsAntiBuild will never prevent you from building.
-    build: true
-
-    # Should people with build: false in permissions be allowed to use items?
-    # Set true to disable using for those people.
-    # Setting to false means EssentialsAntiBuild will never prevent you from using items.
-    use: true
-
-    # Should we tell people they are not allowed to build?
-    warn-on-build-disallow: true
-
-  # For which block types would you like to be alerted?
-  # You can find a list of IDs in plugins/Essentials/items.csv after loading Essentials for the first time.
-  # 10 = lava :: 11 = still lava :: 46 = TNT :: 327 = lava bucket
-  alert:
-    on-placement: 10,11,46,327
-    on-use: 327
-    on-break:
-
-  blacklist:
-
-    # Which blocks should people be prevented from placing?
-    placement: 10,11,46,327
-
-    # Which items should people be prevented from using?
-    usage: 327
-
-    # Which blocks should people be prevented from breaking?
-    break:
-
-    # Which blocks should not be pushed by pistons?
-    piston:
-
-    # Which blocks should not be dispensed by dispensers
-    dispenser:
 
 ############################################################
 # +------------------------------------------------------+ #

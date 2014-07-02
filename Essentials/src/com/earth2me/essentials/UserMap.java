@@ -4,30 +4,24 @@ import com.earth2me.essentials.utils.StringUtil;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
-import com.google.common.cache.RemovalCause;
-import com.google.common.cache.RemovalListener;
-import com.google.common.cache.RemovalNotification;
 import com.google.common.util.concurrent.UncheckedExecutionException;
+import net.ess3.api.IEssentials;
+import org.bukkit.entity.Player;
+
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutionException;
-import net.ess3.api.IEssentials;
-import org.bukkit.entity.Player;
 
 
 public class UserMap extends CacheLoader<String, User> implements IConf
 {
 	private final transient IEssentials ess;
 	private final transient Cache<String, User> users;
-	private final transient ConcurrentSkipListSet<UUID> keys = new ConcurrentSkipListSet<UUID>();
-	private final transient ConcurrentSkipListMap<String, UUID> names = new ConcurrentSkipListMap<String, UUID>();
-	private final transient ConcurrentSkipListMap<UUID, ArrayList<String>> history = new ConcurrentSkipListMap<UUID, ArrayList<String>>();
+	private final transient ConcurrentSkipListSet<UUID> keys = new ConcurrentSkipListSet<>();
+	private final transient ConcurrentSkipListMap<String, UUID> names = new ConcurrentSkipListMap<>();
+	private final transient ConcurrentSkipListMap<UUID, ArrayList<String>> history = new ConcurrentSkipListMap<>();
 	private UUIDMap uuidMap;
 
 	public UserMap(final IEssentials ess)
@@ -42,40 +36,35 @@ public class UserMap extends CacheLoader<String, User> implements IConf
 
 	private void loadAllUsersAsync(final IEssentials ess)
 	{
-		ess.runTaskAsynchronously(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				synchronized (users)
-				{
-					final File userdir = new File(ess.getDataFolder(), "userdata");
-					if (!userdir.exists())
-					{
-						return;
-					}
-					keys.clear();
-					users.invalidateAll();
-					for (String string : userdir.list())
-					{
-						if (!string.endsWith(".yml"))
-						{
-							continue;
-						}
-						final String name = string.substring(0, string.length() - 4);
-						try
-						{
-							keys.add(UUID.fromString(name));
-						}
-						catch (IllegalArgumentException ex)
-						{
-							//Ignore these users till they rejoin.
-						}
-					}
-					uuidMap.loadAllUsers(names, history);
-				}
-			}
-		});
+		ess.runTaskAsynchronously(() -> {
+            synchronized (users)
+            {
+                final File userdir = new File(ess.getDataFolder(), "userdata");
+                if (!userdir.exists())
+                {
+                    return;
+                }
+                keys.clear();
+                users.invalidateAll();
+                for (String string : userdir.list())
+                {
+                    if (!string.endsWith(".yml"))
+                    {
+                        continue;
+                    }
+                    final String name = string.substring(0, string.length() - 4);
+                    try
+                    {
+                        keys.add(UUID.fromString(name));
+                    }
+                    catch (IllegalArgumentException ex)
+                    {
+                        //Ignore these users till they rejoin.
+                    }
+                }
+                uuidMap.loadAllUsers(names, history);
+            }
+        });
 	}
 
 	public boolean userExists(final UUID uuid)

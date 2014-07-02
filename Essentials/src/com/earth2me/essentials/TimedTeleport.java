@@ -1,11 +1,13 @@
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
-import java.util.UUID;
 import net.ess3.api.IEssentials;
 import net.ess3.api.IUser;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+
+import java.util.UUID;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class TimedTeleport implements Runnable
@@ -57,7 +59,7 @@ public class TimedTeleport implements Runnable
 	public void run()
 	{
 
-		if (teleportOwner == null || !teleportOwner.getBase().isOnline() || teleportOwner.getBase().getLocation() == null)
+		if (!teleportOwner.getBase().isOnline() || teleportOwner.getBase().getLocation() == null)
 		{
 			cancelTimer(false);
 			return;
@@ -135,7 +137,7 @@ public class TimedTeleport implements Runnable
 								timer_chargeFor.charge(teleportOwner);
 							}
 						}
-						catch (Exception ex)
+						catch (Exception ignore)
 						{
 						}
 
