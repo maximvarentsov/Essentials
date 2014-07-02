@@ -9,21 +9,16 @@ import java.util.*;
 
 public class BookInput implements IText
 {
-	private final static HashMap<String, SoftReference<BookInput>> cache = new HashMap<String, SoftReference<BookInput>>();
+	private final static HashMap<String, SoftReference<BookInput>> cache = new HashMap<>();
 	private final transient List<String> lines;
 	private final transient List<String> chapters;
 	private final transient Map<String, Integer> bookmarks;
-	private final transient long lastChange;
 
-	public BookInput(final String filename, final boolean createFile, final IEssentials ess) throws IOException
+    public BookInput(final String filename, final boolean createFile, final IEssentials ess) throws IOException
 	{
 
-		File file = null;
-		if (file == null || !file.exists())
-		{
-			file = new File(ess.getDataFolder(), filename + ".txt");
-		}
-		if (!file.exists())
+		File file = new File(ess.getDataFolder(), filename + ".txt");
+        if (!file.exists())
 		{
 			if (createFile)
 			{
@@ -38,7 +33,8 @@ public class BookInput implements IText
 				ess.getLogger().info("File " + filename + ".txt does not exist. Creating one for you.");
 			}
 		}
-		if (!file.exists())
+        long lastChange;
+        if (!file.exists())
 		{
 			lastChange = 0;
 			lines = Collections.emptyList();
@@ -54,7 +50,7 @@ public class BookInput implements IText
 			{
 				final SoftReference<BookInput> inputRef = cache.get(file.getName());
 				BookInput input;
-				if (inputRef == null || (input = inputRef.get()) == null || input.lastChange < lastChange)
+				if (inputRef == null || (input = inputRef.get()) == null || lastChange < lastChange)
 				{
 					lines = new ArrayList<>();
 					chapters = new ArrayList<>();

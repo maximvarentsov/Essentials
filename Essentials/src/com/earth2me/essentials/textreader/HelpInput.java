@@ -27,7 +27,7 @@ public class HelpInput implements IText
 	{
 		boolean reported = false;
 		final List<String> newLines = new ArrayList<>();
-		String pluginName = "";
+		String pluginName;
 		String pluginNameLow = "";
 		if (!match.equalsIgnoreCase(""))
 		{
@@ -38,7 +38,7 @@ public class HelpInput implements IText
 		{
 			try
 			{
-				final List<String> pluginLines = new ArrayList<String>();
+				final List<String> pluginLines = new ArrayList<>();
 				final PluginDescriptionFile desc = p.getDescription();
 				final Map<String, Map<String, Object>> cmds = desc.getCommands();
 				pluginName = p.getDescription().getName();
@@ -121,7 +121,7 @@ public class HelpInput implements IText
 							}
 						}
 					}
-					catch (NullPointerException ex)
+					catch (NullPointerException ignore)
 					{
 					}
 				}
@@ -138,7 +138,7 @@ public class HelpInput implements IText
 					}
 				}
 			}
-			catch (NullPointerException ex)
+			catch (NullPointerException ignore)
 			{
 			}
 			catch (Exception ex)

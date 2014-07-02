@@ -14,10 +14,7 @@ public class SimpleTextPager
 
 	public void showPage(final CommandSource sender)
 	{
-		for (String line : text.getLines())
-		{
-			sender.sendMessage(line);
-		}
+        text.getLines().forEach(sender::sendMessage);
 	}
 
 	public List<String> getLines()

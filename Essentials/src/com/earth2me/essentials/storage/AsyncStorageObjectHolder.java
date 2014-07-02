@@ -1,12 +1,13 @@
 package com.earth2me.essentials.storage;
 
 import com.earth2me.essentials.IConf;
-import java.io.File;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.logging.Level;
 import net.ess3.api.IEssentials;
 import net.ess3.api.IReload;
 import org.bukkit.Bukkit;
+
+import java.io.File;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
 
 
 public abstract class AsyncStorageObjectHolder<T extends StorageObject> implements IConf, IStorageObjectHolder<T>, IReload
@@ -24,15 +25,11 @@ public abstract class AsyncStorageObjectHolder<T extends StorageObject> implemen
 		{
 			this.data = clazz.newInstance();
 		}
-		catch (IllegalAccessException ex)
+		catch (IllegalAccessException | InstantiationException ex)
 		{
 			Bukkit.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
 		}
-		catch (InstantiationException ex)
-		{
-			Bukkit.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
-		}
-	}
+    }
 
 	@Override
 	public T getData()
@@ -152,15 +149,11 @@ public abstract class AsyncStorageObjectHolder<T extends StorageObject> implemen
 				{
 					data = clazz.newInstance();
 				}
-				catch (IllegalAccessException ex)
+				catch (IllegalAccessException | InstantiationException ex)
 				{
 					Bukkit.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
 				}
-				catch (InstantiationException ex)
-				{
-					Bukkit.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
-				}
-			}
+            }
 			rwl.writeLock().unlock();
 		}
 	}

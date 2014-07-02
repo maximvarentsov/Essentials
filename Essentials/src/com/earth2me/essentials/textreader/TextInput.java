@@ -13,13 +13,12 @@ import java.util.*;
 
 public class TextInput implements IText
 {
-	private static final HashMap<String, SoftReference<TextInput>> cache = new HashMap<String, SoftReference<TextInput>>();
+	private static final HashMap<String, SoftReference<TextInput>> cache = new HashMap<>();
 	private final transient List<String> lines;
 	private final transient List<String> chapters;
 	private final transient Map<String, Integer> bookmarks;
-	private final transient long lastChange;
 
-	public TextInput(final CommandSource sender, final String filename, final boolean createFile, final IEssentials ess) throws IOException
+    public TextInput(final CommandSource sender, final String filename, final boolean createFile, final IEssentials ess) throws IOException
 	{
 
 		File file = null;
@@ -36,7 +35,8 @@ public class TextInput implements IText
 		{
 			file = new File(ess.getDataFolder(), filename + ".txt");
 		}
-		if (file.exists())
+        long lastChange;
+        if (file.exists())
 		{
 			lastChange = file.lastModified();
 			boolean readFromfile;
@@ -44,7 +44,7 @@ public class TextInput implements IText
 			{
 				final SoftReference<TextInput> inputRef = cache.get(file.getName());
 				TextInput input;
-				if (inputRef == null || (input = inputRef.get()) == null || input.lastChange < lastChange)
+				if (inputRef == null || (input = inputRef.get()) == null || lastChange < lastChange)
 				{
 					lines = new ArrayList<>();
 					chapters = new ArrayList<>();

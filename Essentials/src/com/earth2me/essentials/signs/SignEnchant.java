@@ -1,11 +1,16 @@
 package com.earth2me.essentials.signs;
 
-import com.earth2me.essentials.*;
-import static com.earth2me.essentials.I18n.tl;
-import java.util.Locale;
+import com.earth2me.essentials.ChargeException;
+import com.earth2me.essentials.Enchantments;
+import com.earth2me.essentials.Trade;
+import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Locale;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class SignEnchant extends EssentialsSign
@@ -118,22 +123,21 @@ public class SignEnchant extends EssentialsSign
 			throw new SignException(tl("missingItems", 1, search.getType().toString().toLowerCase(Locale.ENGLISH).replace('_', ' ')));
 		}
 
-		final ItemStack toEnchant = playerHand;
-		try
+        try
 		{
 			if (level == 0)
 			{
-				toEnchant.removeEnchantment(enchantment);
+				playerHand.removeEnchantment(enchantment);
 			}
 			else
 			{
 				if (ess.getSettings().allowUnsafeEnchantments() && player.isAuthorized("essentials.signs.enchant.allowunsafe"))
 				{
-					toEnchant.addUnsafeEnchantment(enchantment, level);
+					playerHand.addUnsafeEnchantment(enchantment, level);
 				}
 				else
 				{
-					toEnchant.addEnchantment(enchantment, level);
+					playerHand.addEnchantment(enchantment, level);
 				}
 			}
 		}

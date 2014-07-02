@@ -1,10 +1,10 @@
 package com.earth2me.essentials.signs;
 
-import com.earth2me.essentials.*;
-import static com.earth2me.essentials.I18n.tl;
+import com.earth2me.essentials.ChargeException;
+import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.Trade.OverflowType;
+import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
-import java.util.*;
 import net.ess3.api.IEssentials;
 import net.ess3.api.MaxMoneyException;
 import org.bukkit.Location;
@@ -13,6 +13,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.*;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 @Deprecated // This sign will be removed soon
@@ -94,7 +98,7 @@ public class SignProtection extends EssentialsSign
 
 	private Map<Location, SignProtectionState> getConnectedSigns(final Block block, final User user, final String username, boolean secure)
 	{
-		final Map<Location, SignProtectionState> signs = new HashMap<Location, SignProtectionState>();
+		final Map<Location, SignProtectionState> signs = new HashMap<>();
 		getConnectedSigns(block, signs, user, username, secure ? 4 : 2);
 		return signs;
 	}

@@ -31,13 +31,12 @@ public class KeywordReplacer implements IText
 	private final transient List<String> replaced;
 	private final transient IEssentials ess;
 	private final transient boolean includePrivate;
-	private transient ExecuteTimer execTimer;
-	private final EnumMap<KeywordType, Object> keywordCache = new EnumMap<KeywordType, Object>(KeywordType.class);
+    private final EnumMap<KeywordType, Object> keywordCache = new EnumMap<>(KeywordType.class);
 
 	public KeywordReplacer(final IText input, final CommandSource sender, final IEssentials ess)
 	{
 		this.input = input;
-		this.replaced = new ArrayList<String>(this.input.getLines().size());
+		this.replaced = new ArrayList<>(this.input.getLines().size());
 		this.ess = ess;
 		this.includePrivate = true;
 		replaceKeywords(sender);
@@ -46,7 +45,7 @@ public class KeywordReplacer implements IText
 	public KeywordReplacer(final IText input, final CommandSource sender, final IEssentials ess, final boolean showPrivate)
 	{
 		this.input = input;
-		this.replaced = new ArrayList<String>(this.input.getLines().size());
+		this.replaced = new ArrayList<>(this.input.getLines().size());
 		this.ess = ess;
 		this.includePrivate = showPrivate;
 		replaceKeywords(sender);
@@ -54,7 +53,7 @@ public class KeywordReplacer implements IText
 
 	private void replaceKeywords(final CommandSource sender)
 	{
-		execTimer = new ExecuteTimer();
+        ExecuteTimer execTimer = new ExecuteTimer();
 		execTimer.start();
 		User user = null;
 		if (sender.isPlayer())
@@ -193,18 +192,11 @@ public class KeywordReplacer implements IText
 					else
 					{
 						final boolean showHidden;
-						if (user == null)
-						{
-							showHidden = true;
-						}
-						else
-						{
-							showHidden = user.isAuthorized("essentials.list.hidden") || user.canInteractVanished();
-						}
+                        showHidden = user == null || user.isAuthorized("essentials.list.hidden") || user.canInteractVanished();
 
 						//First lets build the per group playerlist
 						final Map<String, List<User>> playerList = PlayerList.getPlayerLists(ess, user, showHidden);
-						outputList = new HashMap<String, String>();
+						outputList = new HashMap<>();
 						for (String groupName : playerList.keySet())
 						{
 							final List<User> groupUsers = playerList.get(groupName);
@@ -326,7 +318,7 @@ public class KeywordReplacer implements IText
 
 			line = line.replace(fullMatch, replacer);
 		}
-		catch (IllegalArgumentException ex)
+		catch (IllegalArgumentException ignore)
 		{
 		}
 
@@ -409,5 +401,5 @@ enum KeywordCachable
 {
 	CACHEABLE, // This keyword can be cached as a string
 	SUBVALUE, // This keyword can be cached as a map
-	NOTCACHEABLE; // This keyword should never be cached
+	NOTCACHEABLE // This keyword should never be cached
 }

@@ -21,13 +21,12 @@ public abstract class UserData extends PlayerExtension implements IConf
 {
 	protected final transient IEssentials ess;
 	private final EssentialsUserConf config;
-	private final File folder;
 
-	protected UserData(Player base, IEssentials ess)
+    protected UserData(Player base, IEssentials ess)
 	{
 		super(base);
 		this.ess = ess;
-		folder = new File(ess.getDataFolder(), "userdata");
+        File folder = new File(ess.getDataFolder(), "userdata");
 		if (!folder.exists())
 		{
 			folder.mkdirs();
@@ -152,7 +151,7 @@ public abstract class UserData extends PlayerExtension implements IConf
 		{
 			return config.getConfigurationSection("homes").getValues(false);
 		}
-		return new HashMap<String, Object>();
+		return new HashMap<>();
 	}
 
 	private String getHomeName(String search)
@@ -163,13 +162,10 @@ public abstract class UserData extends PlayerExtension implements IConf
 			{
 				search = getHomes().get(Integer.parseInt(search) - 1);
 			}
-			catch (NumberFormatException e)
+			catch (NumberFormatException | IndexOutOfBoundsException ignore)
 			{
 			}
-			catch (IndexOutOfBoundsException e)
-			{
-			}
-		}
+        }
 		return search;
 	}
 
@@ -208,7 +204,7 @@ public abstract class UserData extends PlayerExtension implements IConf
 
 	public List<String> getHomes()
 	{
-		return new ArrayList<String>(homes.keySet());
+		return new ArrayList<>(homes.keySet());
 	}
 
 	public void setHome(String name, Location loc)
@@ -241,12 +237,8 @@ public abstract class UserData extends PlayerExtension implements IConf
 
 	public boolean hasHome()
 	{
-		if (config.hasProperty("home"))
-		{
-			return true;
-		}
-		return false;
-	}
+        return config.hasProperty("home");
+    }
 	private String nickname;
 
 	public String _getNickname()
@@ -303,7 +295,7 @@ public abstract class UserData extends PlayerExtension implements IConf
 		{
 			return config.getConfigurationSection("powertools").getValues(false);
 		}
-		return new HashMap<String, Object>();
+		return new HashMap<>();
 	}
 
 	public void clearAllPowertools()
@@ -499,7 +491,7 @@ public abstract class UserData extends PlayerExtension implements IConf
 	{
 		if (players == null || players.isEmpty())
 		{
-			ignoredPlayers = Collections.synchronizedList(new ArrayList<String>());
+			ignoredPlayers = Collections.synchronizedList(new ArrayList<>());
 			config.removeProperty("ignore");
 		}
 		else
@@ -508,17 +500,6 @@ public abstract class UserData extends PlayerExtension implements IConf
 			config.setProperty("ignore", players);
 		}
 		config.save();
-	}
-
-	@Deprecated
-	public boolean isIgnoredPlayer(final String userName)
-	{
-		final IUser user = ess.getUser(userName);
-		if (user == null || !user.getBase().isOnline())
-		{
-			return false;
-		}
-		return isIgnoredPlayer(user);
 	}
 
 	public boolean isIgnoredPlayer(IUser user)
@@ -699,8 +680,8 @@ public abstract class UserData extends PlayerExtension implements IConf
 		config.setProperty("afk", set);
 		config.save();
 	}
-	private boolean newplayer;
-	private String geolocation;
+
+    private String geolocation;
 
 	private String _getGeoLocation()
 	{

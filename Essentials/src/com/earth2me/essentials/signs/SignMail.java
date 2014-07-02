@@ -1,9 +1,11 @@
 package com.earth2me.essentials.signs;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.User;
-import java.util.List;
 import net.ess3.api.IEssentials;
+
+import java.util.List;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class SignMail extends EssentialsSign
@@ -22,10 +24,7 @@ public class SignMail extends EssentialsSign
 			player.sendMessage(tl("noNewMail"));
 			return false;
 		}
-		for (String s : mail)
-		{
-			player.sendMessage(s);
-		}
+        mail.forEach(player::sendMessage);
 		player.sendMessage(tl("markMailAsRead"));
 		return true;
 	}

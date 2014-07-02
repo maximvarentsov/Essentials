@@ -2,10 +2,12 @@ package com.earth2me.essentials.textreader;
 
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.I18n;
-import static com.earth2me.essentials.I18n.tl;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class TextPager
@@ -59,7 +61,7 @@ public class TextPager
 			}
 			else
 			{
-				int page = 1;
+				int page;
 				try
 				{
 					page = Integer.parseInt(pageStr);

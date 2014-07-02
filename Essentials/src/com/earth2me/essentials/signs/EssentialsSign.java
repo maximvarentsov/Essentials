@@ -63,15 +63,11 @@ public class EssentialsSign
 			}
 			return ret;
 		}
-		catch (ChargeException ex)
+		catch (ChargeException | SignException ex)
 		{
 			showError(ess, user.getSource(), ex, signName);
 		}
-		catch (SignException ex)
-		{
-			showError(ess, user.getSource(), ex, signName);
-		}
-		// Return true, so the player sees the wrong sign.
+        // Return true, so the player sees the wrong sign.
 		return true;
 	}
 
@@ -182,15 +178,11 @@ public class EssentialsSign
 		{
 			return onBlockPlace(block, user, getUsername(user), ess);
 		}
-		catch (ChargeException ex)
+		catch (ChargeException | SignException ex)
 		{
 			showError(ess, user.getSource(), ex, signName);
 		}
-		catch (SignException ex)
-		{
-			showError(ess, user.getSource(), ex, signName);
-		}
-		return false;
+        return false;
 	}
 
 	protected final boolean onBlockInteract(final Block block, final Player player, final IEssentials ess)
@@ -200,15 +192,11 @@ public class EssentialsSign
 		{
 			return onBlockInteract(block, user, getUsername(user), ess);
 		}
-		catch (ChargeException ex)
+		catch (ChargeException | SignException ex)
 		{
 			showError(ess, user.getSource(), ex, signName);
 		}
-		catch (SignException ex)
-		{
-			showError(ess, user.getSource(), ex, signName);
-		}
-		return false;
+        return false;
 	}
 
 	protected final boolean onBlockBreak(final Block block, final Player player, final IEssentials ess) throws MaxMoneyException
@@ -397,9 +385,8 @@ public class EssentialsSign
 	{
 		try
 		{
-			final int quantity = Integer.parseInt(line);
 
-			return quantity;
+            return Integer.parseInt(line);
 		}
 		catch (NumberFormatException ex)
 		{
@@ -463,15 +450,11 @@ public class EssentialsSign
 		{
 			return new BigDecimal(line);
 		}
-		catch (ArithmeticException ex)
+		catch (ArithmeticException | NumberFormatException ex)
 		{
 			throw new SignException(ex.getMessage(), ex);
 		}
-		catch (NumberFormatException ex)
-		{
-			throw new SignException(ex.getMessage(), ex);
-		}
-	}
+    }
 
 	protected final Trade getTrade(final ISign sign, final int index, final IEssentials ess) throws SignException
 	{
