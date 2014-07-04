@@ -133,8 +133,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
         final PluginManager pm = getServer().getPluginManager();
         for (Plugin plugin : pm.getPlugins())
         {
-            if (plugin.getDescription().getName().startsWith("Essentials")
-                && !plugin.getDescription().getVersion().equals(this.getDescription().getVersion()))
+            if (plugin.getDescription().getName().startsWith("Essentials") && !plugin.getDescription().getVersion().equals(this.getDescription().getVersion()))
             {
                 LOGGER.log(Level.WARNING, tl("versionMismatch", plugin.getDescription().getName()));
             }

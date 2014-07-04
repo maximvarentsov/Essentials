@@ -104,7 +104,7 @@ public class EssentialsEntityListener implements Listener
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     @SuppressWarnings("unused")
-	void onPotionSplashEvent(final PotionSplashEvent event)
+	void onPotionSplash(final PotionSplashEvent event)
 	{
 		for (LivingEntity entity : event.getAffectedEntities())
 		{
