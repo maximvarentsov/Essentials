@@ -11,26 +11,27 @@ import java.util.Map;
 
 public class EssentialsChatPlayerListenerHighest extends EssentialsChatPlayer
 {
-	public EssentialsChatPlayerListenerHighest(final Server server,
-											   final IEssentials ess,
-											   final Map<AsyncPlayerChatEvent, ChatStore> chatStorage)
-	{
-		super(server, ess, chatStorage);
-	}
+    public EssentialsChatPlayerListenerHighest(final Server server,
+                                               final IEssentials ess,
+                                               final Map<AsyncPlayerChatEvent, ChatStore> chatStorage)
+    {
+        super(server, ess, chatStorage);
+    }
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("unused")
-	public void onPlayerChat(final AsyncPlayerChatEvent event)
-	{
-		final ChatStore chatStore = delChatStore(event);
-		if (isAborted(event) || chatStore == null)
-		{
-			return;
-		}
+    public void onPlayerChat(final AsyncPlayerChatEvent event)
+    {
+        final ChatStore chatStore = delChatStore(event);
 
-		/**
-		 * This file should handle charging the user for the action before returning control back
-		 */
-		charge(event, chatStore);
-	}
+        if (isAborted(event) || chatStore == null)
+        {
+            return;
+        }
+
+        /**
+         * This file should handle charging the user for the action before returning control back
+         */
+        charge(event, chatStore);
+    }
 }
