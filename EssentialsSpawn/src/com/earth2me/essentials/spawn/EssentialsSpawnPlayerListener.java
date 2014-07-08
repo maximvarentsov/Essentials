@@ -110,6 +110,7 @@ public class EssentialsSpawnPlayerListener implements Listener
                 try
                 {
                     final Kit kit = new Kit(kitName.toLowerCase(Locale.ENGLISH), ess);
+                    kit.setTime(user);
                     kit.expandItems(user);
                 }
                 catch (Exception ex)
