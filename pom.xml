@@ -60,7 +60,6 @@
 	<modules>
 		<module>Essentials</module>
 		<module>EssentialsChat</module>
-		<module>EssentialsGeoIP</module>
 		<module>EssentialsSpawn</module>
 	</modules>
 
