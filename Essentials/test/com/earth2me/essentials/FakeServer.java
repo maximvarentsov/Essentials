@@ -916,11 +916,6 @@ public class FakeServer implements Server
 	}
 
     @Override
-    public Inventory createInventory(InventoryHolder inventoryHolder, InventoryType inventoryType, String s) {
-        return null;
-    }
-
-    @Override
 	public Inventory createInventory(InventoryHolder ih, int i)
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
