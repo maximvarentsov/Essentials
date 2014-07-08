@@ -41,10 +41,30 @@ public class Commandtp extends EssentialsCommand
 			charge.isAffordableFor(user);
 			user.getTeleport().teleport(player.getBase(), charge, TeleportCause.COMMAND);
 			throw new NoChargeException();
+		case 3:
+			if (!user.isAuthorized("essentials.tp.position"))
+			{
+				throw new Exception(tl("noPerm", "essentials.tp.position"));
+			}
+			final double x2 = args[0].startsWith("~") ? user.getLocation().getX() + Integer.parseInt(args[0].substring(1)) : Integer.parseInt(args[0]);
+			final double y2 = args[1].startsWith("~") ? user.getLocation().getY() + Integer.parseInt(args[1].substring(1)) : Integer.parseInt(args[1]);
+			final double z2 = args[2].startsWith("~") ? user.getLocation().getZ() + Integer.parseInt(args[2].substring(1)) : Integer.parseInt(args[2]);
+			if (x2 > 30000000 || y2 > 30000000 || z2 > 30000000 || x2 < -30000000 || y2 < -30000000 || z2 < -30000000)
+			{
+				throw new NotEnoughArgumentsException(tl("teleportInvalidLocation"));
+			}
+			final Location locpos = new Location(user.getWorld(), x2, y2, z2, user.getLocation().getYaw(), user.getLocation().getPitch());
+			user.getTeleport().now(locpos, false, TeleportCause.COMMAND);
+			user.sendMessage(tl("teleporting", locpos.getWorld().getName(), locpos.getBlockX(), locpos.getBlockY(), locpos.getBlockZ()));
+			break;
 		case 4:
 			if (!user.isAuthorized("essentials.tp.others"))
 			{
 				throw new Exception(tl("noPerm", "essentials.tp.others"));
+			}
+			if (!user.isAuthorized("essentials.tp.position"))
+			{
+				throw new Exception(tl("noPerm", "essentials.tp.position"));
 			}
 			final User target2 = getPlayer(server, user, args, 0);
 			final double x = args[1].startsWith("~") ? target2.getLocation().getX() + Integer.parseInt(args[1].substring(1)) : Integer.parseInt(args[1]);
@@ -54,14 +74,14 @@ public class Commandtp extends EssentialsCommand
 			{
 				throw new NotEnoughArgumentsException(tl("teleportInvalidLocation"));
 			}
-			final Location loc = new Location(target2.getWorld(), x, y, z, target2.getLocation().getYaw(), target2.getLocation().getPitch());
+			final Location locposother = new Location(target2.getWorld(), x, y, z, target2.getLocation().getYaw(), target2.getLocation().getPitch());
 			if (!target2.isTeleportEnabled())
 			{
 				throw new Exception(tl("teleportDisabled", target2.getDisplayName()));
 			}
-			user.sendMessage(tl("teleporting", loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
-			target2.getTeleport().now(loc, false, TeleportCause.COMMAND);
-			target2.sendMessage(tl("teleporting", loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
+			user.sendMessage(tl("teleporting", locposother.getWorld().getName(), locposother.getBlockX(), locposother.getBlockY(), locposother.getBlockZ()));
+			target2.getTeleport().now(locposother, false, TeleportCause.COMMAND);
+			target2.sendMessage(tl("teleporting", locposother.getWorld().getName(), locposother.getBlockX(), locposother.getBlockY(), locposother.getBlockZ()));
 			break;
 		case 2:
 		default:
