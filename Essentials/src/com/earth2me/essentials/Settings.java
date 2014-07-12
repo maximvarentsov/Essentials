@@ -519,10 +519,6 @@ public class Settings implements net.ess3.api.ISettings
 		economyLogUpdate = _isEcoLogUpdateEnabled();
 		economyDisabled = _isEcoDisabled();
 		allowSilentJoin = _allowSilentJoinQuit();
-		customJoinMessage = _getCustomJoinMessage();
-		isCustomJoinMessage = !customJoinMessage.equals("none");
-		customQuitMessage = _getCustomQuitMessage();
-		isCustomQuitMessage = !customQuitMessage.equals("none");
 	}
 	private List<Integer> itemSpawnBl = new ArrayList<>();
 
@@ -1131,44 +1127,7 @@ public class Settings implements net.ess3.api.ISettings
 	{
 		return allowSilentJoin;
 	}
-	private String customJoinMessage;
-	private boolean isCustomJoinMessage;
 
-	public String _getCustomJoinMessage()
-	{
-		return FormatUtil.replaceFormat(config.getString("custom-join-message", "none"));
-	}
-
-	@Override
-	public String getCustomJoinMessage()
-	{
-		return customJoinMessage;
-	}
-
-	@Override
-	public boolean isCustomJoinMessage()
-	{
-		return isCustomJoinMessage;
-	}
-	private String customQuitMessage;
-	private boolean isCustomQuitMessage;
-
-	public String _getCustomQuitMessage()
-	{
-		return FormatUtil.replaceFormat(config.getString("custom-quit-message", "none"));
-	}
-
-	@Override
-	public String getCustomQuitMessage()
-	{
-		return customQuitMessage;
-	}
-
-	@Override
-	public boolean isCustomQuitMessage()
-	{
-		return isCustomQuitMessage;
-	}
 
 	// #easteregg
 	@Override

@@ -1151,7 +1151,6 @@ public class FakeServer implements Server
 					{						
 						PlayerJoinEvent jEvent = (PlayerJoinEvent)event;
 						EssentialsPlayerListener epl = (EssentialsPlayerListener)listener.getListener();
-						epl.onPlayerJoin(jEvent);
 						Essentials ess = (Essentials)listener.getPlugin();
 						ess.getLogger().info("Sending join event to Essentials");
 						ess.getUser(jEvent.getPlayer());

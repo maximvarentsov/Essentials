@@ -176,9 +176,6 @@ commands:
   pay:
     description: Pays another player from your balance.
     usage: /<command> <player> <amount>
-  ping:
-    description: Pong!
-    usage: /<command>
   potion:
     description: Adds custom potion effects to a potion.
     usage: /<command> <clear|apply|effect:<effect> power:<power> duration:<duration>>
