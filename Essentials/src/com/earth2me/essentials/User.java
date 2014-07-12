@@ -39,7 +39,6 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	private transient long lastThrottledAction;
 	private transient long lastActivity = System.currentTimeMillis();
 	private boolean hidden = false;
-	private boolean rightClickJump = false;
 	private transient Location afkPosition = null;
 	private boolean invSee = false;
 	private boolean recipeSee = false;
@@ -763,16 +762,6 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	public void updateThrottle()
 	{
 		lastThrottledAction = System.currentTimeMillis();
-	}
-
-	public boolean isFlyClickJump()
-	{
-		return rightClickJump;
-	}
-
-	public void setRightClickJump(boolean rightClickJump)
-	{
-		this.rightClickJump = rightClickJump;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.earth2me.essentials;
 
 import net.ess3.api.IEssentials;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -78,7 +77,7 @@ public class EssentialsEntityListener implements Listener
 	{
 		if (event.getEntity() instanceof Player)
 		{
-			final User user = ess.getUser((Player)event.getEntity());
+			final User user = ess.getUser( (Player) event.getEntity());
 			if (user.isGodModeEnabled())
 			{
 				if (user.isGodModeEnabledRaw())
@@ -106,13 +105,11 @@ public class EssentialsEntityListener implements Listener
     @SuppressWarnings("unused")
 	void onPotionSplash(final PotionSplashEvent event)
 	{
-		for (LivingEntity entity : event.getAffectedEntities())
-		{
-			if (entity instanceof Player && ess.getUser((Player)entity).isGodModeEnabled())
-			{
-				event.setIntensity(entity, 0d);
-			}
-		}
+        event.getAffectedEntities()
+             .stream()
+             .filter(entity -> entity instanceof Player && ess.getUser((Player) entity)
+             .isGodModeEnabled())
+             .forEach(entity -> event.setIntensity(entity, 0d));
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

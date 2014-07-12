@@ -41,7 +41,7 @@ public class SpawnMob
 	{
 		String[] mobParts = mobString.split(",");
 
-		List<String> mobs = new ArrayList<String>();
+		List<String> mobs = new ArrayList<>();
 
 		for (String mobPart : mobParts)
 		{

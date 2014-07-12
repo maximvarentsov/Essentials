@@ -47,10 +47,9 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.NORMAL)
     @SuppressWarnings("unused")
-    public void onPlayerRespawn(final PlayerRespawnEvent event)
+    void onRespawn(final PlayerRespawnEvent event)
 	{
 		final User user = ess.getUser(event.getPlayer());
-		updateCompass(user);
 		user.setDisplayNick();
 
 		if (ess.getSettings().isTeleportInvulnerability())
@@ -61,7 +60,7 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.LOWEST)
     @SuppressWarnings("unused")
-	public void onPlayerChat(final AsyncPlayerChatEvent event)
+	void onChat(final AsyncPlayerChatEvent event)
 	{
 		final User user = ess.getUser(event.getPlayer());
 		if (user.isMuted())
@@ -100,7 +99,7 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     @SuppressWarnings("unused")
-	public void onPlayerMove(final PlayerMoveEvent event)
+	void onMove(final PlayerMoveEvent event)
 	{
 		if (event.getFrom().getBlockX() == event.getTo().getBlockX()
 			&& event.getFrom().getBlockZ() == event.getTo().getBlockZ()
@@ -154,23 +153,14 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("unused")
-    public void onPlayerQuit(final PlayerQuitEvent event)
+    void onQuit(final PlayerQuitEvent event)
 	{
 		final User user = ess.getUser(event.getPlayer());
 
-		if (ess.getSettings().allowSilentJoinQuit() && user.isAuthorized("essentials.silentquit"))
+		if (ess.getSettings().allowSilentJoinQuit())
 		{
 			event.setQuitMessage(null);
 		}
-		else if (ess.getSettings().isCustomQuitMessage() && event.getQuitMessage() != null)
-		{
-			final Player player = event.getPlayer();
-			event.setQuitMessage(
-					ess.getSettings().getCustomQuitMessage()
-					.replace("{PLAYER}", player.getDisplayName())
-					.replace("{USERNAME}", player.getName()));
-		}
-
 		if (ess.getSettings().removeGodOnDisconnect() && user.isGodModeEnabled())
 		{
 			user.setGodModeEnabled(false);
@@ -189,17 +179,17 @@ public class EssentialsPlayerListener implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerJoin(final PlayerJoinEvent event)
+    @SuppressWarnings("unused")
+	void onJoin(final PlayerJoinEvent event)
 	{
-		final String joinMessage = event.getJoinMessage();
-		ess.runTaskAsynchronously(() -> delayedJoin(event.getPlayer(), joinMessage));
-		if (ess.getSettings().allowSilentJoinQuit() || ess.getSettings().isCustomJoinMessage())
-		{
-			event.setJoinMessage(null);
-		}
+        if (ess.getSettings().allowSilentJoinQuit())
+        {
+            event.setJoinMessage(null);
+        }
+		ess.runTaskAsynchronously(() -> delayedJoin(event.getPlayer()));
 	}
 
-	public void delayedJoin(final Player player, final String message)
+	void delayedJoin(final Player player)
 	{
 		if (!player.isOnline())
 		{
@@ -257,7 +247,6 @@ public class EssentialsPlayerListener implements Listener
 				user.setLastAccountName(user.getBase().getName());
 				user.setLastLogin(currentTime);
 				user.setDisplayNick();
-				updateCompass(user);
 
 				if (!ess.getVanishedPlayers().isEmpty() && !user.isAuthorized("essentials.vanish.see"))
 				{
@@ -276,28 +265,11 @@ public class EssentialsPlayerListener implements Listener
 					user.getBase().setSleepingIgnored(true);
 				}
 
-				if (ess.getSettings().allowSilentJoinQuit() && (user.isAuthorized("essentials.silentjoin") || user.isAuthorized("essentials.silentjoin.vanish")))
-				{
-					if (user.isAuthorized("essentials.silentjoin.vanish"))
-					{
-						user.setVanished(true);
-					}
-				}
-				else if (message == null)
-				{
-					//NOOP
-				}
-				else if (ess.getSettings().isCustomJoinMessage())
-				{
-					ess.getServer().broadcastMessage(
-							ess.getSettings().getCustomJoinMessage()
-							.replace("{PLAYER}", player.getDisplayName())
-							.replace("{USERNAME}", player.getName()));
-				}
-				else if (ess.getSettings().allowSilentJoinQuit())
-				{
-					ess.getServer().broadcastMessage(message);
-				}
+				if (ess.getSettings().allowSilentJoinQuit() && (user.isAuthorized("essentials.silentjoin") || user.isAuthorized("essentials.silentjoin.vanish"))) {
+                    if (user.isAuthorized("essentials.silentjoin.vanish")) {
+                        user.setVanished(true);
+                    }
+                }
 
 				if (input != null && user.isAuthorized("essentials.motd"))
 				{
@@ -339,24 +311,10 @@ public class EssentialsPlayerListener implements Listener
 		ess.scheduleSyncDelayedTask(new DelayJoinTask());
 	}
 
-	// Makes the compass item ingame always point to the first essentials home.  #EasterEgg
-	private void updateCompass(final User user)
-	{
-		Location loc = user.getHome(user.getLocation());
-		if (loc == null)
-		{
-			loc = user.getBase().getBedSpawnLocation();
-		}
-		if (loc != null)
-		{
-			final Location updateLoc = loc;
-			user.getBase().setCompassTarget(updateLoc);
-		}
-	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
     @SuppressWarnings("unused")
-    public void onPlayerLogin2(final PlayerLoginEvent event)
+    void onLogin2(final PlayerLoginEvent event)
 	{
 		switch (event.getResult())
 		{
@@ -372,7 +330,7 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.HIGH)
     @SuppressWarnings("unused")
-    public void onPlayerLogin(final PlayerLoginEvent event)
+    void onLogin(final PlayerLoginEvent event)
 	{
 		switch (event.getResult())
 		{
@@ -414,7 +372,7 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    public void onPlayerTeleport(final PlayerTeleportEvent event)
+    void onTeleport(final PlayerTeleportEvent event)
 	{
 		final boolean backListener = ess.getSettings().registerBackInListener();
 		final boolean teleportInvulnerability = ess.getSettings().isTeleportInvulnerability();
@@ -435,7 +393,7 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    public void onPlayerEggThrow(final PlayerEggThrowEvent event)
+    void onEggThrow(final PlayerEggThrowEvent event)
 	{
 		final User user = ess.getUser(event.getPlayer());
 		final ItemStack stack = new ItemStack(Material.EGG, 1);
@@ -448,7 +406,7 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    public void onPlayerBucketEmpty(final PlayerBucketEmptyEvent event)
+    void onBucketEmpty(final PlayerBucketEmptyEvent event)
 	{
 		final User user = ess.getUser(event.getPlayer());
 		if (user.hasUnlimited(new ItemStack(event.getBucket())))
@@ -460,7 +418,7 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    public void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event)
+    void onCommandPreprocess(final PlayerCommandPreprocessEvent event)
 	{
 		final Player player = event.getPlayer();
 		final String cmd = event.getMessage().toLowerCase(Locale.ENGLISH).split(" ")[0].replace("/", "").toLowerCase(Locale.ENGLISH);
@@ -484,7 +442,7 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.NORMAL)
     @SuppressWarnings("unused")
-    public void onPlayerChangedWorldFlyReset(final PlayerChangedWorldEvent event)
+    void onChangedWorldFlyReset(final PlayerChangedWorldEvent event)
 	{
 		final User user = ess.getUser(event.getPlayer());
 		if (user.getBase().getGameMode() != GameMode.CREATIVE && !user.isAuthorized("essentials.fly"))
@@ -521,12 +479,11 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
-    public void onPlayerChangedWorld(final PlayerChangedWorldEvent event)
+    void onChangedWorld(final PlayerChangedWorldEvent event)
 	{
 		final User user = ess.getUser(event.getPlayer());
 		final String newWorld = event.getPlayer().getLocation().getWorld().getName();
 		user.setDisplayNick();
-		updateCompass(user);
 		if (ess.getSettings().getNoGodWorlds().contains(newWorld) && user.isGodModeEnabledRaw())
 		{
 			user.sendMessage(tl("noGodWorldWarning"));
@@ -544,7 +501,7 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.NORMAL)
     @SuppressWarnings("unused")
-    public void onPlayerInteract(final PlayerInteractEvent event)
+    void onInteract(final PlayerInteractEvent event)
 	{
 		switch (event.getAction())
 		{
@@ -559,16 +516,6 @@ public class EssentialsPlayerListener implements Listener
                     }
                 }
                 break;
-            case LEFT_CLICK_AIR:
-                if (event.getPlayer().isFlying())
-                {
-                    final User user = ess.getUser(event.getPlayer());
-                    if (user.isFlyClickJump())
-                    {
-                        useFlyClickJump(user);
-                        return;
-                    }
-                }
             case LEFT_CLICK_BLOCK:
                 if (event.getItem() != null && event.getItem().getType() != Material.AIR)
                 {
@@ -583,40 +530,7 @@ public class EssentialsPlayerListener implements Listener
 		}
 	}
 
-	// This method allows the /jump lock feature to work, allows teleporting while flying #EasterEgg
-	private void useFlyClickJump(final User user)
-	{
-		try
-		{
-			final Location otarget = LocationUtil.getTarget(user.getBase());
-
-			class DelayedClickJumpTask implements Runnable
-			{
-				@Override
-				public void run()
-				{
-					Location loc = user.getLocation();
-					loc.setX(otarget.getX());
-					loc.setZ(otarget.getZ());
-					while (LocationUtil.isBlockDamaging(loc.getWorld(), loc.getBlockX(), loc.getBlockY() - 1, loc.getBlockZ()))
-					{
-						loc.setY(loc.getY() + 1d);
-					}
-					user.getBase().teleport(loc, TeleportCause.PLUGIN);
-				}
-			}
-			ess.scheduleSyncDelayedTask(new DelayedClickJumpTask());
-		}
-		catch (Exception ex)
-		{
-			if (ess.getSettings().isDebug())
-			{
-				LOGGER.log(Level.WARNING, ex.getMessage(), ex);
-			}
-		}
-	}
-
-	private boolean usePowertools(final User user, final int id)
+	boolean usePowertools(final User user, final int id)
 	{
 		final List<String> commandList = user.getPowertool(id);
 		if (commandList == null || commandList.isEmpty())
@@ -629,8 +543,7 @@ public class EssentialsPlayerListener implements Listener
 		{
 			if (command.contains("{player}"))
 			{
-				continue;
-			}
+            }
 			else if (command.startsWith("c:"))
 			{
 				used = true;
@@ -658,7 +571,7 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    public void onPlayerPickupItem(final PlayerPickupItemEvent event)
+    void onPickupItem(final PlayerPickupItemEvent event)
 	{
 		if (ess.getSettings().getDisableItemPickupWhileAfk())
 		{
@@ -671,7 +584,7 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    public void onInventoryClickEvent(final InventoryClickEvent event)
+    void onInventoryClickEvent(final InventoryClickEvent event)
 	{
 		Player refreshPlayer = null;
 		final Inventory top = event.getView().getTopInventory();
@@ -724,14 +637,13 @@ public class EssentialsPlayerListener implements Listener
 
 		if (refreshPlayer != null)
 		{
-			final Player player = refreshPlayer;
-			ess.scheduleSyncDelayedTask(() -> player.updateInventory(), 1);
+            ess.scheduleSyncDelayedTask(refreshPlayer::updateInventory, 1);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
-    public void onInventoryCloseEvent(final InventoryCloseEvent event)
+    void onInventoryCloseEvent(final InventoryCloseEvent event)
 	{
 		Player refreshPlayer = null;
 		final Inventory top = event.getView().getTopInventory();
@@ -771,14 +683,13 @@ public class EssentialsPlayerListener implements Listener
 
 		if (refreshPlayer != null)
 		{
-			final Player player = refreshPlayer;
-			ess.scheduleSyncDelayedTask(() -> player.updateInventory(), 1);
+            ess.scheduleSyncDelayedTask(refreshPlayer::updateInventory, 1);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    public void onPlayerFishEvent(final PlayerFishEvent event)
+    void onFishEvent(final PlayerFishEvent event)
 	{
 		final User user = ess.getUser(event.getPlayer());
 		user.updateActivity(true);
