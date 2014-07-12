@@ -84,7 +84,8 @@
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>Vault</artifactId>
             <version>1.4.1</version>
-            <scope>provided</scope>
+            <systemPath>${project.basedir}/../../Vault/target/Vault.jar</systemPath>
+            <scope>system</scope>
         </dependency>
 	</dependencies>
 </project>
