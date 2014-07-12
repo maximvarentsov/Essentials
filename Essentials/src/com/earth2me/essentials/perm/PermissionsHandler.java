@@ -3,7 +3,6 @@ package com.earth2me.essentials.perm;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
-import ru.gtncraft.permissions.Permissions;
 
 import java.util.Collections;
 import java.util.List;
@@ -105,11 +104,8 @@ public class PermissionsHandler implements IPermissionsHandler
 		final Plugin permBukkitPlugin = pluginManager.getPlugin("Permissions");
 		if (permBukkitPlugin != null && permBukkitPlugin.isEnabled())
 		{
-			if (!(handler instanceof Permissions))
-			{
-				LOGGER.log(Level.INFO, "Essentials: Using Permissions based permissions.");
-				handler = new GPermissionsHandler(permBukkitPlugin);
-			}
+			LOGGER.log(Level.INFO, "Essentials: Using Permissions based permissions.");
+			handler = new GPermissionsHandler(permBukkitPlugin);
 			return;
 		}
 

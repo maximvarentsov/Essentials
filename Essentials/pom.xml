@@ -73,9 +73,9 @@
 			<version>LATEST</version>
 		</dependency>
         <dependency>
-            <groupId>ru.gtncraft</groupId>
+            <groupId>ru.gtncraft.permissions</groupId>
             <artifactId>permissions</artifactId>
-            <version>0.1</version>
+            <version>0.2</version>
             <optional>true</optional>
             <scope>system</scope>
             <systemPath>${project.basedir}/../../Permissions/target/Permissions.jar</systemPath>
