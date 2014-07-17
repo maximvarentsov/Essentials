@@ -26,6 +26,5 @@ public class Commandsuicide extends EssentialsCommand
 		}
 		user.sendMessage(tl("suicideMessage"));
 		user.setDisplayNick();
-		ess.broadcastMessage(user, tl("suicideSuccess", user.getDisplayName()));
 	}
 }
