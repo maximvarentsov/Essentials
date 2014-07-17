@@ -8,6 +8,8 @@ import org.bukkit.Server;
 
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
+import java.util.Date;
+import org.bukkit.BanList;
 
 import static com.earth2me.essentials.I18n.tl;
 
@@ -46,8 +48,8 @@ public class Commandtempban extends EssentialsCommand
 		}
 		final String time = getFinalArg(args, 1);
 		final long banTimestamp = DateUtil.parseDateDiff(time, true);
-		String stringDregs = DateUtil.removeTimePattern(time);
-		
+		String banReason = DateUtil.removeTimePattern(time);
+
 		final long maxBanLength = ess.getSettings().getMaxTempban() * 1000;
 		if (maxBanLength > 0 && ((banTimestamp - GregorianCalendar.getInstance().getTimeInMillis()) > maxBanLength)
 			&& sender.isPlayer() && !(ess.getUser(sender.getPlayer()).isAuthorized("essentials.tempban.unlimited")))
@@ -55,20 +57,20 @@ public class Commandtempban extends EssentialsCommand
 			sender.sendMessage(tl("oversizedTempban"));
 			throw new NoChargeException();
 		}
-		
-		if (stringDregs.length() < 2) 
+
+		if (banReason.length() < 2)
 		{
-			stringDregs = tl("defaultBanReason");
+			banReason = tl("defaultBanReason");
 		}
 
 		final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : Console.NAME;
-		final String banReason = tl("tempBanned", DateUtil.formatDateDiff(banTimestamp), senderName, stringDregs);
-		user.setBanReason(banReason);
-		user.setBanTimeout(banTimestamp);
-		user.getBase().setBanned(true);
-		user.getBase().kickPlayer(banReason);
+		ess.getServer().getBanList(BanList.Type.NAME).addBan(user.getName(), banReason, new Date(banTimestamp), senderName);
+		final String expiry = DateUtil.formatDateDiff(banTimestamp);
 
-		final String message = tl("playerBanned", senderName, user.getName(), banReason, DateUtil.formatDateDiff(banTimestamp));
+		final String banDisplay = tl("tempBanned", expiry, senderName, banReason);
+		user.getBase().kickPlayer(banDisplay);
+
+		final String message = tl("playerTempBanned", senderName, user.getName(), expiry, banReason);
 		server.getLogger().log(Level.INFO, message);
 		ess.broadcastMessage("essentials.ban.notify", message);
 	}

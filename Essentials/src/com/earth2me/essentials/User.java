@@ -292,9 +292,12 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 		String nickname;
 		String suffix = "";
 		final String nick = getNickname();
-		if (ess.getSettings().isCommandDisabled("nick") || nick == null || nick.isEmpty() || nick.equalsIgnoreCase(getName()))
+		if (ess.getSettings().isCommandDisabled("nick") || nick == null || nick.isEmpty() || nick.equals(getName()))
 		{
 			nickname = getName();
+		}
+		else if (nick.equalsIgnoreCase(getName())) {
+			nickname = nick;
 		}
 		else
 		{
@@ -534,18 +537,6 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 			setMuteTimeout(0);
 			sendMessage(tl("canTalkAgain"));
 			setMuted(false);
-			return true;
-		}
-		return false;
-	}
-
-	//Returns true if status expired during this check
-	public boolean checkBanTimeout(final long currentTime)
-	{
-		if (getBanTimeout() > 0 && getBanTimeout() < currentTime && this.getBase().isBanned())
-		{
-			setBanTimeout(0);
-			this.getBase().setBanned(false);
 			return true;
 		}
 		return false;

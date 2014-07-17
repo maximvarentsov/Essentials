@@ -4,9 +4,9 @@ import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.Console;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
-import org.bukkit.Server;
-
 import java.util.logging.Level;
+import org.bukkit.BanList;
+import org.bukkit.Server;
 
 import static com.earth2me.essentials.I18n.tl;
 
@@ -25,7 +25,7 @@ public class Commandunbanip extends EssentialsCommand
 		{
 			throw new NotEnoughArgumentsException();
 		}
-		
+
 		String ipAddress;
 		if (FormatUtil.validIP(args[0]))
 		{
@@ -49,7 +49,8 @@ public class Commandunbanip extends EssentialsCommand
 			throw new PlayerNotFoundException();
 		}
 
-		ess.getServer().unbanIP(ipAddress);
+
+		ess.getServer().getBanList(BanList.Type.IP).pardon(ipAddress);
 		final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : Console.NAME;
 		server.getLogger().log(Level.INFO, tl("playerUnbanIpAddress", senderName, ipAddress));
 

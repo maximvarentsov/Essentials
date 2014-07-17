@@ -17,8 +17,8 @@ import java.security.MessageDigest;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import static com.earth2me.essentials.I18n.tl;
+import org.bukkit.BanList;
 
 
 public class EssentialsUpgrade
@@ -616,6 +616,101 @@ public class EssentialsUpgrade
 		ess.getLogger().info("To rerun the conversion type /essentials uuidconvert");
 	}
 
+	public void banFormatChange()
+	{
+		if (doneFile.getBoolean("banFormatChange", false))
+		{
+			return;
+		}
+
+		ess.getLogger().info("Starting Essentials ban format conversion");
+
+		final File userdir = new File(ess.getDataFolder(), "userdata");
+		if (!userdir.exists())
+		{
+			return;
+		}
+
+		int countFiles = 0;
+
+		ess.getLogger().info("Found " + userdir.list().length + " files to convert...");
+
+		for (String string : userdir.list())
+		{
+			if (!string.endsWith(".yml") || string.length() < 5)
+			{
+				continue;
+			}
+
+			final int showProgress = countFiles % 250;
+
+			if (showProgress == 0)
+			{
+				ess.getLogger().info("Converted " + countFiles + "/" + userdir.list().length);
+			}
+
+			countFiles++;
+			final File pFile = new File(userdir, string);
+			final EssentialsConf conf = new EssentialsConf(pFile);
+			conf.load();
+			
+			String banReason;
+			Long banTimeout;
+
+			try
+			{
+				banReason = conf.getConfigurationSection("ban").getString("reason");
+			}
+			catch (NullPointerException n)
+			{
+				banReason = null;
+			}
+
+			final String playerName = conf.getString("lastAccountName");
+			if (playerName != null && playerName.length() > 1 && banReason != null && banReason.length() > 1)
+			{
+				try
+				{
+					if (conf.getConfigurationSection("ban").contains("timeout"))
+					{
+						banTimeout = Long.parseLong(conf.getConfigurationSection("ban").getString("timeout"));
+					}
+					else
+					{
+						banTimeout = 0L;
+					}
+				}
+				catch (NumberFormatException n)
+				{
+					banTimeout = 0L;
+				}
+				
+				if (ess.getServer().getBanList(BanList.Type.NAME).isBanned(playerName))
+				{
+					updateBan(playerName, banReason, banTimeout);
+				}
+			}
+			conf.removeProperty("ban");
+			conf.save();
+		}
+
+		doneFile.setProperty("banFormatChange", true);
+		doneFile.save();
+		ess.getLogger().info("Ban format update complete.");
+	}
+
+	private void updateBan(String playerName, String banReason, Long banTimeout)
+	{
+		if (banTimeout == 0)
+		{
+			Bukkit.getBanList(BanList.Type.NAME).addBan(playerName, banReason, null, Console.NAME);
+		}
+		else
+		{
+			Bukkit.getBanList(BanList.Type.NAME).addBan(playerName, banReason, new Date(banTimeout), Console.NAME);
+		}
+	}
+
 	public void beforeSettings()
 	{
 		if (!ess.getDataFolder().exists())
@@ -634,6 +729,7 @@ public class EssentialsUpgrade
 		deleteOldItemsCsv();
 		updateSpawnsToNewSpawnsConfig();
 		uuidFileChange();
+		banFormatChange();
 		warnMetrics();
 	}
 }

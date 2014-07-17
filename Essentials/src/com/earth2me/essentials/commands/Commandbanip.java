@@ -4,13 +4,14 @@ import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.Console;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
-import org.bukkit.Server;
-
 import java.util.logging.Level;
+import org.bukkit.BanList;
+import org.bukkit.Server;
 
 import static com.earth2me.essentials.I18n.tl;
 
 @SuppressWarnings("unused")
+//TODO: Add kick to online players matching ip ban.
 public class Commandbanip extends EssentialsCommand
 {
 	public Commandbanip()
@@ -51,9 +52,19 @@ public class Commandbanip extends EssentialsCommand
 			throw new PlayerNotFoundException();
 		}
 
-		ess.getServer().banIP(ipAddress);
-		server.getLogger().log(Level.INFO, tl("playerBanIpAddress", senderName, ipAddress));
+		String banReason;
+		if (args.length > 1)
+		{
+			banReason = FormatUtil.replaceFormat(getFinalArg(args, 1).replace("\\n", "\n").replace("|", "\n"));
+		}
+		else
+		{
+			banReason = tl("defaultBanReason");
+		}
 
-		ess.broadcastMessage("essentials.ban.notify", tl("playerBanIpAddress", senderName, ipAddress));
+		ess.getServer().getBanList(BanList.Type.IP).addBan(ipAddress, banReason, null, senderName);
+		server.getLogger().log(Level.INFO, tl("playerBanIpAddress", senderName, ipAddress, banReason));
+
+		ess.broadcastMessage("essentials.ban.notify", tl("playerBanIpAddress", senderName, ipAddress, banReason));
 	}
 }

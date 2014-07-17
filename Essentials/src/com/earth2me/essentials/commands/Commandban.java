@@ -5,9 +5,9 @@ import com.earth2me.essentials.Console;
 import com.earth2me.essentials.OfflinePlayer;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
-import org.bukkit.Server;
-
 import java.util.logging.Level;
+import org.bukkit.BanList;
+import org.bukkit.Server;
 
 import static com.earth2me.essentials.I18n.tl;
 
@@ -62,13 +62,13 @@ public class Commandban extends EssentialsCommand
 		{
 			banReason = tl("defaultBanReason");
 		}
+		
+		ess.getServer().getBanList(BanList.Type.NAME).addBan(user.getName(), banReason, null, senderName);
 
-		user.setBanReason(tl("banFormat", banReason, senderName));
-		user.getBase().setBanned(true);
-		user.setBanTimeout(0);
-		user.getBase().kickPlayer(tl("banFormat", banReason, senderName));
-
-		server.getLogger().log(Level.INFO, tl("playerBanned", senderName, user.getName(), banReason));
+		String banDisplay = tl("banFormat",  banReason, senderName);
+		
+		user.getBase().kickPlayer(banDisplay);
+		server.getLogger().log(Level.INFO, tl("playerBanned", senderName, user.getName(), banDisplay));
 
 		if (nomatch)
 		{

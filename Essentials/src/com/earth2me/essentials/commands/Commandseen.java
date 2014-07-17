@@ -8,10 +8,12 @@ import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.StringUtil;
 import org.bukkit.Location;
 import org.bukkit.Server;
-
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import org.bukkit.BanList;
 import java.util.UUID;
+import org.bukkit.BanEntry;
 
 import static com.earth2me.essentials.I18n.tl;
 
@@ -56,9 +58,14 @@ public class Commandseen extends EssentialsCommand
 					seenIP(server, sender, args[0]);
 					return;
 				}
-				else if (FormatUtil.validIP(args[0]) && (server.getIPBans().contains(args[0])))
+				else if (ess.getServer().getBanList(BanList.Type.IP).isBanned(args[0]))
 				{
 					sender.sendMessage(tl("isIpBanned", args[0]));
+					return;
+				}
+				else if (ess.getServer().getBanList(BanList.Type.NAME).isBanned(args[0]))
+				{
+					sender.sendMessage(tl("whoisBanned", showBan ? ess.getServer().getBanList(BanList.Type.NAME).getBanEntry(args[0]).getReason() : tl("true")));
 					return;
 				}
 				else
@@ -134,7 +141,19 @@ public class Commandseen extends EssentialsCommand
 
 		if (user.getBase().isBanned())
 		{
-			sender.sendMessage(tl("whoisBanned", showBan ? user.getBanReason() : tl("true")));
+			final BanEntry banEntry = ess.getServer().getBanList(BanList.Type.NAME).getBanEntry(user.getName());
+			final String reason = showBan ? banEntry.getReason() : tl("true");
+			sender.sendMessage(tl("whoisBanned", reason));
+			if (banEntry.getExpiration() != null)
+			{
+				Date expiry = banEntry.getExpiration();
+				String expireString = tl("now");
+				if (expiry.after(new Date()))
+				{
+					expireString = DateUtil.formatDateDiff(expiry.getTime());
+				}
+				sender.sendMessage(tl("whoisTempBanned", expireString));
+			}
 		}
 		final String location = user.getGeoLocation();
 		if (location != null && (!(sender.isPlayer()) || ess.getUser(sender.getPlayer()).isAuthorized("essentials.geoip.show")))
@@ -159,7 +178,7 @@ public class Commandseen extends EssentialsCommand
 	{
 		final UserMap userMap = ess.getUserMap();
 
-		if (server.getIPBans().contains(ipAddress))
+		if (ess.getServer().getBanList(BanList.Type.IP).isBanned(ipAddress))
 		{
 			sender.sendMessage(tl("isIpBanned", ipAddress));
 		}

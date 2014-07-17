@@ -3,10 +3,10 @@ package com.earth2me.essentials.commands;
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.Console;
 import com.earth2me.essentials.User;
+import java.util.logging.Level;
+import org.bukkit.BanList;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
-
-import java.util.logging.Level;
 
 import static com.earth2me.essentials.I18n.tl;
 
@@ -30,8 +30,7 @@ public class Commandunban extends EssentialsCommand
 		{
 			final User user = getPlayer(server, args, 0, true, true);
 			name = user.getName();
-			user.getBase().setBanned(false);
-			user.setBanTimeout(0);
+			ess.getServer().getBanList(BanList.Type.NAME).pardon(name);
 		}
 		catch (NoSuchFieldException e)
 		{
@@ -41,12 +40,12 @@ public class Commandunban extends EssentialsCommand
 			{
 				throw new Exception(tl("playerNotFound"), e);
 			}
-			player.setBanned(false);
+			ess.getServer().getBanList(BanList.Type.NAME).pardon(name);
 		}
 
 		final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : Console.NAME;
 		server.getLogger().log(Level.INFO, tl("playerUnbanned", senderName, name));
-		
+
 		ess.broadcastMessage("essentials.ban.notify", tl("playerUnbanned", senderName, name));
 	}
 }

@@ -66,8 +66,13 @@ public class Commandnick extends EssentialsLoopCommand
 		final String nick = args[0];
 		if (target.getName().equalsIgnoreCase(nick))
 		{
+			String oldName = target.getDisplayName();
 			setNickname(server, sender, target, nick);
-			target.sendMessage(tl("nickNoMore"));
+			if (!target.getDisplayName().equalsIgnoreCase(oldName))
+			{
+				target.sendMessage(tl("nickNoMore"));
+			}
+			target.sendMessage(tl("nickSet", target.getDisplayName()));
 		}
 		else if ("off".equalsIgnoreCase(nick))
 		{
@@ -119,8 +124,12 @@ public class Commandnick extends EssentialsLoopCommand
 				return true;
 			}
 		}
-        return ess.getUser(lowerNick) != null && ess.getUser(lowerNick) != target;
-    }
+		if (ess.getUser(lowerNick) != null && ess.getUser(lowerNick) != target)
+		{
+			return true;
+		}
+		return false;
+	}
 
 	private void setNickname(final Server server, final CommandSource sender, final User target, final String nickname)
 	{
