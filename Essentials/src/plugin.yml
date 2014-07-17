@@ -250,9 +250,6 @@ commands:
   suicide:
     description: Causes you to perish.
     usage: /<command>
-  tempban:
-    description: Temporary ban a user.
-    usage: /<command> <playername> <datediff>
   thunder:
     description: Enable/disable thunder.
     usage: /<command> <true/false> [duration]
