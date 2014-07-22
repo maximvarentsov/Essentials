@@ -72,7 +72,7 @@ public class PlayerList
 	public static Map<String, List<User>> getPlayerLists(final IEssentials ess, final User sender, final boolean showHidden)
 	{
 		Server server = ess.getServer();
-		final Map<String, List<User>> playerList = new HashMap<String, List<User>>();
+		final Map<String, List<User>> playerList = new HashMap<>();
 		for (Player onlinePlayer : server.getOnlinePlayers())
 		{
 			final User onlineUser = ess.getUser(onlinePlayer);
@@ -85,7 +85,7 @@ public class PlayerList
 			List<User> list = playerList.get(group);
 			if (list == null)
 			{
-				list = new ArrayList<User>();
+				list = new ArrayList<>();
 				playerList.put(group, list);
 			}
 			list.add(onlineUser);
@@ -97,7 +97,7 @@ public class PlayerList
 	public static List<User> getMergedList(final IEssentials ess, final Map<String, List<User>> playerList, final String groupName)
 	{
 		final Set<String> configGroups = ess.getSettings().getListGroupConfig().keySet();
-		final List<User> users = new ArrayList<User>();
+		final List<User> users = new ArrayList<>();
 		for (String configGroup : configGroups)
 		{
 			if (configGroup.equalsIgnoreCase(groupName))
@@ -106,7 +106,7 @@ public class PlayerList
 				for (String groupValue : groupValues)
 				{
 					groupValue = groupValue.toLowerCase(Locale.ENGLISH);
-					if (groupValue == null || groupValue.isEmpty())
+					if (groupValue.isEmpty())
 					{
 						continue;
 					}
