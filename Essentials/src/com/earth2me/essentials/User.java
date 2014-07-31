@@ -1,28 +1,28 @@
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.commands.IEssentialsCommand;
 import com.earth2me.essentials.register.payment.Method;
 import com.earth2me.essentials.register.payment.Methods;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.NumberUtil;
+import net.ess3.api.IEssentials;
+import net.ess3.api.MaxMoneyException;
+import net.ess3.api.events.AfkStatusChangeEvent;
+import net.ess3.api.events.UserBalanceUpdateEvent;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.ess3.api.IEssentials;
-import net.ess3.api.MaxMoneyException;
-import net.ess3.api.events.AfkStatusChangeEvent;
-import net.ess3.api.events.UserBalanceUpdateEvent;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class User extends UserData implements Comparable<User>, IReplyTo, net.ess3.api.IUser
@@ -39,7 +39,6 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	private transient long lastThrottledAction;
 	private transient long lastActivity = System.currentTimeMillis();
 	private boolean hidden = false;
-	private boolean rightClickJump = false;
 	private transient Location afkPosition = null;
 	private boolean invSee = false;
 	private boolean recipeSee = false;
@@ -138,7 +137,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	@Override
 	public void giveMoney(final BigDecimal value) throws MaxMoneyException
 	{
-		giveMoney(value, (CommandSource)null);
+		giveMoney(value, null);
 	}
 
 	@Override
@@ -313,22 +312,6 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 			suffix = "§r";
 		}
 
-		if (this.getBase().isOp())
-		{
-			try
-			{
-				final ChatColor opPrefix = ess.getSettings().getOperatorColor();
-				if (opPrefix != null && opPrefix.toString().length() > 0)
-				{
-					prefix.insert(0, opPrefix.toString());
-					suffix = "§r";
-				}
-			}
-			catch (Exception e)
-			{
-			}
-		}
-
 		if (ess.getSettings().addPrefixSuffix())
 		{
 			//These two extra toggles are not documented, because they are mostly redundant #EasterEgg
@@ -445,7 +428,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 				final Method.MethodAccount account = Methods.getMethod().getAccount(this.getName());
 				return BigDecimal.valueOf(account.balance());
 			}
-			catch (Exception ex)
+			catch (Exception ingnore)
 			{
 			}
 		}
@@ -514,7 +497,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 			return;
 		}
 
-		this.getBase().setSleepingIgnored(this.isAuthorized("essentials.sleepingignored") ? true : set);
+		this.getBase().setSleepingIgnored(this.isAuthorized("essentials.sleepingignored") || set);
 		if (set && !isAfk())
 		{
 			afkPosition = this.getLocation();
@@ -547,38 +530,10 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	public void setHidden(final boolean hidden)
 	{
 		this.hidden = hidden;
-		if (hidden == true)
+		if (hidden)
 		{
 			setLastLogout(getLastOnlineActivity());
 		}
-	}
-
-	//Returns true if status expired during this check
-	public boolean checkJailTimeout(final long currentTime)
-	{
-		if (getJailTimeout() > 0 && getJailTimeout() < currentTime && isJailed())
-		{
-			setJailTimeout(0);
-			setJailed(false);
-			sendMessage(tl("haveBeenReleased"));
-			setJail(null);
-			try
-			{
-				getTeleport().back();
-			}
-			catch (Exception ex)
-			{
-				try
-				{
-					getTeleport().respawn(null, TeleportCause.PLUGIN);
-				}
-				catch (Exception ex1)
-				{
-				}
-			}
-			return true;
-		}
-		return false;
 	}
 
 	//Returns true if status expired during this check
@@ -594,58 +549,17 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 		return false;
 	}
 
-	public void updateActivity(final boolean broadcast)
+	public void updateActivity()
 	{
-		if (isAfk() && ess.getSettings().cancelAfkOnInteract())
+		if (isAfk())
 		{
 			setAfk(false);
-			if (broadcast && !isHidden())
-			{
-				setDisplayNick();
-				final String msg = tl("userIsNotAway", getDisplayName());
-				if (!msg.isEmpty())
-				{
-					ess.broadcastMessage(this, msg);
-				}
-			}
 		}
 		lastActivity = System.currentTimeMillis();
-	}
-
-	public void checkActivity()
-	{
-		final long autoafkkick = ess.getSettings().getAutoAfkKick();
-		if (autoafkkick > 0 && lastActivity > 0 && (lastActivity + (autoafkkick * 1000)) < System.currentTimeMillis()
-			&& !isHidden() && !isAuthorized("essentials.kick.exempt") && !isAuthorized("essentials.afk.kickexempt"))
-		{
-			final String kickReason = tl("autoAfkKickReason", autoafkkick / 60.0);
-			lastActivity = 0;
-			this.getBase().kickPlayer(kickReason);
-
-
-			for (Player player : ess.getServer().getOnlinePlayers())
-			{
-				final User user = ess.getUser(player);
-				if (user.isAuthorized("essentials.kick.notify"))
-				{
-					user.sendMessage(tl("playerKicked", Console.NAME, getName(), kickReason));
-				}
-			}
-		}
-		final long autoafk = ess.getSettings().getAutoAfk();
-		if (!isAfk() && autoafk > 0 && lastActivity + autoafk * 1000 < System.currentTimeMillis() && isAuthorized("essentials.afk.auto"))
-		{
-			setAfk(true);
-			if (!isHidden())
-			{
-				setDisplayNick();
-				final String msg = tl("userIsAway", getDisplayName());
-				if (!msg.isEmpty())
-				{
-					ess.broadcastMessage(this, msg);
-				}
-			}
-		}
+        setDisplayNick();
+        //if (broadcast) {
+            //sendMessage(tl("userIsNotAway", getDisplayName()));
+        //}
 	}
 
 	public Location getAfkPosition()
@@ -656,8 +570,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	@Override
 	public boolean isGodModeEnabled()
 	{
-		return (super.isGodModeEnabled() && !ess.getSettings().getNoGodWorlds().contains(this.getLocation().getWorld().getName()))
-			   || (isAfk() && ess.getSettings().getFreezeAfkPlayers());
+		return (super.isGodModeEnabled() && !ess.getSettings().getNoGodWorlds().contains(this.getLocation().getWorld().getName())) || (isAfk());
 	}
 
 	public boolean isGodModeEnabledRaw()
@@ -813,16 +726,6 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	public void updateThrottle()
 	{
 		lastThrottledAction = System.currentTimeMillis();
-	}
-
-	public boolean isFlyClickJump()
-	{
-		return rightClickJump;
-	}
-
-	public void setRightClickJump(boolean rightClickJump)
-	{
-		this.rightClickJump = rightClickJump;
 	}
 
 	@Override

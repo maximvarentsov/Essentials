@@ -35,16 +35,14 @@ public class TextInput implements IText
 		{
 			file = new File(ess.getDataFolder(), filename + ".txt");
 		}
-        long lastChange;
         if (file.exists())
 		{
-			lastChange = file.lastModified();
 			boolean readFromfile;
 			synchronized (cache)
 			{
 				final SoftReference<TextInput> inputRef = cache.get(file.getName());
 				TextInput input;
-				if (inputRef == null || (input = inputRef.get()) == null || lastChange < lastChange)
+				if (inputRef == null || (input = inputRef.get()) == null)
 				{
 					lines = new ArrayList<>();
 					chapters = new ArrayList<>();
@@ -80,15 +78,11 @@ public class TextInput implements IText
                         lines.add(FormatUtil.replaceFormat(line));
                         lineNumber++;
                     }
-                } finally {
-                    reader.close();
-
                 }
 			}
 		}
 		else
 		{
-			lastChange = 0;
 			lines = Collections.emptyList();
 			chapters = Collections.emptyList();
 			bookmarks = Collections.emptyMap();

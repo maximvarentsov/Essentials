@@ -3,7 +3,6 @@ package com.earth2me.essentials.commands;
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.User;
 import org.bukkit.Server;
-import org.bukkit.entity.Player;
 
 import static com.earth2me.essentials.I18n.tl;
 

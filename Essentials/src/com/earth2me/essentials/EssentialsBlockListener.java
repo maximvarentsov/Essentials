@@ -2,7 +2,6 @@ package com.earth2me.essentials;
 
 import com.earth2me.essentials.utils.LocationUtil;
 import net.ess3.api.IEssentials;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
@@ -53,21 +52,6 @@ public class EssentialsBlockListener implements Listener
 					}
 				}
 			}
-		}
-
-		final User user = ess.getUser(event.getPlayer());
-		if (user.hasUnlimited(is) && user.getBase().getGameMode() == GameMode.SURVIVAL)
-		{
-			class UnlimitedItemSpawnTask implements Runnable
-			{
-				@Override
-				public void run()
-				{
-					user.getBase().getInventory().addItem(is);
-					user.getBase().updateInventory();
-				}
-			}
-			ess.scheduleSyncDelayedTask(new UnlimitedItemSpawnTask());
 		}
 	}
 }

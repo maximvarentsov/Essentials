@@ -18,11 +18,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
-import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -48,7 +46,7 @@ public class EssentialsPlayerListener implements Listener
     @SuppressWarnings("unused")
     void onRespawn(final PlayerRespawnEvent event)
 	{
-		final User user = ess.getUser(event.getPlayer());
+		User user = ess.getUser(event.getPlayer());
 		user.setDisplayNick();
 
 		if (ess.getSettings().isTeleportInvulnerability())
@@ -92,67 +90,36 @@ public class EssentialsPlayerListener implements Listener
 			}
 		}
 
-		user.updateActivity(true);
+		user.updateActivity();
 		user.setDisplayNick();
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     @SuppressWarnings("unused")
-	void onMove(final PlayerMoveEvent event)
-	{
-		if (event.getFrom().getBlockX() == event.getTo().getBlockX()
-			&& event.getFrom().getBlockZ() == event.getTo().getBlockZ()
-			&& event.getFrom().getBlockY() == event.getTo().getBlockY())
-		{
-			return;
-		}
+	void onPlayerMove(final PlayerMoveEvent event) {
+        Location from = event.getFrom();
+        Location to = event.getTo();
 
-		if (!ess.getSettings().cancelAfkOnMove() && !ess.getSettings().getFreezeAfkPlayers())
-		{
-			event.getHandlers().unregister(this);
+        if (from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ()) {
+            return;
+        }
 
-			if (ess.getSettings().isDebug())
-			{
-				LOGGER.log(Level.INFO, "Unregistering move listener");
-			}
+		User user = ess.getUser(event.getPlayer());
 
-			return;
-		}
-
-		final User user = ess.getUser(event.getPlayer());
-		if (user.isAfk() && ess.getSettings().getFreezeAfkPlayers())
-		{
-			final Location from = event.getFrom();
-			final Location origTo = event.getTo();
-			final Location to = origTo.clone();
-			if (ess.getSettings().cancelAfkOnMove() && origTo.getY() >= from.getBlockY() + 1)
-			{
-				user.updateActivity(true);
+        if (user.isAfk()) {
+            // Falling don't change afc status.
+            if (from.getBlockY() > to.getBlockY()) {
 				return;
 			}
-			to.setX(from.getX());
-			to.setY(from.getY());
-			to.setZ(from.getZ());
-			try
-			{
-				event.setTo(LocationUtil.getSafeDestination(to));
-			}
-			catch (Exception ex)
-			{
-				event.setTo(to);
-			}
-			return;
-		}
-		final Location afk = user.getAfkPosition();
-		if (afk == null || !event.getTo().getWorld().equals(afk.getWorld()) || afk.distanceSquared(event.getTo()) > 9)
-		{
-			user.updateActivity(true);
+            if (from.getBlockX() != to.getBlockX() || from.getBlockY() == to.getBlockY() || from.getBlockZ() == to.getBlockZ()) {
+                user.updateActivity();
+            }
 		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("unused")
-    void onQuit(final PlayerQuitEvent event)
+    void onPlayerQuit(final PlayerQuitEvent event)
 	{
 		final User user = ess.getUser(event.getPlayer());
 
@@ -173,7 +140,7 @@ public class EssentialsPlayerListener implements Listener
 		{
 			user.getBase().getOpenInventory().getTopInventory().clear();
 		}
-		user.updateActivity(false);
+		user.updateActivity();
 		user.dispose();
 	}
 
@@ -204,7 +171,7 @@ public class EssentialsPlayerListener implements Listener
 
 		final long currentTime = System.currentTimeMillis();
 		dUser.checkMuteTimeout(currentTime);
-		dUser.updateActivity(false);
+		dUser.updateActivity();
 
 		IText tempInput = null;
 
@@ -318,68 +285,31 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.HIGH)
     @SuppressWarnings("unused")
-    void onLogin(final PlayerLoginEvent event)
-	{
-		switch (event.getResult())
-		{
-            case KICK_FULL:
-                final User kfuser = ess.getUser(event.getPlayer());
-                if (kfuser.isAuthorized("essentials.joinfullserver"))
-                {
-                    event.allow();
-                    return;
-                }
-                event.disallow(Result.KICK_FULL, tl("serverFull"));
-                break;
-            default:
-                break;
-		}
+    void onPlayerLogin(final PlayerLoginEvent event) {
+        if (!event.getResult().equals(PlayerLoginEvent.Result.KICK_FULL)) {
+            return;
+        }
+        if (ess.getUser(event.getPlayer()).isAuthorized("essentials.joinfullserver")) {
+            event.allow();
+        }
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    void onTeleport(final PlayerTeleportEvent event)
-	{
-		final boolean backListener = ess.getSettings().registerBackInListener();
-		final boolean teleportInvulnerability = ess.getSettings().isTeleportInvulnerability();
-		if (backListener || teleportInvulnerability)
-		{
-			final User user = ess.getUser(event.getPlayer());
-			//There is TeleportCause.COMMMAND but plugins have to actively pass the cause in on their teleports.
-			if (backListener && (event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND))
-			{
-				user.setLastLocation();
-			}
-			if (teleportInvulnerability && (event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND))
-			{
-				user.enableInvulnerabilityAfterTeleport();
-			}
-		}
-	}
+    void onPlayerTeleport(final PlayerTeleportEvent event) {
+        User user = ess.getUser(event.getPlayer());
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    @SuppressWarnings("unused")
-    void onEggThrow(final PlayerEggThrowEvent event)
-	{
-		final User user = ess.getUser(event.getPlayer());
-		final ItemStack stack = new ItemStack(Material.EGG, 1);
-		if (user.hasUnlimited(stack))
-		{
-			user.getBase().getInventory().addItem(stack);
-			user.getBase().updateInventory();
-		}
-	}
+        boolean backListener = ess.getSettings().registerBackInListener();
+        boolean teleportInvulnerability = ess.getSettings().isTeleportInvulnerability();
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    @SuppressWarnings("unused")
-    void onBucketEmpty(final PlayerBucketEmptyEvent event)
-	{
-		final User user = ess.getUser(event.getPlayer());
-		if (user.hasUnlimited(new ItemStack(event.getBucket())))
-		{
-			event.getItemStack().setType(event.getBucket());
-			ess.scheduleSyncDelayedTask(() -> user.getBase().updateInventory());
-		}
+        if (event.getCause() == TeleportCause.PLUGIN || event.getCause() == TeleportCause.COMMAND) {
+            if (backListener) {
+                user.setLastLocation();
+            }
+            if (teleportInvulnerability) {
+                user.enableInvulnerabilityAfterTeleport();
+            }
+        }
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -400,8 +330,7 @@ public class EssentialsPlayerListener implements Listener
 		}
 		else if (!cmd.equalsIgnoreCase("afk"))
 		{
-			final User user = ess.getUser(player);
-			user.updateActivity(true);
+			ess.getUser(player).updateActivity();
 		}
 	}
 
@@ -409,7 +338,8 @@ public class EssentialsPlayerListener implements Listener
     @SuppressWarnings("unused")
     void onChangedWorldFlyReset(final PlayerChangedWorldEvent event)
 	{
-		final User user = ess.getUser(event.getPlayer());
+		User user = ess.getUser(event.getPlayer());
+
 		if (user.getBase().getGameMode() != GameMode.CREATIVE && !user.isAuthorized("essentials.fly"))
 		{
 			user.getBase().setFallDistance(0f);
@@ -485,7 +415,7 @@ public class EssentialsPlayerListener implements Listener
                 if (event.getItem() != null && event.getItem().getType() != Material.AIR)
                 {
                     final User user = ess.getUser(event.getPlayer());
-                    user.updateActivity(true);
+                    user.updateActivity();
                     if (user.hasPowerTools() && user.arePowerToolsEnabled() && usePowertools(user, event.getItem().getTypeId()))
                     {
                         event.setCancelled(true);
@@ -536,20 +466,15 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    void onPickupItem(final PlayerPickupItemEvent event)
-	{
-		if (ess.getSettings().getDisableItemPickupWhileAfk())
-		{
-			if (ess.getUser(event.getPlayer()).isAfk())
-			{
-				event.setCancelled(true);
-			}
+    void onPlayerPickupItem(final PlayerPickupItemEvent event) {
+		if (ess.getUser(event.getPlayer()).isAfk()) {
+		    event.setCancelled(true);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    void onInventoryClickEvent(final InventoryClickEvent event)
+    void onInventoryClick(final InventoryClickEvent event)
 	{
 		Player refreshPlayer = null;
 		final Inventory top = event.getView().getTopInventory();
@@ -608,25 +533,19 @@ public class EssentialsPlayerListener implements Listener
 
 	@EventHandler(priority = EventPriority.MONITOR)
     @SuppressWarnings("unused")
-    void onInventoryCloseEvent(final InventoryCloseEvent event)
-	{
+    void onInventoryClose(final InventoryCloseEvent event) {
 		Player refreshPlayer = null;
 		final Inventory top = event.getView().getTopInventory();
 		final InventoryType type = top.getType();
-		if (type == InventoryType.PLAYER)
-		{
+		if (type == InventoryType.PLAYER) {
 			final User user = ess.getUser((Player)event.getPlayer());
 			user.setInvSee(false);
 			refreshPlayer = user.getBase();
-		}
-		else if (type == InventoryType.ENDER_CHEST)
-		{
+		} else if (type == InventoryType.ENDER_CHEST) {
 			final User user = ess.getUser((Player)event.getPlayer());
 			user.setEnderSee(false);
 			refreshPlayer = user.getBase();
-		}
-		else if (type == InventoryType.WORKBENCH)
-		{
+		} else if (type == InventoryType.WORKBENCH) {
 			final User user = ess.getUser((Player)event.getPlayer());
 			if (user.isRecipeSee())
 			{
@@ -634,9 +553,7 @@ public class EssentialsPlayerListener implements Listener
 				event.getView().getTopInventory().clear();
 				refreshPlayer = user.getBase();
 			}
-		}
-		else if (type == InventoryType.CHEST && top.getSize() == 9)
-		{
+		} else if (type == InventoryType.CHEST && top.getSize() == 9) {
 			final InventoryHolder invHolder = top.getHolder();
 			if (invHolder != null && invHolder instanceof HumanEntity)
 			{
@@ -646,17 +563,14 @@ public class EssentialsPlayerListener implements Listener
 			}
 		}
 
-		if (refreshPlayer != null)
-		{
-            ess.scheduleSyncDelayedTask(refreshPlayer::updateInventory, 1);
+		if (refreshPlayer != null) {
+            refreshPlayer.updateInventory();
 		}
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     @SuppressWarnings("unused")
-    void onFishEvent(final PlayerFishEvent event)
-	{
-		final User user = ess.getUser(event.getPlayer());
-		user.updateActivity(true);
+    void onPlayerFish(final PlayerFishEvent event) {
+		ess.getUser(event.getPlayer()).updateActivity();
 	}
 }

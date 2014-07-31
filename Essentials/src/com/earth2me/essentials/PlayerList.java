@@ -1,16 +1,12 @@
 package com.earth2me.essentials;
 
-import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.utils.FormatUtil;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+
+import java.util.*;
+
+import static com.earth2me.essentials.I18n.tl;
 
 
 public class PlayerList
@@ -63,11 +59,11 @@ public class PlayerList
 		String online;
 		if (hiddenCount > 0)
 		{
-			online = tl("listAmountHidden", server.getOnlinePlayers().length - playerHidden, hiddenCount, server.getMaxPlayers());
+			online = tl("listAmountHidden", server.getOnlinePlayers().size() - playerHidden, hiddenCount, server.getMaxPlayers());
 		}
 		else
 		{
-			online = tl("listAmount", server.getOnlinePlayers().length - playerHidden, server.getMaxPlayers());
+			online = tl("listAmount", server.getOnlinePlayers().size() - playerHidden, server.getMaxPlayers());
 		}
 		return online;
 	}
@@ -76,7 +72,7 @@ public class PlayerList
 	public static Map<String, List<User>> getPlayerLists(final IEssentials ess, final User sender, final boolean showHidden)
 	{
 		Server server = ess.getServer();
-		final Map<String, List<User>> playerList = new HashMap<String, List<User>>();
+		final Map<String, List<User>> playerList = new HashMap<>();
 		for (Player onlinePlayer : server.getOnlinePlayers())
 		{
 			final User onlineUser = ess.getUser(onlinePlayer);
@@ -89,7 +85,7 @@ public class PlayerList
 			List<User> list = playerList.get(group);
 			if (list == null)
 			{
-				list = new ArrayList<User>();
+				list = new ArrayList<>();
 				playerList.put(group, list);
 			}
 			list.add(onlineUser);
@@ -101,7 +97,7 @@ public class PlayerList
 	public static List<User> getMergedList(final IEssentials ess, final Map<String, List<User>> playerList, final String groupName)
 	{
 		final Set<String> configGroups = ess.getSettings().getListGroupConfig().keySet();
-		final List<User> users = new ArrayList<User>();
+		final List<User> users = new ArrayList<>();
 		for (String configGroup : configGroups)
 		{
 			if (configGroup.equalsIgnoreCase(groupName))
@@ -110,7 +106,7 @@ public class PlayerList
 				for (String groupValue : groupValues)
 				{
 					groupValue = groupValue.toLowerCase(Locale.ENGLISH);
-					if (groupValue == null || groupValue.isEmpty())
+					if (groupValue.isEmpty())
 					{
 						continue;
 					}

@@ -47,7 +47,7 @@ public class Commandafk extends EssentialsCommand
 		user.setDisplayNick();
 		if (!user.toggleAfk())
 		{
-			user.updateActivity(false);
+			user.updateActivity();
             user.sendMessage(tl("userIsNotAway", user.getDisplayName()));
 		}
 		else

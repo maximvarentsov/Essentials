@@ -134,16 +134,6 @@ public interface ISettings extends IConf
 
 	boolean disableSuffix();
 
-	long getAutoAfk();
-
-	long getAutoAfkKick();
-
-	boolean getFreezeAfkPlayers();
-
-	boolean cancelAfkOnMove();
-
-	boolean cancelAfkOnInteract();
-
 	boolean areDeathMessagesEnabled();
 
 	void setDebug(boolean debug);
@@ -161,8 +151,6 @@ public interface ISettings extends IConf
 	boolean isWorldHomePermissions();
 
 	boolean registerBackInListener();
-
-	boolean getDisableItemPickupWhileAfk();
 
 	EventPriority getRespawnPriority();
 
@@ -187,8 +175,6 @@ public interface ISettings extends IConf
 	long getPermissionsLagWarning();
 
 	void setEssentialsChatActive(boolean b);
-
-	long getMaxTempban();
 
 	Map<String, Object> getListGroupConfig();
 

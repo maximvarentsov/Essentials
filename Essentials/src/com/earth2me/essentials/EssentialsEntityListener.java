@@ -59,18 +59,6 @@ public class EssentialsEntityListener implements Listener
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOW)
-    @SuppressWarnings("unused")
-	void onPlayerDeathExpEvent(final PlayerDeathEvent event)
-	{
-		final User user = ess.getUser(event.getEntity());
-		if (user.isAuthorized("essentials.keepxp"))
-		{
-			event.setKeepLevel(true);
-			event.setDroppedExp(0);
-		}
-	}
-
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     @SuppressWarnings("unused")
 	void onFoodLevelChange(final FoodLevelChangeEvent event)
@@ -95,7 +83,7 @@ public class EssentialsEntityListener implements Listener
 	void onEntityRegainHealth(final EntityRegainHealthEvent event)
 	{
 		if (event.getRegainReason() == RegainReason.SATIATED && event.getEntity() instanceof Player
-			&& ess.getUser((Player)event.getEntity()).isAfk() && ess.getSettings().getFreezeAfkPlayers())
+			&& ess.getUser((Player)event.getEntity()).isAfk())
 		{
 			event.setCancelled(true);
 		}
@@ -118,10 +106,10 @@ public class EssentialsEntityListener implements Listener
 	{
 		if (event.getEntity() instanceof Player)
 		{
-			final User user = ess.getUser((Player)event.getEntity());
+			User user = ess.getUser((Player) event.getEntity());
 			if (user.isAfk())
 			{
-				user.updateActivity(true);
+				user.updateActivity();
 			}
 		}
 	}

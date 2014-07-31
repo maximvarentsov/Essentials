@@ -485,11 +485,7 @@ public class Settings implements net.ess3.api.ISettings
 		teleportSafety = _isTeleportSafetyEnabled();
 		teleportInvulnerabilityTime = _getTeleportInvulnerability();
 		teleportInvulnerability = _isTeleportInvulnerability();
-		disableItemPickupWhileAfk = _getDisableItemPickupWhileAfk();
 		registerBackInListener = _registerBackInListener();
-		cancelAfkOnInteract = _cancelAfkOnInteract();
-		cancelAfkOnMove = _cancelAfkOnMove() && cancelAfkOnInteract;
-		getFreezeAfkPlayers = _getFreezeAfkPlayers();
 		itemSpawnBl = _getItemSpawnBlacklist();
 		loginAttackDelay = _getLoginAttackDelay();
 		signUsePerSecond = _getSignUsePerSecond();
@@ -852,54 +848,6 @@ public class Settings implements net.ess3.api.ISettings
 	}
 
 	@Override
-	public long getAutoAfk()
-	{
-		return config.getLong("auto-afk", 300);
-	}
-
-	@Override
-	public long getAutoAfkKick()
-	{
-		return config.getLong("auto-afk-kick", -1);
-	}
-	private boolean getFreezeAfkPlayers;
-
-	@Override
-	public boolean getFreezeAfkPlayers()
-	{
-		return getFreezeAfkPlayers;
-	}
-
-	private boolean _getFreezeAfkPlayers()
-	{
-		return config.getBoolean("freeze-afk-players", false);
-	}
-	private boolean cancelAfkOnMove;
-
-	@Override
-	public boolean cancelAfkOnMove()
-	{
-		return cancelAfkOnMove;
-	}
-
-	private boolean _cancelAfkOnMove()
-	{
-		return config.getBoolean("cancel-afk-on-move", true);
-	}
-	private boolean cancelAfkOnInteract;
-
-	@Override
-	public boolean cancelAfkOnInteract()
-	{
-		return cancelAfkOnInteract;
-	}
-
-	private boolean _cancelAfkOnInteract()
-	{
-		return config.getBoolean("cancel-afk-on-interact", true);
-	}
-
-	@Override
 	public boolean areDeathMessagesEnabled()
 	{
 		return config.getBoolean("death-messages", true);
@@ -952,18 +900,6 @@ public class Settings implements net.ess3.api.ISettings
 	private boolean _registerBackInListener()
 	{
 		return config.getBoolean("register-back-in-listener", false);
-	}
-	private boolean disableItemPickupWhileAfk;
-
-	@Override
-	public boolean getDisableItemPickupWhileAfk()
-	{
-		return disableItemPickupWhileAfk;
-	}
-
-	private boolean _getDisableItemPickupWhileAfk()
-	{
-		return config.getBoolean("disable-item-pickup-while-afk", false);
 	}
 
 	@Override
@@ -1102,12 +1038,6 @@ public class Settings implements net.ess3.api.ISettings
 	public long getPermissionsLagWarning()
 	{
 		return permissionsLagWarning;
-	}
-
-	@Override
-	public long getMaxTempban()
-	{
-		return config.getLong("max-tempban-time", -1);
 	}
 
 	@Override

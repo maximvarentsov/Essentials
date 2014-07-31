@@ -5,7 +5,6 @@ import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.FormatUtil;
 import net.ess3.api.events.NickChangeEvent;
 import org.bukkit.Server;
-import org.bukkit.entity.Player;
 
 import java.util.Locale;
 
@@ -111,7 +110,7 @@ public class Commandnick extends EssentialsLoopCommand
 	private boolean nickInUse(final Server server, final User target, String nick)
 	{
 		final String lowerNick = FormatUtil.stripFormat(nick.toLowerCase(Locale.ENGLISH));
-		for (final Player onlinePlayer : ess.getOnlinePlayers())
+		for (User onlinePlayer : ess.getOnlineUsers())
 		{
 			if (target.getBase().getName().equals(onlinePlayer.getName()))
 			{
@@ -124,12 +123,8 @@ public class Commandnick extends EssentialsLoopCommand
 				return true;
 			}
 		}
-		if (ess.getUser(lowerNick) != null && ess.getUser(lowerNick) != target)
-		{
-			return true;
-		}
-		return false;
-	}
+        return ess.getUser(lowerNick) != null && ess.getUser(lowerNick) != target;
+    }
 
 	private void setNickname(final Server server, final CommandSource sender, final User target, final String nickname)
 	{
