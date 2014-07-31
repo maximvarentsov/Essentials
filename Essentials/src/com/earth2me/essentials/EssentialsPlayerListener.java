@@ -7,7 +7,6 @@ import com.earth2me.essentials.textreader.TextPager;
 import com.earth2me.essentials.utils.LocationUtil;
 import net.ess3.api.IEssentials;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -90,31 +89,7 @@ public class EssentialsPlayerListener implements Listener
 			}
 		}
 
-		user.updateActivity();
 		user.setDisplayNick();
-	}
-
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
-    @SuppressWarnings("unused")
-	void onPlayerMove(final PlayerMoveEvent event) {
-        Location from = event.getFrom();
-        Location to = event.getTo();
-
-        if (from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ()) {
-            return;
-        }
-
-		User user = ess.getUser(event.getPlayer());
-
-        if (user.isAfk()) {
-            // Falling don't change afc status.
-            if (from.getBlockY() > to.getBlockY()) {
-				return;
-			}
-            if (from.getBlockX() != to.getBlockX() || from.getBlockY() == to.getBlockY() || from.getBlockZ() == to.getBlockZ()) {
-                user.updateActivity();
-            }
-		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -140,7 +115,6 @@ public class EssentialsPlayerListener implements Listener
 		{
 			user.getBase().getOpenInventory().getTopInventory().clear();
 		}
-		user.updateActivity();
 		user.dispose();
 	}
 
@@ -171,7 +145,6 @@ public class EssentialsPlayerListener implements Listener
 
 		final long currentTime = System.currentTimeMillis();
 		dUser.checkMuteTimeout(currentTime);
-		dUser.updateActivity();
 
 		IText tempInput = null;
 
@@ -328,10 +301,6 @@ public class EssentialsPlayerListener implements Listener
 				}
 			}
 		}
-		else if (!cmd.equalsIgnoreCase("afk"))
-		{
-			ess.getUser(player).updateActivity();
-		}
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -415,7 +384,6 @@ public class EssentialsPlayerListener implements Listener
                 if (event.getItem() != null && event.getItem().getType() != Material.AIR)
                 {
                     final User user = ess.getUser(event.getPlayer());
-                    user.updateActivity();
                     if (user.hasPowerTools() && user.arePowerToolsEnabled() && usePowertools(user, event.getItem().getTypeId()))
                     {
                         event.setCancelled(true);
@@ -566,11 +534,5 @@ public class EssentialsPlayerListener implements Listener
 		if (refreshPlayer != null) {
             refreshPlayer.updateInventory();
 		}
-	}
-
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    @SuppressWarnings("unused")
-    void onPlayerFish(final PlayerFishEvent event) {
-		ess.getUser(event.getPlayer()).updateActivity();
 	}
 }

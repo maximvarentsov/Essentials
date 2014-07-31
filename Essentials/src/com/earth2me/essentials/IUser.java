@@ -1,14 +1,15 @@
 package com.earth2me.essentials;
 
 import com.earth2me.essentials.commands.IEssentialsCommand;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import net.ess3.api.ITeleport;
 import net.ess3.api.MaxMoneyException;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 public interface IUser
@@ -47,14 +48,11 @@ public interface IUser
 
 	void setMoney(final BigDecimal value) throws MaxMoneyException;
 
-	void setAfk(final boolean set);
-
 	/**
 	 * 'Hidden' Represents when a player is hidden from others. This status includes when the player is hidden via other
 	 * supported plugins. Use isVanished() if you want to check if a user is vanished by Essentials.
 	 *
 	 * @return If the user is hidden or not
-	 * @see isVanished
 	 */
 	boolean isHidden();
 
@@ -82,7 +80,6 @@ public interface IUser
 	 * plugin.
 	 *
 	 * @return If the user is vanished or not
-	 * @see isHidden
 	 */
 	boolean isVanished();
 

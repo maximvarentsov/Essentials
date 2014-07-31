@@ -8,7 +8,6 @@ import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.NumberUtil;
 import net.ess3.api.IEssentials;
 import net.ess3.api.MaxMoneyException;
-import net.ess3.api.events.AfkStatusChangeEvent;
 import net.ess3.api.events.UserBalanceUpdateEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -37,9 +36,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	private transient long teleportRequestTime;
 	private transient long lastOnlineActivity;
 	private transient long lastThrottledAction;
-	private transient long lastActivity = System.currentTimeMillis();
 	private boolean hidden = false;
-	private transient Location afkPosition = null;
 	private boolean invSee = false;
 	private boolean recipeSee = false;
 	private boolean enderSee = false;
@@ -49,10 +46,6 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	{
 		super(base, ess);
 		teleport = new Teleport(this, ess);
-		if (isAfk())
-		{
-			afkPosition = this.getLocation();
-		}
 		if (this.getBase().isOnline())
 		{
 			lastOnlineActivity = System.currentTimeMillis();
@@ -488,34 +481,6 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	}
 
 	@Override
-	public void setAfk(final boolean set)
-	{
-		final AfkStatusChangeEvent afkEvent = new AfkStatusChangeEvent(this, set);
-		ess.getServer().getPluginManager().callEvent(afkEvent);
-		if (afkEvent.isCancelled())
-		{
-			return;
-		}
-
-		this.getBase().setSleepingIgnored(this.isAuthorized("essentials.sleepingignored") || set);
-		if (set && !isAfk())
-		{
-			afkPosition = this.getLocation();
-		}
-		else if (!set && isAfk())
-		{
-			afkPosition = null;
-		}
-		_setAfk(set);
-	}
-
-	public boolean toggleAfk()
-	{
-		setAfk(!isAfk());
-		return isAfk();
-	}
-
-	@Override
 	public boolean isHidden()
 	{
 		return hidden;
@@ -549,28 +514,10 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 		return false;
 	}
 
-	public void updateActivity()
-	{
-		if (isAfk())
-		{
-			setAfk(false);
-		}
-		lastActivity = System.currentTimeMillis();
-        setDisplayNick();
-        //if (broadcast) {
-            //sendMessage(tl("userIsNotAway", getDisplayName()));
-        //}
-	}
-
-	public Location getAfkPosition()
-	{
-		return afkPosition;
-	}
-
 	@Override
 	public boolean isGodModeEnabled()
 	{
-		return (super.isGodModeEnabled() && !ess.getSettings().getNoGodWorlds().contains(this.getLocation().getWorld().getName())) || (isAfk());
+		return (super.isGodModeEnabled() && !ess.getSettings().getNoGodWorlds().contains(this.getLocation().getWorld().getName()));
 	}
 
 	public boolean isGodModeEnabledRaw()

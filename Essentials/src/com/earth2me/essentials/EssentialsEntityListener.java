@@ -107,10 +107,6 @@ public class EssentialsEntityListener implements Listener
 		if (event.getEntity() instanceof Player)
 		{
 			User user = ess.getUser((Player) event.getEntity());
-			if (user.isAfk())
-			{
-				user.updateActivity();
-			}
 		}
 	}
 }
