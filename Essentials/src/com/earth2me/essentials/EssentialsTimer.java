@@ -1,22 +1,27 @@
 package com.earth2me.essentials;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.UUID;
+import java.util.logging.Level;
 import net.ess3.api.IEssentials;
 import org.bukkit.entity.Player;
-
-import java.util.*;
-import java.util.logging.Level;
 
 
 public class EssentialsTimer implements Runnable
 {
 	private final transient IEssentials ess;
-	private final transient Set<UUID> onlineUsers = new HashSet<>();
+	private final transient Set<UUID> onlineUsers = new HashSet<UUID>();
 	private transient long lastPoll = System.nanoTime();
-	private final LinkedList<Double> history = new LinkedList<>();
+	private final LinkedList<Double> history = new LinkedList<Double>();
 	private int skip1 = 0;
 	private int skip2 = 0;
-
-    EssentialsTimer(final IEssentials ess)
+	private final long maxTime = 10 * 1000000;
+	private final long tickInterval = 50;
+	
+	EssentialsTimer(final IEssentials ess)
 	{
 		this.ess = ess;
 		history.add(20d);
@@ -36,16 +41,14 @@ public class EssentialsTimer implements Runnable
 		{
 			history.remove();
 		}
-        long tickInterval = 50;
-        double tps = tickInterval * 1000000.0 / timeSpent;
+		double tps = tickInterval * 1000000.0 / timeSpent;
 		if (tps <= 21)
 		{
 			history.add(tps);
 		}
 		lastPoll = startTime;
 		int count = 0;
-        long maxTime = 10 * 1000000;
-        for (Player player : ess.getServer().getOnlinePlayers())
+		for (Player player : ess.getServer().getOnlinePlayers())
 		{
 			count++;
 			if (skip1 > 0)
@@ -102,6 +105,7 @@ public class EssentialsTimer implements Runnable
 				continue;
 			}
 			user.checkMuteTimeout(currentTime);
+			user.checkJailTimeout(currentTime);
 			user.resetInvulnerabilityAfterTeleport();
 		}
 	}

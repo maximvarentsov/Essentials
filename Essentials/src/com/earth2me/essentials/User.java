@@ -1,28 +1,28 @@
 package com.earth2me.essentials;
 
+import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.commands.IEssentialsCommand;
 import com.earth2me.essentials.register.payment.Method;
 import com.earth2me.essentials.register.payment.Methods;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.earth2me.essentials.utils.NumberUtil;
-import net.ess3.api.IEssentials;
-import net.ess3.api.MaxMoneyException;
-import net.ess3.api.events.AfkStatusChangeEvent;
-import net.ess3.api.events.UserBalanceUpdateEvent;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static com.earth2me.essentials.I18n.tl;
+import net.ess3.api.IEssentials;
+import net.ess3.api.MaxMoneyException;
+import net.ess3.api.events.AfkStatusChangeEvent;
+import net.ess3.api.events.UserBalanceUpdateEvent;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 
 public class User extends UserData implements Comparable<User>, IReplyTo, net.ess3.api.IUser
@@ -39,6 +39,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	private transient long lastThrottledAction;
 	private transient long lastActivity = System.currentTimeMillis();
 	private boolean hidden = false;
+	private boolean rightClickJump = false;
 	private transient Location afkPosition = null;
 	private boolean invSee = false;
 	private boolean recipeSee = false;
@@ -137,7 +138,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	@Override
 	public void giveMoney(final BigDecimal value) throws MaxMoneyException
 	{
-		giveMoney(value, null);
+		giveMoney(value, (CommandSource)null);
 	}
 
 	@Override
@@ -178,7 +179,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	@Override
 	public void takeMoney(final BigDecimal value)
 	{
-		takeMoney(value, null);
+		takeMoney(value, (CommandSource)null);
 	}
 
 	@Override
@@ -225,7 +226,14 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 
 	public void dispose()
 	{
-		ess.runTaskAsynchronously(this::_dispose);
+		ess.runTaskAsynchronously(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				_dispose();
+			}
+		});
 	}
 
 	private void _dispose()
@@ -303,6 +311,22 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 		{
 			nickname = ess.getSettings().getNicknamePrefix() + nick;
 			suffix = "§r";
+		}
+
+		if (this.getBase().isOp())
+		{
+			try
+			{
+				final ChatColor opPrefix = ess.getSettings().getOperatorColor();
+				if (opPrefix != null && opPrefix.toString().length() > 0)
+				{
+					prefix.insert(0, opPrefix.toString());
+					suffix = "§r";
+				}
+			}
+			catch (Exception e)
+			{
+			}
 		}
 
 		if (ess.getSettings().addPrefixSuffix())
@@ -421,7 +445,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 				final Method.MethodAccount account = Methods.getMethod().getAccount(this.getName());
 				return BigDecimal.valueOf(account.balance());
 			}
-			catch (Exception ignore)
+			catch (Exception ex)
 			{
 			}
 		}
@@ -452,7 +476,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 				final Method.MethodAccount account = Methods.getMethod().getAccount(this.getName());
 				account.set(value.doubleValue());
 			}
-			catch (Exception ignore)
+			catch (Exception ex)
 			{
 			}
 		}
@@ -467,7 +491,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 		{
 			return;
 		}
-		if (Methods.hasMethod() && !super.getMoney().equals(value))
+		if (Methods.hasMethod() && super.getMoney() != value)
 		{
 			try
 			{
@@ -490,7 +514,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 			return;
 		}
 
-		this.getBase().setSleepingIgnored(this.isAuthorized("essentials.sleepingignored") || set);
+		this.getBase().setSleepingIgnored(this.isAuthorized("essentials.sleepingignored") ? true : set);
 		if (set && !isAfk())
 		{
 			afkPosition = this.getLocation();
@@ -523,10 +547,38 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	public void setHidden(final boolean hidden)
 	{
 		this.hidden = hidden;
-		if (hidden)
+		if (hidden == true)
 		{
 			setLastLogout(getLastOnlineActivity());
 		}
+	}
+
+	//Returns true if status expired during this check
+	public boolean checkJailTimeout(final long currentTime)
+	{
+		if (getJailTimeout() > 0 && getJailTimeout() < currentTime && isJailed())
+		{
+			setJailTimeout(0);
+			setJailed(false);
+			sendMessage(tl("haveBeenReleased"));
+			setJail(null);
+			try
+			{
+				getTeleport().back();
+			}
+			catch (Exception ex)
+			{
+				try
+				{
+					getTeleport().respawn(null, TeleportCause.PLUGIN);
+				}
+				catch (Exception ex1)
+				{
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 	//Returns true if status expired during this check
@@ -638,8 +690,12 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	@Override
 	public boolean canBuild()
 	{
-        return ess.getPermissionsHandler().canBuild(base, getGroup());
-    }
+		if (this.getBase().isOp())
+		{
+			return true;
+		}
+		return ess.getPermissionsHandler().canBuild(base, getGroup());
+	}
 
 	public long getTeleportRequestTime()
 	{
@@ -709,9 +765,13 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 		vanished = set;
 		if (set)
 		{
-            ess.getServer().getOnlinePlayers().stream().filter(p -> !ess.getUser(p).isAuthorized("essentials.vanish.see")).forEach(p ->
-                p.hidePlayer(getBase())
-            );
+			for (Player p : ess.getServer().getOnlinePlayers())
+			{
+				if (!ess.getUser(p).isAuthorized("essentials.vanish.see"))
+				{
+					p.hidePlayer(getBase());
+				}
+			}
 			setHidden(true);
 			ess.getVanishedPlayers().add(getName());
 			if (isAuthorized("essentials.vanish.effect"))
@@ -753,6 +813,16 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	public void updateThrottle()
 	{
 		lastThrottledAction = System.currentTimeMillis();
+	}
+
+	public boolean isFlyClickJump()
+	{
+		return rightClickJump;
+	}
+
+	public void setRightClickJump(boolean rightClickJump)
+	{
+		this.rightClickJump = rightClickJump;
 	}
 
 	@Override
@@ -801,9 +871,13 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	@Override
 	public boolean equals(final Object object)
 	{
-        return object instanceof User && this.getName().equalsIgnoreCase(((User) object).getName());
+		if (!(object instanceof User))
+		{
+			return false;
+		}
+		return this.getName().equalsIgnoreCase(((User)object).getName());
 
-    }
+	}
 
 	@Override
 	public int hashCode()

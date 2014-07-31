@@ -2,6 +2,13 @@ package com.earth2me.essentials;
 
 import com.avaje.ebean.config.ServerConfig;
 import com.earth2me.essentials.craftbukkit.FakeWorld;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.logging.Logger;
 import org.bukkit.*;
 import org.bukkit.Warning.WarningState;
 import org.bukkit.World.Environment;
@@ -23,20 +30,21 @@ import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.plugin.*;
+import org.bukkit.plugin.EventExecutor;
+import org.bukkit.plugin.InvalidDescriptionException;
+import org.bukkit.plugin.InvalidPluginException;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginLoader;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredListener;
+import org.bukkit.plugin.ServicesManager;
+import org.bukkit.plugin.UnknownDependencyException;
 import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scheduler.BukkitWorker;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.util.CachedServerIcon;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.logging.Logger;
 
 
 public class FakeServer implements Server
@@ -63,6 +71,12 @@ public class FakeServer implements Server
 	public String getVersion()
 	{
 		return "1.0";
+	}
+
+	@Override
+	public Player[] getOnlinePlayers()
+	{
+		return players.toArray(new Player[0]);
 	}
 
 	public void setOnlinePlayers(List<Player> players)
@@ -815,17 +829,7 @@ public class FakeServer implements Server
 		return "Essentials Fake-Server";
 	}
 
-    @Override
-    public Player[] _INVALID_getOnlinePlayers() {
-        return new Player[0];
-    }
-
-    @Override
-    public Collection<? extends Player> getOnlinePlayers() {
-        return players;
-    }
-
-    @Override
+	@Override
 	public File getWorldContainer()
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
@@ -915,7 +919,7 @@ public class FakeServer implements Server
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
-    @Override
+	@Override
 	public Inventory createInventory(InventoryHolder ih, int i)
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
@@ -1151,6 +1155,7 @@ public class FakeServer implements Server
 					{						
 						PlayerJoinEvent jEvent = (PlayerJoinEvent)event;
 						EssentialsPlayerListener epl = (EssentialsPlayerListener)listener.getListener();
+						epl.onPlayerJoin(jEvent);
 						Essentials ess = (Essentials)listener.getPlugin();
 						ess.getLogger().info("Sending join event to Essentials");
 						ess.getUser(jEvent.getPlayer());

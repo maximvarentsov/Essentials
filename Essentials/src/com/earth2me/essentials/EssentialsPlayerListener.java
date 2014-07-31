@@ -300,8 +300,12 @@ public class EssentialsPlayerListener implements Listener
 						user.getBase().sendMessage(tl("flyMode", tl("enabled"), user.getDisplayName()));
 					}
 				}
-				user.getBase().setFlySpeed(0.1f);
-				user.getBase().setWalkSpeed(0.2f);
+
+				if (!user.isAuthorized("essentials.speed"))
+				{
+					user.getBase().setFlySpeed(0.1f);
+					user.getBase().setWalkSpeed(0.2f);
+				}
 
 				user.stopTransaction();
 			}
@@ -386,10 +390,9 @@ public class EssentialsPlayerListener implements Listener
 		final String cmd = event.getMessage().toLowerCase(Locale.ENGLISH).split(" ")[0].replace("/", "").toLowerCase(Locale.ENGLISH);
 		if (ess.getSettings().getSocialSpyCommands().contains(cmd) || ess.getSettings().getSocialSpyCommands().contains("*"))
 		{
-			for (Player onlinePlayer : ess.getServer().getOnlinePlayers())
+			for (User spyer : ess.getOnlineUsers())
 			{
-				final User spyer = ess.getUser(onlinePlayer);
-				if (spyer.isSocialSpyEnabled() && !player.equals(onlinePlayer))
+				if (spyer.isSocialSpyEnabled() && !player.equals(spyer.getBase()))
 				{
 					spyer.sendMessage(player.getDisplayName() + " : " + event.getMessage());
 				}

@@ -2,25 +2,31 @@ package com.earth2me.essentials.textreader;
 
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.ExecuteTimer;
+import static com.earth2me.essentials.I18n.tl;
 import com.earth2me.essentials.PlayerList;
 import com.earth2me.essentials.User;
+import static com.earth2me.essentials.textreader.KeywordType.DISPLAYNAME;
+import static com.earth2me.essentials.textreader.KeywordType.PLAYER;
 import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.DescParseTickFormat;
 import com.earth2me.essentials.utils.NumberUtil;
+import java.lang.management.ManagementFactory;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.ess3.api.IEssentials;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-
-import java.lang.management.ManagementFactory;
-import java.text.DateFormat;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static com.earth2me.essentials.I18n.tl;
 
 
 public class KeywordReplacer implements IText
@@ -31,12 +37,13 @@ public class KeywordReplacer implements IText
 	private final transient List<String> replaced;
 	private final transient IEssentials ess;
 	private final transient boolean includePrivate;
-    private final EnumMap<KeywordType, Object> keywordCache = new EnumMap<>(KeywordType.class);
+	private transient ExecuteTimer execTimer;
+	private final EnumMap<KeywordType, Object> keywordCache = new EnumMap<KeywordType, Object>(KeywordType.class);
 
 	public KeywordReplacer(final IText input, final CommandSource sender, final IEssentials ess)
 	{
 		this.input = input;
-		this.replaced = new ArrayList<>(this.input.getLines().size());
+		this.replaced = new ArrayList<String>(this.input.getLines().size());
 		this.ess = ess;
 		this.includePrivate = true;
 		replaceKeywords(sender);
@@ -45,7 +52,7 @@ public class KeywordReplacer implements IText
 	public KeywordReplacer(final IText input, final CommandSource sender, final IEssentials ess, final boolean showPrivate)
 	{
 		this.input = input;
-		this.replaced = new ArrayList<>(this.input.getLines().size());
+		this.replaced = new ArrayList<String>(this.input.getLines().size());
 		this.ess = ess;
 		this.includePrivate = showPrivate;
 		replaceKeywords(sender);
@@ -53,7 +60,7 @@ public class KeywordReplacer implements IText
 
 	private void replaceKeywords(final CommandSource sender)
 	{
-        ExecuteTimer execTimer = new ExecuteTimer();
+		execTimer = new ExecuteTimer();
 		execTimer.start();
 		User user = null;
 		if (sender.isPlayer())
@@ -166,7 +173,7 @@ public class KeywordReplacer implements IText
 							playerHidden++;
 						}
 					}
-					replacer = Integer.toString(ess.getServer().getOnlinePlayers().size() - playerHidden);
+					replacer = Integer.toString(ess.getServer().getOnlinePlayers().length - playerHidden);
 					break;
 				case UNIQUE:
 					replacer = Integer.toString(ess.getUserMap().getUniqueUsers());
@@ -192,11 +199,18 @@ public class KeywordReplacer implements IText
 					else
 					{
 						final boolean showHidden;
-                        showHidden = user == null || user.isAuthorized("essentials.list.hidden") || user.canInteractVanished();
+						if (user == null)
+						{
+							showHidden = true;
+						}
+						else
+						{
+							showHidden = user.isAuthorized("essentials.list.hidden") || user.canInteractVanished();
+						}
 
 						//First lets build the per group playerlist
 						final Map<String, List<User>> playerList = PlayerList.getPlayerLists(ess, user, showHidden);
-						outputList = new HashMap<>();
+						outputList = new HashMap<String, String>();
 						for (String groupName : playerList.keySet())
 						{
 							final List<User> groupUsers = playerList.get(groupName);
@@ -318,7 +332,7 @@ public class KeywordReplacer implements IText
 
 			line = line.replace(fullMatch, replacer);
 		}
-		catch (IllegalArgumentException ignore)
+		catch (IllegalArgumentException ex)
 		{
 		}
 
@@ -401,5 +415,5 @@ enum KeywordCachable
 {
 	CACHEABLE, // This keyword can be cached as a string
 	SUBVALUE, // This keyword can be cached as a map
-	NOTCACHEABLE // This keyword should never be cached
+	NOTCACHEABLE; // This keyword should never be cached
 }
