@@ -68,11 +68,6 @@ public class Commandmsg extends EssentialsLoopCommand
 		final IReplyTo replyTo = sender.isPlayer() ? ess.getUser(sender.getPlayer()) : Console.getConsoleReplyTo();
 		final String senderName = sender.isPlayer() ? sender.getPlayer().getDisplayName() : Console.NAME;
 
-		if (matchedUser.isAfk())
-		{
-			sender.sendMessage(tl("userAFK", matchedUser.getDisplayName()));
-		}
-
 		sender.sendMessage(tl("msgFormat", translatedMe, matchedUser.getDisplayName(), args[0]));
 		if (sender.isPlayer() && matchedUser.isIgnoredPlayer(ess.getUser(sender.getPlayer())))
 		{

@@ -24,10 +24,6 @@ public class PlayerList
 				groupString.append(seperator);
 			}
 			needComma = true;
-			if (user.isAfk())
-			{
-				groupString.append(tl("listAfkTag"));
-			}
 			if (user.isHidden())
 			{
 				groupString.append(tl("listHiddenTag"));

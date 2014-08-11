@@ -64,8 +64,6 @@ public interface IUser
 
 	boolean inGroup(final String group);
 
-	boolean canBuild();
-
 	long getTeleportRequestTime();
 
 	void enableInvulnerabilityAfterTeleport();
@@ -115,8 +113,6 @@ public interface IUser
 	List<String> getMails();
 
 	void addMail(String mail);
-
-	boolean isAfk();
 
 	void setConfigProperty(String node, Object object);
 

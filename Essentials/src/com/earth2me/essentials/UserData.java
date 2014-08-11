@@ -80,7 +80,6 @@ public abstract class UserData extends PlayerExtension implements IConf
 		lastLogin = _getLastLogin();
 		lastLogout = _getLastLogout();
 		lastLoginAddress = _getLastLoginAddress();
-		afk = _getAfk();
 		geolocation = _getGeoLocation();
 		isSocialSpyEnabled = _isSocialSpyEnabled();
 		isNPC = _isNPC();
@@ -611,25 +610,6 @@ public abstract class UserData extends PlayerExtension implements IConf
 		lastLoginAddress = address;
 		config.setProperty("ipAddress", address);
 	}
-	private boolean afk;
-
-	private boolean _getAfk()
-	{
-		return config.getBoolean("afk", false);
-	}
-
-	public boolean isAfk()
-	{
-		return afk;
-	}
-
-	public void _setAfk(boolean set)
-	{
-		afk = set;
-		config.setProperty("afk", set);
-		config.save();
-	}
-
     private String geolocation;
 
 	private String _getGeoLocation()

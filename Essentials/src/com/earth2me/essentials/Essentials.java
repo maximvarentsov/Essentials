@@ -62,15 +62,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.earth2me.essentials.I18n.tl;
 
 
 public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 {
-	public static final int BUKKIT_VERSION = 3050;
 	private static final Logger LOGGER = Logger.getLogger("Essentials");
 	private transient ISettings settings;
 	private transient Warps warps;
@@ -129,99 +126,73 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 	@Override
 	public void onEnable()
 	{
-		try
-		{
-			LOGGER.setParent(this.getLogger());
-			execTimer = new ExecuteTimer();
-			execTimer.start();
-			i18n = new I18n(this);
-			i18n.onEnable();
-			execTimer.mark("I18n1");
-			final PluginManager pm = getServer().getPluginManager();
-			for (Plugin plugin : pm.getPlugins())
-			{
-				if (plugin.getDescription().getName().startsWith("Essentials")
-					&& !plugin.getDescription().getVersion().equals(this.getDescription().getVersion())
-					&& !plugin.getDescription().getName().equals("EssentialsAntiCheat"))
-				{
-					LOGGER.log(Level.WARNING, tl("versionMismatch", plugin.getDescription().getName()));
-				}
-			}
-			final Matcher versionMatch = Pattern.compile("git-Bukkit-(?:(?:[0-9]+)\\.)+[0-9]+-R[\\.0-9]+-(?:[0-9]+-g[0-9a-f]+-)?b([0-9]+)jnks.*").matcher(getServer().getVersion());
-			if (versionMatch.matches())
-			{
-				final int versionNumber = Integer.parseInt(versionMatch.group(1));
-				if (versionNumber < BUKKIT_VERSION && versionNumber > 100)
-				{
-					wrongVersion();
-					this.setEnabled(false);
-					return;
-				}
-			}
-			else
-			{
-				LOGGER.log(Level.INFO, tl("bukkitFormatChanged"));
-				LOGGER.log(Level.INFO, getServer().getVersion());
-				LOGGER.log(Level.INFO, getServer().getBukkitVersion());
-			}
-			execTimer.mark("BukkitCheck");
-			try
-			{
-				final EssentialsUpgrade upgrade = new EssentialsUpgrade(this);
-				upgrade.beforeSettings();
-				execTimer.mark("Upgrade");
-				confList = new ArrayList<>();
-				settings = new Settings(this);
-				confList.add(settings);
-				execTimer.mark("Settings");
-				userMap = new UserMap(this);
-				confList.add(userMap);
-				execTimer.mark("Init(Usermap)");
-				upgrade.afterSettings();
-				execTimer.mark("Upgrade2");
-				i18n.updateLocale(settings.getLocale());
-				warps = new Warps(getServer(), this.getDataFolder());
-				confList.add(warps);
-				execTimer.mark("Init(Spawn/Warp)");
-				worth = new Worth(this.getDataFolder());
-				confList.add(worth);
-				itemDb = new ItemDb(this);
-				confList.add(itemDb);
-				execTimer.mark("Init(Worth/ItemDB)");
-				reload();
-			}
-			catch (YAMLException exception)
-			{
-				if (pm.getPlugin("EssentialsUpdate") != null)
-				{
-					LOGGER.log(Level.SEVERE, tl("essentialsHelp2"));
-				}
-				else
-				{
-					LOGGER.log(Level.SEVERE, tl("essentialsHelp1"));
-				}
-				return;
-			}
-			permissionsHandler = new PermissionsHandler(this, settings.useBukkitPermissions());
-			alternativeCommandsHandler = new AlternativeCommandsHandler(this);
+        LOGGER.setParent(this.getLogger());
+        execTimer = new ExecuteTimer();
+        execTimer.start();
+        i18n = new I18n(this);
+        i18n.onEnable();
+        execTimer.mark("I18n1");
+        final PluginManager pm = getServer().getPluginManager();
+        for (Plugin plugin : pm.getPlugins())
+        {
+            if (plugin.getDescription().getName().startsWith("Essentials")
+                && !plugin.getDescription().getVersion().equals(this.getDescription().getVersion())
+                && !plugin.getDescription().getName().equals("EssentialsAntiCheat"))
+            {
+                LOGGER.log(Level.WARNING, tl("versionMismatch", plugin.getDescription().getName()));
+            }
+        }
 
-			timer = new EssentialsTimer(this);
-			scheduleSyncRepeatingTask(timer, 1000, 50);
-
-			Economy.setEss(this);
-			execTimer.mark("RegHandler");
-
-			final String timeroutput = execTimer.end();
-			if (getSettings().isDebug())
-			{
-				LOGGER.log(Level.INFO, "Essentials load {0}", timeroutput);
-			}
-		}
-		catch (NumberFormatException | Error ex)
-		{
-			throw ex;
-		}
-	}
+        execTimer.mark("BukkitCheck");
+        try
+        {
+            final EssentialsUpgrade upgrade = new EssentialsUpgrade(this);
+            upgrade.beforeSettings();
+            execTimer.mark("Upgrade");
+            confList = new ArrayList<>();
+            settings = new Settings(this);
+            confList.add(settings);
+            execTimer.mark("Settings");
+            userMap = new UserMap(this);
+            confList.add(userMap);
+            execTimer.mark("Init(Usermap)");
+            upgrade.afterSettings();
+            execTimer.mark("Upgrade2");
+            i18n.updateLocale(settings.getLocale());
+            warps = new Warps(getServer(), this.getDataFolder());
+            confList.add(warps);
+            execTimer.mark("Init(Spawn/Warp)");
+            worth = new Worth(this.getDataFolder());
+            confList.add(worth);
+            itemDb = new ItemDb(this);
+            confList.add(itemDb);
+            execTimer.mark("Init(Worth/ItemDB)");
+            reload();
+        }
+        catch (YAMLException exception)
+        {
+            if (pm.getPlugin("EssentialsUpdate") != null)
+            {
+                LOGGER.log(Level.SEVERE, tl("essentialsHelp2"));
+            }
+            else
+            {
+                LOGGER.log(Level.SEVERE, tl("essentialsHelp1"));
+            }
+            return;
+        }
+        permissionsHandler = new PermissionsHandler(this, settings.useBukkitPermissions());
+        alternativeCommandsHandler = new AlternativeCommandsHandler(this);
+        timer = new EssentialsTimer(this);
+        scheduleSyncRepeatingTask(timer, 1000, 50);
+        Economy.setEss(this);
+        execTimer.mark("RegHandler");
+        final String timeroutput = execTimer.end();
+        if (getSettings().isDebug())
+        {
+            LOGGER.log(Level.INFO, "Essentials load {0}", timeroutput);
+        }
+    }
 
 	@Override
 	public void saveConfig()
@@ -397,7 +368,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 			CommandSource sender = new CommandSource(cSender);
 
 			// New mail notification
-			if (user != null && !getSettings().isCommandDisabled("mail") && !command.getName().equals("mail") && user.isAuthorized("essentials.mail"))
+			if (user != null && !command.getName().equals("mail") && user.isAuthorized("essentials.mail"))
 			{
 				final List<String> mail = user.getMails();
 				if (mail != null && !mail.isEmpty())
@@ -412,13 +383,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 				sender.sendMessage("This server is running Essentials " + getDescription().getVersion());
 				return true;
 			}
-
-			// Check for disabled commands
-			if (getSettings().isCommandDisabled(commandLabel))
-			{
-				return true;
-			}
-
 			IEssentialsCommand cmd;
 			try
 			{
@@ -513,14 +477,6 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 		{
 			LOGGER.log(Level.INFO, tl("errorCallingCommand", commandLabel), exception);
 		}
-	}
-
-	public static void wrongVersion()
-	{
-		LOGGER.log(Level.SEVERE, " * ! * ! * ! * ! * ! * ! * ! * ! * ! * ! * ! * ! *");
-		LOGGER.log(Level.SEVERE, tl("notRecommendedBukkit"));
-		LOGGER.log(Level.SEVERE, tl("requiredBukkit", Integer.toString(BUKKIT_VERSION)));
-		LOGGER.log(Level.SEVERE, " * ! * ! * ! * ! * ! * ! * ! * ! * ! * ! * ! * ! *");
 	}
 
 	@Override
@@ -792,29 +748,19 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials
 		}
 
 		@EventHandler(priority = EventPriority.LOW)
+        @SuppressWarnings("unused")
 		public void onWorldLoad(final WorldLoadEvent event)
 		{
 			ess.getWarps().reloadConfig();
-			for (IConf iConf : ((Essentials)ess).confList)
-			{
-				if (iConf instanceof IEssentialsModule)
-				{
-					iConf.reloadConfig();
-				}
-			}
+            ((Essentials) ess).confList.stream().filter(iConf -> iConf instanceof IEssentialsModule).forEach(IConf::reloadConfig);
 		}
 
 		@EventHandler(priority = EventPriority.LOW)
+        @SuppressWarnings("unused")
 		public void onWorldUnload(final WorldUnloadEvent event)
 		{
 			ess.getWarps().reloadConfig();
-			for (IConf iConf : ((Essentials)ess).confList)
-			{
-				if (iConf instanceof IEssentialsModule)
-				{
-					iConf.reloadConfig();
-				}
-			}
+            ((Essentials) ess).confList.stream().filter(iConf -> iConf instanceof IEssentialsModule).forEach(IConf::reloadConfig);
 		}
 
 		@Override

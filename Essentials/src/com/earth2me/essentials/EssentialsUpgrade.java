@@ -6,6 +6,7 @@ import com.earth2me.essentials.storage.YamlStorageWriter;
 import com.earth2me.essentials.utils.StringUtil;
 import com.google.common.base.Charsets;
 import net.ess3.api.IEssentials;
+import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -17,8 +18,8 @@ import java.security.MessageDigest;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import static com.earth2me.essentials.I18n.tl;
-import org.bukkit.BanList;
 
 
 public class EssentialsUpgrade
@@ -176,9 +177,9 @@ public class EssentialsUpgrade
 					{
 						if (entry.getValue() instanceof String)
 						{
-							List<String> temp = new ArrayList<String>();
+							List<String> temp = new ArrayList<>();
 							temp.add((String)entry.getValue());
-							((Map<String, Object>)powertools).put(entry.getKey(), temp);
+							powertools.put(entry.getKey(), temp);
 						}
 					}
 					config.forceSave();
@@ -248,7 +249,7 @@ public class EssentialsUpgrade
 							continue;
 						}
 						worldName = loc.getWorld().getName().toLowerCase(Locale.ENGLISH);
-						if (worldName != null && !worldName.isEmpty())
+						if (!worldName.isEmpty())
 						{
 							config.setProperty("homes." + worldName, loc);
 						}
@@ -355,7 +356,7 @@ public class EssentialsUpgrade
 		{
 			try
 			{
-				final Set<BigInteger> oldconfigs = new HashSet<BigInteger>();
+				final Set<BigInteger> oldconfigs = new HashSet<>();
 				oldconfigs.add(new BigInteger("66ec40b09ac167079f558d1099e39f10", 16)); // sep 1
 				oldconfigs.add(new BigInteger("34284de1ead43b0bee2aae85e75c041d", 16)); // crlf
 				oldconfigs.add(new BigInteger("c33bc9b8ee003861611bbc2f48eb6f4f", 16)); // jul 24
@@ -363,18 +364,11 @@ public class EssentialsUpgrade
 
 				MessageDigest digest = ManagedFile.getDigest();
 				final BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-				final DigestInputStream dis = new DigestInputStream(bis, digest);
-				final byte[] buffer = new byte[1024];
-				try
-				{
-					while (dis.read(buffer) != -1)
-					{
-					}
-				}
-				finally
-				{
-					dis.close();
-				}
+                final byte[] buffer = new byte[1024];
+                try (DigestInputStream dis = new DigestInputStream(bis, digest)) {
+                    while (dis.read(buffer) != -1) {
+                    }
+                }
 
 				BigInteger hash = new BigInteger(1, digest.digest());
 				if (oldconfigs.contains(hash) && !file.delete())

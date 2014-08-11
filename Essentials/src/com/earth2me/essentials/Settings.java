@@ -158,50 +158,6 @@ public class Settings implements net.ess3.api.ISettings
 	}
 
 	@Override
-	public boolean isCommandDisabled(final IEssentialsCommand cmd)
-	{
-		return isCommandDisabled(cmd.getName());
-	}
-	private Set<String> disabledCommands = new HashSet<>();
-
-	@Override
-	public boolean isCommandDisabled(String label)
-	{
-		return disabledCommands.contains(label);
-	}
-
-	private Set<String> getDisabledCommands()
-	{
-		Set<String> disCommands = new HashSet<>();
-		for (String c : config.getStringList("disabled-commands"))
-		{
-			disCommands.add(c.toLowerCase(Locale.ENGLISH));
-		}
-		for (String c : config.getKeys(false))
-		{
-			if (c.startsWith("disable-"))
-			{
-				disCommands.add(c.substring(8).toLowerCase(Locale.ENGLISH));
-			}
-		}
-		return disCommands;
-	}
-
-	@Override
-	public boolean isPlayerCommand(String label)
-	{
-		for (String c : config.getStringList("player-commands"))
-		{
-			if (!c.equalsIgnoreCase(label))
-			{
-				continue;
-			}
-			return true;
-		}
-		return false;
-	}
-
-	@Override
 	public boolean isCommandOverridden(String name)
 	{
 		for (String c : config.getStringList("overridden-commands"))
@@ -492,7 +448,6 @@ public class Settings implements net.ess3.api.ISettings
 		kits = _getKits();
 		chatFormats.clear();
 		changeDisplayName = _changeDisplayName();
-		disabledCommands = getDisabledCommands();
 		nicknamePrefix = _getNicknamePrefix();
 		changePlayerListName = _changePlayerListName();
 		configDebug = _isDebug();

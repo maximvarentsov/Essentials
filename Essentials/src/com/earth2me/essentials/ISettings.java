@@ -86,10 +86,6 @@ public interface ISettings extends IConf
 
 	boolean hidePermissionlessHelp();
 
-	boolean isCommandDisabled(final IEssentialsCommand cmd);
-
-	boolean isCommandDisabled(String label);
-
 	boolean isCommandOverridden(String name);
 
 	boolean isDebug();
@@ -124,7 +120,6 @@ public interface ISettings extends IConf
 
 	boolean changePlayerListName();
 
-	boolean isPlayerCommand(String string);
 
 	boolean useBukkitPermissions();
 

@@ -65,7 +65,7 @@ public class HelpInput implements IText
 						if (pluginNameLow.contains("essentials"))
 						{
 							final String node = "essentials." + k.getKey();
-							if (!ess.getSettings().isCommandDisabled(k.getKey()) && user.isAuthorized(node))
+							if (user.isAuthorized(node))
 							{
 								pluginLines.add(tl("helpLine", k.getKey(), k.getValue().get(DESCRIPTION)));
 							}

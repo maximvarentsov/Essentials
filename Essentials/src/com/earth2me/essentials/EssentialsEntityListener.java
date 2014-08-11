@@ -6,7 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 
 import static com.earth2me.essentials.I18n.tl;
 
@@ -26,7 +25,7 @@ public class EssentialsEntityListener implements Listener
 	{
 		if (event.getEntity() instanceof Player && ess.getUser((Player)event.getEntity()).isGodModeEnabled())
 		{
-			final Player player = (Player)event.getEntity();
+			Player player = (Player) event.getEntity();
 			player.setFireTicks(0);
 			player.setRemainingAir(player.getMaximumAir());
 			event.setCancelled(true);
@@ -48,7 +47,7 @@ public class EssentialsEntityListener implements Listener
 	void onPlayerDeathEvent(final PlayerDeathEvent event)
 	{
 		final User user = ess.getUser(event.getEntity());
-		if (user.isAuthorized("essentials.back.ondeath") && !ess.getSettings().isCommandDisabled("back"))
+		if (user.isAuthorized("essentials.back.ondeath"))
 		{
 			user.setLastLocation();
 			user.sendMessage(tl("backAfterDeath"));
@@ -80,17 +79,6 @@ public class EssentialsEntityListener implements Listener
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     @SuppressWarnings("unused")
-	void onEntityRegainHealth(final EntityRegainHealthEvent event)
-	{
-		if (event.getRegainReason() == RegainReason.SATIATED && event.getEntity() instanceof Player
-			&& ess.getUser((Player)event.getEntity()).isAfk())
-		{
-			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    @SuppressWarnings("unused")
 	void onPotionSplash(final PotionSplashEvent event)
 	{
         event.getAffectedEntities()
@@ -98,15 +86,5 @@ public class EssentialsEntityListener implements Listener
              .filter(entity -> entity instanceof Player && ess.getUser((Player) entity)
              .isGodModeEnabled())
              .forEach(entity -> event.setIntensity(entity, 0d));
-	}
-
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    @SuppressWarnings("unused")
-	void onEntityShootBow(final EntityShootBowEvent event)
-	{
-		if (event.getEntity() instanceof Player)
-		{
-			User user = ess.getUser((Player) event.getEntity());
-		}
 	}
 }

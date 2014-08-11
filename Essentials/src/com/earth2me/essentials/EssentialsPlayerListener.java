@@ -148,7 +148,7 @@ public class EssentialsPlayerListener implements Listener
 
 		IText tempInput = null;
 
-		if (!ess.getSettings().isCommandDisabled("motd"))
+		if (dUser.isAuthorized("essentials.motd"))
 		{
 			try
 			{
@@ -217,9 +217,9 @@ public class EssentialsPlayerListener implements Listener
 					pager.showPage("1", null, "motd", user.getSource());
 				}
 
-				if (!ess.getSettings().isCommandDisabled("mail") && user.isAuthorized("essentials.mail"))
+				if (user.isAuthorized("essentials.mail"))
 				{
-					final List<String> mail = user.getMails();
+					List<String> mail = user.getMails();
 					if (mail.isEmpty())
 					{
 						user.sendMessage(tl("noNewMail"));
@@ -430,14 +430,6 @@ public class EssentialsPlayerListener implements Listener
 			}
 		}
 		return used;
-	}
-
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    @SuppressWarnings("unused")
-    void onPlayerPickupItem(final PlayerPickupItemEvent event) {
-		if (ess.getUser(event.getPlayer()).isAfk()) {
-		    event.setCancelled(true);
-		}
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

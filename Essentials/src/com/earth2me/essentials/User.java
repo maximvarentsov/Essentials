@@ -171,7 +171,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 	@Override
 	public void takeMoney(final BigDecimal value)
 	{
-		takeMoney(value, (CommandSource)null);
+		takeMoney(value, null);
 	}
 
 	@Override
@@ -218,23 +218,13 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 
 	public void dispose()
 	{
-		ess.runTaskAsynchronously(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				_dispose();
-			}
-		});
-	}
-
-	private void _dispose()
-	{
-		if (!base.isOnline())
-		{
-			this.base = new OfflinePlayer(getConfigUUID(), ess.getServer());
-		}
-		cleanup();
+		ess.runTaskAsynchronously(() -> {
+            if (!base.isOnline())
+            {
+                this.base = new OfflinePlayer(getConfigUUID(), ess.getServer());
+            }
+            cleanup();
+        });
 	}
 
 	@Override
@@ -292,7 +282,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 		String nickname;
 		String suffix = "";
 		final String nick = getNickname();
-		if (ess.getSettings().isCommandDisabled("nick") || nick == null || nick.isEmpty() || nick.equals(getName()))
+		if (nick == null || nick.isEmpty() || nick.equals(getName()))
 		{
 			nickname = getName();
 		}
@@ -421,7 +411,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 				final Method.MethodAccount account = Methods.getMethod().getAccount(this.getName());
 				return BigDecimal.valueOf(account.balance());
 			}
-			catch (Exception ingnore)
+			catch (Exception ignore)
 			{
 			}
 		}
@@ -452,7 +442,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 				final Method.MethodAccount account = Methods.getMethod().getAccount(this.getName());
 				account.set(value.doubleValue());
 			}
-			catch (Exception ex)
+			catch (Exception ignore)
 			{
 			}
 		}
@@ -467,7 +457,7 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 		{
 			return;
 		}
-		if (Methods.hasMethod() && super.getMoney() != value)
+		if (Methods.hasMethod() && !super.getMoney().equals(value))
 		{
 			try
 			{
@@ -545,16 +535,6 @@ public class User extends UserData implements Comparable<User>, IReplyTo, net.es
 			ess.getLogger().log(Level.INFO, "checking if " + base.getName() + " is in group " + group + " - " + result);
 		}
 		return result;
-	}
-
-	@Override
-	public boolean canBuild()
-	{
-		if (this.getBase().isOp())
-		{
-			return true;
-		}
-		return ess.getPermissionsHandler().canBuild(base, getGroup());
 	}
 
 	public long getTeleportRequestTime()

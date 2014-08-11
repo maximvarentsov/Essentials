@@ -51,7 +51,6 @@ public class Commandwhois extends EssentialsCommand
 		sender.sendMessage(tl("whoisGod", (user.isGodModeEnabled() ? tl("true") : tl("false"))));
 		sender.sendMessage(tl("whoisOp", (user.getBase().isOp() ? tl("true") : tl("false"))));
 		sender.sendMessage(tl("whoisFly", user.getBase().getAllowFlight() ? tl("true") : tl("false"), user.getBase().isFlying() ? tl("flying") : tl("notFlying")));
-		sender.sendMessage(tl("whoisAFK", (user.isAfk() ? tl("true") : tl("false"))));
 
 		sender.sendMessage(tl("whoisMuted", (user.isMuted()
 											? user.getMuteTimeout() > 0
