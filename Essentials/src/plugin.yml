@@ -241,9 +241,6 @@ commands:
   sudo:
     description: Make another user perform a command.
     usage: /<command> <player> <command [args]>
-  suicide:
-    description: Causes you to perish.
-    usage: /<command>
   thunder:
     description: Enable/disable thunder.
     usage: /<command> <true/false> [duration]
