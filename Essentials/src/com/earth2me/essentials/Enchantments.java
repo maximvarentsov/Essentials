@@ -1,18 +1,18 @@
 package com.earth2me.essentials;
 
 import com.earth2me.essentials.utils.NumberUtil;
+import org.bukkit.enchantments.Enchantment;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.bukkit.enchantments.Enchantment;
-
 
 public class Enchantments
 {
-	private static final Map<String, Enchantment> ENCHANTMENTS = new HashMap<String, Enchantment>();
-	private static final Map<String, Enchantment> ALIASENCHANTMENTS = new HashMap<String, Enchantment>();
+	private static final Map<String, Enchantment> ENCHANTMENTS = new HashMap<>();
+	private static final Map<String, Enchantment> ALIASENCHANTMENTS = new HashMap<>();
 
 	static
 	{
@@ -142,19 +142,13 @@ public class Enchantments
 		ALIASENCHANTMENTS.put("unlimitedarrows", Enchantment.ARROW_INFINITE);
 		ALIASENCHANTMENTS.put("ai", Enchantment.ARROW_INFINITE);
 
-		try // 1.7 update
-		{
-			ENCHANTMENTS.put("luck", Enchantment.LUCK);
-			ALIASENCHANTMENTS.put("luckofsea", Enchantment.LUCK);
-			ALIASENCHANTMENTS.put("luckofseas", Enchantment.LUCK);
-			ALIASENCHANTMENTS.put("rodluck", Enchantment.LUCK);
+        ENCHANTMENTS.put("luck", Enchantment.LUCK);
+        ALIASENCHANTMENTS.put("luckofsea", Enchantment.LUCK);
+        ALIASENCHANTMENTS.put("luckofseas", Enchantment.LUCK);
+        ALIASENCHANTMENTS.put("rodluck", Enchantment.LUCK);
 
-			ENCHANTMENTS.put("lure", Enchantment.LURE);
-			ALIASENCHANTMENTS.put("rodlure", Enchantment.LURE);
-		}
-		catch (java.lang.NoSuchFieldError e)
-		{
-		}
+        ENCHANTMENTS.put("lure", Enchantment.LURE);
+        ALIASENCHANTMENTS.put("rodlure", Enchantment.LURE);
 	}
 
 	public static Enchantment getByName(String name)
