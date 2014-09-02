@@ -235,9 +235,6 @@ commands:
     description: Change your speed limits.
     usage: /<command> [type] <speed> [player]
     aliases: [flyspeed,walkspeed]
-  sudo:
-    description: Make another user perform a command.
-    usage: /<command> <player> <command [args]>
   thunder:
     description: Enable/disable thunder.
     usage: /<command> <true/false> [duration]
