@@ -117,13 +117,6 @@ commands:
     description: See the inventory of other players.
     usage: /<command> <player>
     aliases: [open, openinv]
-  item:
-    description: Spawn an item.
-    usage: /<command> <item|numeric> [amount [itemmeta...]]
-  itemdb:
-    description: Searches for an item.
-    usage: /<command> <item>
-    aliases: [dura,durability,itemno]
   kick:
     description: Kicks a specified player with a reason.
     usage: /<command> <player> [reason]
