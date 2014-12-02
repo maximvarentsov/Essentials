@@ -102,14 +102,23 @@ public class OfflinePlayer implements Player
 	}
 
 	@Override
-	public double getHealth()
+	public void setHealth(double d)
 	{
+	}
+
+	@Override
+	public void _INVALID_setHealth(int i) {
+
+	}
+
+	@Override
+	public double getMaxHealth() {
 		return 0;
 	}
 
 	@Override
-	public void setHealth(double d)
-	{
+	public int _INVALID_getMaxHealth() {
+		return 0;
 	}
 
 	@Override
@@ -323,9 +332,29 @@ public class OfflinePlayer implements Player
 	}
 
 	@Override
+	public void _INVALID_damage(int i) {
+
+	}
+
+	@Override
 	public void damage(double d, Entity entity)
 	{
 		throw new UnsupportedOperationException(tl("notSupportedYet"));
+	}
+
+	@Override
+	public void _INVALID_damage(int i, Entity entity) {
+
+	}
+
+	@Override
+	public double getHealth() {
+		return 0;
+	}
+
+	@Override
+	public int _INVALID_getHealth() {
+		return 0;
 	}
 
 	@Override
@@ -359,15 +388,24 @@ public class OfflinePlayer implements Player
 	}
 
 	@Override
-	public double getLastDamage()
-	{
-		throw new UnsupportedOperationException(tl("notSupportedYet"));
+	public double getLastDamage() {
+		return 0;
+	}
+
+	@Override
+	public int _INVALID_getLastDamage() {
+		return 0;
 	}
 
 	@Override
 	public void setLastDamage(double d)
 	{
 		throw new UnsupportedOperationException(tl("notSupportedYet"));
+	}
+
+	@Override
+	public void _INVALID_setLastDamage(int i) {
+
 	}
 
 	@Override
@@ -860,12 +898,6 @@ public class OfflinePlayer implements Player
 	}
 
 	@Override
-	public double getMaxHealth()
-	{
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
 	public void giveExp(int i)
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
@@ -1271,6 +1303,11 @@ public class OfflinePlayer implements Player
 	}
 
 	@Override
+	public void _INVALID_setMaxHealth(int i) {
+
+	}
+
+	@Override
 	public void resetMaxHealth()
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
@@ -1332,54 +1369,6 @@ public class OfflinePlayer implements Player
 
 	@Override
 	public void setScoreboard(Scoreboard scrbrd) throws IllegalArgumentException, IllegalStateException
-	{
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public int _INVALID_getLastDamage()
-	{
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public void _INVALID_setLastDamage(int i)
-	{
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public void _INVALID_damage(int i)
-	{
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public void _INVALID_damage(int i, Entity entity)
-	{
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public int _INVALID_getHealth()
-	{
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public void _INVALID_setHealth(int i)
-	{
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public int _INVALID_getMaxHealth()
-	{
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-
-	@Override
-	public void _INVALID_setMaxHealth(int i)
 	{
 		throw new UnsupportedOperationException("Not supported yet.");
 	}

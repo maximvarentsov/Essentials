@@ -1,6 +1,7 @@
 package com.earth2me.essentials;
 
 import com.earth2me.essentials.utils.FormatUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -38,10 +39,9 @@ public class PlayerList
 	// Produce a user summary: There are 5 out of maximum 10 players online.
 	public static String listSummary(final IEssentials ess, final User user, final boolean showHidden)
 	{
-		Server server = ess.getServer();
 		int playerHidden = 0;
 		int hiddenCount = 0;
-		for (Player onlinePlayer : server.getOnlinePlayers())
+		for (Player onlinePlayer : Bukkit.getOnlinePlayers())
 		{
 			if (ess.getUser(onlinePlayer).isHidden() || (user != null && !user.getBase().canSee(onlinePlayer)))
 			{
@@ -55,11 +55,11 @@ public class PlayerList
 		String online;
 		if (hiddenCount > 0)
 		{
-			online = tl("listAmountHidden", server.getOnlinePlayers().size() - playerHidden, hiddenCount, server.getMaxPlayers());
+			online = tl("listAmountHidden", Bukkit.getOnlinePlayers().size() - playerHidden, hiddenCount, Bukkit.getMaxPlayers());
 		}
 		else
 		{
-			online = tl("listAmount", server.getOnlinePlayers().size() - playerHidden, server.getMaxPlayers());
+			online = tl("listAmount", Bukkit.getOnlinePlayers().size() - playerHidden, Bukkit.getMaxPlayers());
 		}
 		return online;
 	}
@@ -69,7 +69,7 @@ public class PlayerList
 	{
 		Server server = ess.getServer();
 		final Map<String, List<User>> playerList = new HashMap<>();
-		for (Player onlinePlayer : server.getOnlinePlayers())
+		for (Player onlinePlayer : Bukkit.getOnlinePlayers())
 		{
 			final User onlineUser = ess.getUser(onlinePlayer);
 			if ((sender == null && !showHidden && onlineUser.isHidden()) ||
