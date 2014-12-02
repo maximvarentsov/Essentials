@@ -79,7 +79,7 @@ commands:
       usage: /<command> [player] [on|off]
   gamemode:
     description: Change player gamemode.
-    usage: /<command> <survival|creative|adventure> [player]
+    usage: /<command> <survival|creative|adventure|spectator> [player]
     aliases: [gm]
   gc:
     description: Reports memory, uptime and tick info.
