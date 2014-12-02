@@ -84,6 +84,9 @@ commands:
   gc:
     description: Reports memory, uptime and tick info.
     usage: /<command> [all]
+  give:
+    description: Give a player an item.
+    usage: /<command> <player> <item|numeric> [amount [itemmeta...]]
   god:
     description: Enables your godly powers.
     usage: /<command> [player] [on|off]
