@@ -187,18 +187,16 @@ public class EssentialsPlayerListener implements Listener
 				user.setLastLogin(currentTime);
 				user.setDisplayNick();
 
-				final String kitName = ess.getSettings().getNewPlayerKit();
-				if (!kitName.isEmpty())
-				{
-					try
-					{
-						final Kit kit = new Kit(kitName.toLowerCase(Locale.ENGLISH), ess);
-						kit.setTime(dUser);
-						kit.expandItems(dUser);
-					}
-					catch (Exception ex)
-					{
-						LOGGER.log(Level.WARNING, ex.getMessage());
+				if (!player.hasPlayedBefore()) {
+					final String kitName = ess.getSettings().getNewPlayerKit();
+					if (!kitName.isEmpty()) {
+						try {
+							final Kit kit = new Kit(kitName.toLowerCase(Locale.ENGLISH), ess);
+							kit.setTime(dUser);
+							kit.expandItems(dUser);
+						} catch (Exception ex) {
+							LOGGER.log(Level.WARNING, ex.getMessage());
+						}
 					}
 				}
 
